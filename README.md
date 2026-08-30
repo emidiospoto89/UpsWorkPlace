@@ -1,13 +1,18 @@
-# UpsWorkPlace V3
+# UpsWorkPlace V4
 
-V3: base con archivio locale persistente e modello dati giornaliero.
+V4 collega realmente i campi della giornata al salvataggio locale persistente.
 
-- Nome: UpsWorkPlace
-- Menu laterale concordato
-- Giornata con dati separati per ogni giorno
-- Archivio locale permanente tramite AsyncStorage
-- Template Ruolino originale in assets/Driver_Log_Ruolino_Template.pdf
-- Il template Ruolino è immutabile: la compilazione PDF sarà fatta per coordinate nella fase dedicata
-- Logo ufficiale: IMG_20260830_003353.png
+## Cosa cambia
+- Ogni campo con `data-key` viene salvato automaticamente su AsyncStorage.
+- Driver, codice e targa vengono mantenuti anche per le giornate successive.
+- Le pause vengono archiviate come intervalli inizio/fine.
+- L'uscita dal magazzino resta bloccata finché l'itinerario non è finalizzato.
+- Il modello dati giornaliero rimane la fonte unica per storico, ore, statistiche e Ruolino.
+- Il template del Ruolino originale è mantenuto separatamente e non viene ridisegnato.
 
-Nota tecnica: il bridge nativo per fotocamera/GPS e le schermate avanzate verranno collegati nella prossima fase; questa V3 stabilisce prima una base dati persistente.
+## Ancora da collegare
+- Fotocamera nativa e allegati.
+- GPS nativo.
+- Schermate complete di storico/Ruolino/statistiche/buste paga.
+- Compilazione del PDF del Ruolino tramite coordinate sul template originale.
+- Condivisione Android.
