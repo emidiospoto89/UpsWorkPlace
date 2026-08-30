@@ -4,18 +4,9 @@
     "slug": "upsworkplace",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./icon.png",
-    "userInterfaceStyle": "light",
     "android": {
-      "package": "com.emidiospoto.upsworkplace",
-      "permissions": [
-        "CAMERA",
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
-      ]
-    },
-    "plugins": [
-      "react-native-webview"
-    ]
+      "package": "com.upsworkplace.app",
+      "versionCode": 1
+    }
   }
 }
