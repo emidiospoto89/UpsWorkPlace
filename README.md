@@ -1,11 +1,10 @@
-# UpsWorkPlace
+# UpsWorkPlace V2
 
-Prima versione strutturale.
+Nuova base dell'app costruita sulla logica della versione funzionante, con menu laterale e struttura estesa.
 
+Regole:
 - Nome definitivo: UpsWorkPlace
-- Menu laterale con le sezioni concordate
-- Home con la giornata di lavoro
-- Template ufficiale del Ruolino in `assets/Driver_Log_Ruolino_Template.pdf`
-- Il Ruolino originale non va ridisegnato o modificato.
-
-Nota: per la build finale l'immagine `IMG_20260830_003353.png` va usata come icona ufficiale.
+- Logo ufficiale: IMG_20260830_003353.png
+- Il Ruolino PDF originale è un template immutabile.
+- Il PDF finale dovrà essere compilato digitalmente nelle coordinate dei campi originali.
+- Le sezioni avanzate verranno collegate allo stesso archivio permanente della giornata.
