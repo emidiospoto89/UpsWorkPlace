@@ -1,8 +1,8 @@
-# UpsWorkPlace — Android/GitHub build
+# UpsWorkPlace Android — GitHub Actions
 
-Questa versione contiene un progetto Android nativo compilabile direttamente da GitHub Actions con Gradle.
+Progetto Android nativo compilabile con GitHub Actions + Gradle.
 
-Flusso:
-GitHub → Actions → Gradle → APK → Artifact.
+Workflow:
+GitHub → Actions → Build UpsWorkPlace APK → Artifact → APK.
 
-La schermata attuale è una prova funzionale del nucleo giornaliero e del salvataggio locale. Il menu laterale, il Ruolino esatto, fotocamera, GPS, storico completo e moduli avanzati saranno integrati nelle successive versioni.
+La UI include il nucleo della giornata, il menu laterale e salvataggio locale del giorno. Le funzioni native (fotocamera/GPS), il Ruolino PDF identico al template e i moduli avanzati verranno collegati nelle versioni successive.
