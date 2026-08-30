@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>UpsWorkPlace</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:#f2f2f2;
+color:#171717;
+font-family:Arial,sans-serif
+}
+
+header{
+height:64px;
+background:#351c15;
+color:#fff;
+display:flex;
+align-items:center;
+padding:0 14px;
+gap:14px;
+position:sticky;
+top:0;
+z-index:5
+}
+
+.menu{font-size:30px}
+.title{font-size:21px;font-weight:800}
+
+main{
+padding:12px;
+max-width:760px;
+margin:auto
+}
+
+.card{
+background:#fff;
+border-radius:16px;
+padding:15px;
+margin:12px 0;
+box-shadow:0 1px 6px #0002
+}
+
+h2{
+font-size:17px;
+margin:0 0 12px
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
+
+label{
+font-size:12px;
+font-weight:700;
+color:#555
+}
+
+input,textarea,select{
+width:100%;
+margin-top:5px;
+padding:11px;
+border:1px solid #ccc;
+border-radius:10px;
+font-size:16px;
+background:#fff
+}
+
+textarea{min-height:75px}
+
+button{
+border:0;
+border-radius:11px;
+padding:12px 14px;
+margin:4px 4px 4px 0;
+background:#351c15;
+color:#fff;
+font-weight:800
+}
+
+.secondary{
+background:#eee;
+color:#222
+}
+
+.status{
+padding:10px;
+background:#f0f0f0;
+border-radius:10px;
+font-size:13px
+}
+
+.ok{background:#eaf6ec}
+.warn{background:#fff0d3}
+
+.check{
+display:block;
+margin:12px 0
+}
+
+.small{
+font-size:12px;
+color:#666
+}
+
+.drawer{
+position:fixed;
+left:-90%;
+top:0;
+bottom:0;
+width:86%;
+max-width:350px;
+background:#fff;
+z-index:20;
+transition:.2s;
+box-shadow:4px 0 15px #0003;
+overflow:auto
+}
+
+.drawer.open{left:0}
+
+.shade{
+display:none;
+position:fixed;
+inset:0;
+background:#0007;
+z-index:15
+}
+
+.shade.open{display:block}
+
+.dhead{
+background:#351c15;
+color:#fff;
+padding:30px 20px 20px;
+font-size:23px;
+font-weight:800
+}
+
+.dsub{
+font-size:12px;
+opacity:.75;
+margin-top:5px
+}
+
+.item{
+padding:15px 18px;
+border-bottom:1px solid #eee;
+font-weight:700;
+font-size:16px
+}
+
+.item.active{
+background:#f0e7e2;
+border-left:4px solid #351c15
+}
+</style>
+</head>
+
+<body>
+
+<div id="shade" class="shade" onclick="closeMenu()"></div>
+
+<aside id="drawer" class="drawer">
+
+<div class="dhead">
+UpsWorkPlace
+<div class="dsub">Gestione del lavoro del driver</div>
+</div>
+
+<div class="item active">🏠 Giornata di oggi</div>
+<div class="item">👤 Driver</div>
+<div class="item">📚 Storico giornate</div>
+<div class="item">⏱️ Ore lavorate</div>
+<div class="item">🏖️ Ferie / Permessi / Malattia</div>
+<div class="item">🚐 Veicolo</div>
+<div class="item">🔧 Guasti e danni</div>
+<div class="item">💶 Rifornimenti e pedaggi</div>
+<div class="item">📄 Ruolino</div>
+<div class="item">💰 Buste paga</div>
+<div class="item">📊 Statistiche</div>
+<div class="item">⚙️ Impostazioni</div>
+
+</aside>
+
+<header>
+<span class="menu" onclick="openMenu()">☰</span>
+<span class="title">UpsWorkPlace</span>
+</header>
+
+<main>
+
+<div class="card">
+
+<h2>☀️ La mia giornata</h2>
+
+<div class="status">
+Data: <b id="date"></b>
+<br>
+<span id="save">Salvataggio automatico attivo</span>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>👤 Driver e veicolo</h2>
+
+<div class="grid">
+
+<label>
+Driver
+<input id="driver">
+</label>
+
+<label>
+Codice driver
+<input id="code">
+</label>
+
+<label>
+Targa
+<input id="plate">
+</label>
+
+<label>
+Km uscita
+<input id="kmOut" type="number">
+</label>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>🚚 Mattina / uscita dal magazzino</h2>
+
+<div class="grid">
+
+<label>
+Ora inizio lavoro
+<input id="start" type="time">
+</label>
+
+<label>
+Ora uscita magazzino
+<input id="exit" type="time">
+</label>
+
+<label>
+Pacchi in consegna
+<input id="parcels" type="number">
+</label>
+
+<label>
+Stop di consegna
+<input id="stops" type="number">
+</label>
+
+<label>
+Espressi in consegna
+<input id="express" type="number">
+</label>
+
+</div>
+
+<label class="check">
+<input id="finalized" type="checkbox">
+Itinerario finalizzato
+</label>
+
+<button onclick="setNow('start')">
+⏱ Registra inizio
+</button>
+
+<button onclick="warehouseExit()">
+🚚 Registra uscita
+</button>
+
+<div id="exitMsg" class="status warn">
+Prima dell'uscita devi finalizzare l'itinerario.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📍 Durante il giro</h2>
+
+<button onclick="firstStop()">
+📍 Primo stop + GPS
+</button>
+
+<button onclick="setNow('last')">
+🏁 Ultimo stop
+</button>
+
+<div class="grid">
+
+<label>
+Ora primo stop
+<input id="first" type="time">
+</label>
+
+<label>
+Ora ultimo stop
+<input id="last" type="time">
+</label>
+
+</div>
+
+<div id="gpsMsg" class="status">
+Il primo stop registra l'orario.
+Il GPS nativo verrà collegato nel modulo dedicato.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>⏸ Pause</h2>
+
+<button onclick="pauseStart()">
+▶ Inizio pausa
+</button>
+
+<button class="secondary" onclick="pauseEnd()">
+■ Fine pausa
+</button>
+
+<div id="pause" class="status">
+Le pause vengono archiviate come intervalli inizio → fine.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📦 Ritiri e consegne aggiuntive</h2>
+
+<div class="grid">
+
+<label>
+Stop ritiri
+<input id="pickups" type="number">
+</label>
+
+<label>
+Pacchi ritirati
+<input id="picked" type="number">
+</label>
+
+<label>
+Stop aggiuntivi
+<input id="extraStops" type="number">
+</label>
+
+<label>
+Pacchi aggiuntivi
+<input id="extraParcels" type="number">
+</label>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>⚠️ Mancate consegne</h2>
+
+<textarea
+id="failed"
+placeholder="Evento, motivazione, destinatario, note">
+</textarea>
+
+</div>
+
+
+<div class="card">
+
+<h2>⛽ Rifornimenti</h2>
+
+<div class="grid">
+
+<label>
+Litri
+<input id="liters" type="number" step=".01">
+</label>
+
+<label>
+Prezzo/litro €
+<input id="price" type="number" step=".001">
+</label>
+
+<label>
+Importo €
+<input id="amount" type="number" step=".01">
+</label>
+
+<label>
+Km
+<input id="fuelKm" type="number">
+</label>
+
+</div>
+
+<button class="secondary">
+📷 Fotografa scontrino
+</button>
+
+<div class="small">
+Lo scontrino sarà associato al rifornimento quando verrà collegata la fotocamera nativa.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>🛣️ Pedaggi</h2>
+
+<div class="grid">
+
+<label>
+Pedaggi
+<input id="tolls" type="number">
+</label>
+
+<label>
+Mancati pedaggi
+<input id="missed" type="number">
+</label>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>🏁 Rientro</h2>
+
+<div class="grid">
+
+<label>
+Ora rientro
+<input id="return" type="time">
+</label>
+
+<label>
+Km rientro
+<input id="kmReturn" type="number">
+</label>
+
+<label>
+Ora fine lavoro
+<input id="end" type="time">
+</label>
+
+<label>
+Pulizia abitacolo
+<input id="cleaning" type="number" min="1" max="5">
+</label>
+
+</div>
+
+<button onclick="setNow('return')">
+🏁 Registra rientro
+</button>
+
+<button onclick="setNow('end')">
+⏱ Fine lavoro
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>🔧 Guasti e danni</h2>
+
+<textarea
+id="damage"
+placeholder="Descrizione del guasto/danno">
+</textarea>
+
+<button class="secondary">
+📷 Foto danno
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>📝 Note</h2>
+
+<textarea
+id="notes"
+placeholder="Note della giornata">
+</textarea>
+
+</div>
+
+</main>
+
+
+<script>
+
+const key =
+'upsworkplace.day.' +
+new Date().toISOString().slice(0,10);
+
+const ids = [
+
+'driver',
+'code',
+'plate',
+'kmOut',
+'start',
+'exit',
+'parcels',
+'stops',
+'express',
+'finalized',
+'first',
+'last',
+'pickups',
+'picked',
+'extraStops',
+'extraParcels',
+'failed',
+'liters',
+'price',
+'amount',
+'fuelKm',
+'tolls',
+'missed',
+'return',
+'kmReturn',
+'end',
+'cleaning',
+'damage',
+'notes'
+
+];
+
+const saved =
+JSON.parse(localStorage.getItem(key) || '{}');
+
+document.getElementById('date').textContent =
+new Date().toLocaleDateString('it-IT');
+
+
+ids.forEach(id => {
+
+const e = document.getElementById(id);
+
+if(saved[id] !== undefined){
+
+if(e.type === 'checkbox')
+e.checked = saved[id];
+
+else
+e.value = saved[id];
+
+}
+
+e.addEventListener('input',save);
+e.addEventListener('change',save);
+
+});
+
+
+function save(){
+
+const d = {};
+
+ids.forEach(id => {
+
+const e = document.getElementById(id);
+
+d[id] =
+e.type === 'checkbox'
+? e.checked
+: e.value;
+
+});
+
+d.updatedAt =
+new Date().toISOString();
+
+localStorage.setItem(
+key,
+JSON.stringify(d)
+);
+
+document.getElementById('save').textContent =
+'✓ Salvato automaticamente';
+
+}
+
+
+function now(){
+
+const d = new Date();
+
+return String(d.getHours()).padStart(2,'0')
++ ':'
++ String(d.getMinutes()).padStart(2,'0');
+
+}
+
+
+function setNow(id){
+
+document.getElementById(id).value = now();
+
+save();
+
+}
+
+
+function warehouseExit(){
+
+const m =
+document.getElementById('exitMsg');
+
+if(!document.getElementById('finalized').checked){
+
+m.textContent =
+'⚠️ Itinerario non finalizzato: uscita non registrata.';
+
+return;
+
+}
+
+setNow('exit');
+
+m.textContent =
+'✓ Uscita dal magazzino registrata.';
+
+m.className =
+'status ok';
+
+}
+
+
+function firstStop(){
+
+setNow('first');
+
+document.getElementById('gpsMsg').textContent =
+'✓ Primo stop registrato. Il collegamento GPS nativo verrà associato a questo evento.';
+
+}
+
+
+let ps = null;
+
+
+function pauseStart(){
+
+ps = new Date();
+
+document.getElementById('pause').textContent =
+'▶ Inizio pausa ' +
+ps.toLocaleTimeString(
+'it-IT',
+{
+hour:'2-digit',
+minute:'2-digit'
+}
+);
+
+}
+
+
+function pauseEnd(){
+
+if(!ps){
+
+document.getElementById('pause').textContent =
+'⚠️ Nessuna pausa in corso.';
+
+return;
+
+}
+
+const e = new Date();
+
+document.getElementById('pause').textContent =
+'✓ ' +
+ps.toLocaleTimeString(
+'it-IT',
+{
+hour:'2-digit',
+minute:'2-digit'
+}
+)
++
+' → ' +
+e.toLocaleTimeString(
+'it-IT',
+{
+hour:'2-digit',
+minute:'2-digit'
+}
+);
+
+ps = null;
+
+save();
+
+}
+
+
+function openMenu(){
+
+document.getElementById('drawer')
+.classList.add('open');
+
+document.getElementById('shade')
+.classList.add('open');
+
+}
+
+
+function closeMenu(){
+
+document.getElementById('drawer')
+.classList.remove('open');
+
+document.getElementById('shade')
+.classList.remove('open');
+
+}
+
+</script>
+
+</body>
+</html>
