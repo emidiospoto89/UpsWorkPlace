@@ -1,10 +1,13 @@
-# UpsWorkPlace V2
+# UpsWorkPlace V3
 
-Nuova base dell'app costruita sulla logica della versione funzionante, con menu laterale e struttura estesa.
+V3: base con archivio locale persistente e modello dati giornaliero.
 
-Regole:
-- Nome definitivo: UpsWorkPlace
+- Nome: UpsWorkPlace
+- Menu laterale concordato
+- Giornata con dati separati per ogni giorno
+- Archivio locale permanente tramite AsyncStorage
+- Template Ruolino originale in assets/Driver_Log_Ruolino_Template.pdf
+- Il template Ruolino è immutabile: la compilazione PDF sarà fatta per coordinate nella fase dedicata
 - Logo ufficiale: IMG_20260830_003353.png
-- Il Ruolino PDF originale è un template immutabile.
-- Il PDF finale dovrà essere compilato digitalmente nelle coordinate dei campi originali.
-- Le sezioni avanzate verranno collegate allo stesso archivio permanente della giornata.
+
+Nota tecnica: il bridge nativo per fotocamera/GPS e le schermate avanzate verranno collegati nella prossima fase; questa V3 stabilisce prima una base dati persistente.
