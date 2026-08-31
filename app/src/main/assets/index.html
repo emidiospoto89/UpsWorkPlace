@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+
 <title>UpsWorkPlace</title>
 
 <style>
@@ -12,7 +13,7 @@ body{
 margin:0;
 background:#f2f2f2;
 color:#171717;
-font-family:Arial,sans-serif;
+font-family:Arial,sans-serif
 }
 
 header{
@@ -25,24 +26,32 @@ padding:0 14px;
 gap:14px;
 position:sticky;
 top:0;
-z-index:5;
+z-index:5
 }
 
 .menu{
 font-size:30px;
-cursor:pointer;
 padding:8px;
+cursor:pointer
 }
 
 .title{
 font-size:21px;
-font-weight:800;
+font-weight:800
 }
 
 main{
 padding:12px;
 max-width:760px;
-margin:auto;
+margin:auto
+}
+
+.screen{
+display:none
+}
+
+.screen.active{
+display:block
 }
 
 .card{
@@ -50,25 +59,30 @@ background:#fff;
 border-radius:16px;
 padding:15px;
 margin:12px 0;
-box-shadow:0 1px 6px #0002;
-scroll-margin-top:76px;
+box-shadow:0 1px 6px #0002
+}
+
+h1{
+font-size:24px;
+margin:8px 4px 16px
 }
 
 h2{
-font-size:17px;
-margin:0 0 12px;
+font-size:18px;
+margin:0 0 12px
 }
 
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
+gap:10px
 }
 
 label{
-font-size:12px;
+font-size:13px;
 font-weight:700;
 color:#555;
+display:block
 }
 
 input,textarea,select{
@@ -78,11 +92,19 @@ padding:11px;
 border:1px solid #ccc;
 border-radius:10px;
 font-size:16px;
-background:#fff;
+background:#fff
 }
 
 textarea{
-min-height:75px;
+min-height:80px
+}
+
+.check{
+margin:12px 0
+}
+
+.check input{
+width:auto
 }
 
 button{
@@ -93,37 +115,27 @@ margin:4px 4px 4px 0;
 background:#351c15;
 color:#fff;
 font-weight:800;
-cursor:pointer;
+cursor:pointer
 }
 
 .secondary{
 background:#eee;
-color:#222;
+color:#222
 }
 
 .status{
 padding:10px;
 background:#f0f0f0;
 border-radius:10px;
-font-size:13px;
+font-size:13px
 }
 
 .ok{
-background:#eaf6ec;
+background:#eaf6ec
 }
 
 .warn{
-background:#fff0d3;
-}
-
-.check{
-display:block;
-margin:12px 0;
-}
-
-.small{
-font-size:12px;
-color:#666;
+background:#fff0d3
 }
 
 .drawer{
@@ -137,11 +149,11 @@ background:#fff;
 z-index:20;
 transition:.2s;
 box-shadow:4px 0 15px #0003;
-overflow:auto;
+overflow:auto
 }
 
 .drawer.open{
-left:0;
+left:0
 }
 
 .shade{
@@ -149,25 +161,25 @@ display:none;
 position:fixed;
 inset:0;
 background:#0007;
-z-index:15;
+z-index:15
 }
 
 .shade.open{
-display:block;
+display:block
 }
 
 .dhead{
 background:#351c15;
 color:#fff;
-padding:30px 20px 20px;
+padding:28px 20px 20px;
 font-size:23px;
-font-weight:800;
+font-weight:800
 }
 
 .dsub{
 font-size:12px;
 opacity:.75;
-margin-top:5px;
+margin-top:5px
 }
 
 .item{
@@ -175,14 +187,30 @@ padding:15px 18px;
 border-bottom:1px solid #eee;
 font-weight:700;
 font-size:16px;
-cursor:pointer;
+cursor:pointer
 }
 
 .item.active{
 background:#f0e7e2;
-border-left:4px solid #351c15;
+border-left:4px solid #351c15
 }
 
+.big{
+font-size:28px;
+font-weight:800
+}
+
+.muted{
+color:#666;
+font-size:13px
+}
+
+.row{
+padding:12px 0;
+border-bottom:1px solid #eee;
+display:flex;
+justify-content:space-between
+}
 </style>
 </head>
 
@@ -199,51 +227,51 @@ Gestione del lavoro del driver
 </div>
 </div>
 
-<div class="item active" onclick="goTo('today',this)">
+<div class="item active" onclick="show('today',this)">
 🏠 Giornata di oggi
 </div>
 
-<div class="item" onclick="goTo('driver',this)">
+<div class="item" onclick="show('driver',this)">
 👤 Driver
 </div>
 
-<div class="item" onclick="menuInfo('Lo storico giornaliero verrà collegato al salvataggio delle giornate.',this)">
+<div class="item" onclick="show('history',this)">
 📚 Storico giornate
 </div>
 
-<div class="item" onclick="goTo('work',this)">
+<div class="item" onclick="show('hours',this)">
 ⏱️ Ore lavorate
 </div>
 
-<div class="item" onclick="menuInfo('La sezione ferie / permessi / malattia sarà aggiunta nella prossima fase.',this)">
+<div class="item" onclick="show('leave',this)">
 🏖️ Ferie / Permessi / Malattia
 </div>
 
-<div class="item" onclick="goTo('driver',this)">
+<div class="item" onclick="show('vehicle',this)">
 🚐 Veicolo
 </div>
 
-<div class="item" onclick="goTo('damage',this)">
+<div class="item" onclick="show('damage',this)">
 🔧 Guasti e danni
 </div>
 
-<div class="item" onclick="goTo('fuel',this)">
+<div class="item" onclick="show('expenses',this)">
 💶 Rifornimenti e pedaggi
 </div>
 
-<div class="item" onclick="menuInfo('Il ruolino PDF verrà collegato direttamente all’app.',this)">
+<div class="item" onclick="show('route',this)">
 📄 Ruolino
 </div>
 
-<div class="item" onclick="menuInfo('La sezione buste paga sarà aggiunta nella prossima fase.',this)">
+<div class="item" onclick="show('payslips',this)">
 💰 Buste paga
 </div>
 
-<div class="item" onclick="menuInfo('Le statistiche saranno collegate allo storico delle giornate.',this)">
+<div class="item" onclick="show('stats',this)">
 📊 Statistiche
 </div>
 
-<div class="item" onclick="menuInfo('Le impostazioni saranno aggiunte nella prossima fase.',this)">
+<div class="item" onclick="show('settings',this)">
 ⚙️ Impostazioni
 </div>
 
@@ -251,9 +279,7 @@ Gestione del lavoro del driver
 
 <header>
 
-<span class="menu" onclick="openMenu()">
-☰
-</span>
+<span class="menu" onclick="openMenu()">☰</span>
 
 <span class="title">
 UpsWorkPlace
@@ -263,9 +289,13 @@ UpsWorkPlace
 
 <main>
 
-<div id="today" class="card">
+<!-- GIORNATA -->
 
-<h2>☀️ La mia giornata</h2>
+<section id="today" class="screen active">
+
+<h1>☀️ La mia giornata</h1>
+
+<div class="card">
 
 <div class="status">
 
@@ -274,47 +304,14 @@ Data:
 
 <br>
 
-<span id="save">
-Salvataggio automatico attivo
-</span>
+✓ Salvato automaticamente
 
 </div>
 
 </div>
 
 
-<div id="driver" class="card">
-
-<h2>👤 Driver e veicolo</h2>
-
-<div class="grid">
-
-<label>
-Driver
-<input id="driver">
-</label>
-
-<label>
-Codice driver
-<input id="code">
-</label>
-
-<label>
-Targa
-<input id="plate">
-</label>
-
-<label>
-Km uscita
-<input id="kmOut" type="number">
-</label>
-
-</div>
-
-</div>
-
-
-<div id="work" class="card">
+<div class="card">
 
 <h2>
 🚚 Mattina / uscita dal magazzino
@@ -380,7 +377,7 @@ Prima dell'uscita devi finalizzare l'itinerario.
 📍 Durante il giro
 </h2>
 
-<button onclick="firstStop()">
+<button onclick="setNow('first')">
 📍 Primo stop + GPS
 </button>
 
@@ -402,13 +399,6 @@ Ora ultimo stop
 
 </div>
 
-<div id="gpsMsg" class="status">
-
-Il primo stop registra l'orario.
-Il GPS nativo verrà collegato nel modulo dedicato.
-
-</div>
-
 </div>
 
 
@@ -427,9 +417,7 @@ Il GPS nativo verrà collegato nel modulo dedicato.
 </button>
 
 <div id="pause" class="status">
-
-Le pause vengono archiviate come intervalli inizio → fine.
-
+Nessuna pausa in corso.
 </div>
 
 </div>
@@ -474,76 +462,7 @@ Pacchi aggiuntivi
 ⚠️ Mancate consegne
 </h2>
 
-<textarea
-id="failed"
-placeholder="Evento, motivazione, destinatario, note">
-</textarea>
-
-</div>
-
-
-<div id="fuel" class="card">
-
-<h2>
-⛽ Rifornimenti
-</h2>
-
-<div class="grid">
-
-<label>
-Litri
-<input id="liters" type="number" step=".01">
-</label>
-
-<label>
-Prezzo/litro €
-<input id="price" type="number" step=".001">
-</label>
-
-<label>
-Importo €
-<input id="amount" type="number" step=".01">
-</label>
-
-<label>
-Km
-<input id="fuelKm" type="number">
-</label>
-
-</div>
-
-<button class="secondary">
-📷 Fotografa scontrino
-</button>
-
-<div class="small">
-
-Lo scontrino sarà associato al rifornimento quando verrà collegata la fotocamera nativa.
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>
-🛣️ Pedaggi
-</h2>
-
-<div class="grid">
-
-<label>
-Pedaggi
-<input id="tolls" type="number">
-</label>
-
-<label>
-Mancati pedaggi
-<input id="missed" type="number">
-</label>
-
-</div>
+<textarea id="failed"></textarea>
 
 </div>
 
@@ -589,19 +508,273 @@ Pulizia abitacolo
 </div>
 
 
-<div id="damage" class="card">
+<div class="card">
 
 <h2>
-🔧 Guasti e danni
+📝 Note
 </h2>
+
+<textarea id="notes"></textarea>
+
+</div>
+
+</section>
+
+
+<!-- DRIVER -->
+
+<section id="driver" class="screen">
+
+<h1>👤 Driver</h1>
+
+<div class="card">
+
+<h2>Dati fissi del driver</h2>
+
+<div class="grid">
+
+<label>
+Driver
+<input id="driverName">
+</label>
+
+<label>
+Codice driver
+<input id="driverCode">
+</label>
+
+<label>
+Targa
+<input id="plate">
+</label>
+
+<label>
+Km uscita
+<input id="kmOut" type="number">
+</label>
+
+</div>
+
+<button onclick="saveFixed()">
+💾 Salva dati
+</button>
+
+<div class="status">
+
+Questi dati restano salvati anche nei giorni successivi.
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- STORICO -->
+
+<section id="history" class="screen">
+
+<h1>📚 Storico giornate</h1>
+
+<div class="card">
+
+<h2>Giornate salvate</h2>
+
+<div id="historyList"></div>
+
+</div>
+
+</section>
+
+
+<!-- ORE -->
+
+<section id="hours" class="screen">
+
+<h1>⏱️ Ore lavorate</h1>
+
+<div class="card">
+
+<h2>Totale giornata</h2>
+
+<div id="hoursTotal" class="big">
+—
+</div>
+
+<div class="muted">
+Calcolato tra inizio e fine lavoro.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- FERIE -->
+
+<section id="leave" class="screen">
+
+<h1>🏖️ Ferie / Permessi / Malattia</h1>
+
+<div class="card">
+
+<div class="grid">
+
+<label>
+Tipo
+
+<select id="leaveType">
+
+<option>Ferie</option>
+<option>Permesso</option>
+<option>Malattia</option>
+
+</select>
+
+</label>
+
+<label>
+Data
+
+<input id="leaveDate" type="date">
+
+</label>
+
+</div>
+
+<label>
+Note
+
+<textarea id="leaveNote"></textarea>
+
+</label>
+
+<button onclick="saveLeave()">
+💾 Salva
+</button>
+
+<div id="leaveMsg" class="status">
+Nessuna registrazione.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- VEICOLO -->
+
+<section id="vehicle" class="screen">
+
+<h1>🚐 Veicolo</h1>
+
+<div class="card">
+
+<div class="grid">
+
+<label>
+Targa
+<input id="vehiclePlate">
+</label>
+
+<label>
+Km
+<input id="vehicleKm" type="number">
+</label>
+
+<label>
+Stato
+
+<select id="vehicleState">
+
+<option>OK</option>
+<option>Da controllare</option>
+<option>Fermo</option>
+
+</select>
+
+</label>
+
+</div>
+
+<label>
+Note
+
+<textarea id="vehicleNote"></textarea>
+
+</label>
+
+<button onclick="saveVehicle()">
+💾 Salva
+</button>
+
+</div>
+
+</section>
+
+
+<!-- GUASTI -->
+
+<section id="damage" class="screen">
+
+<h1>🔧 Guasti e danni</h1>
+
+<div class="card">
 
 <textarea
 id="damageText"
-placeholder="Descrizione del guasto/danno">
+placeholder="Descrizione del guasto o danno">
 </textarea>
 
-<button class="secondary">
-📷 Foto danno
+<button onclick="saveDamage()">
+💾 Registra
+</button>
+
+<div id="damageMsg" class="status">
+Nessuna segnalazione.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SPESE -->
+
+<section id="expenses" class="screen">
+
+<h1>💶 Rifornimenti e pedaggi</h1>
+
+<div class="card">
+
+<h2>Rifornimento</h2>
+
+<div class="grid">
+
+<label>
+Litri
+<input id="liters" type="number" step=".01">
+</label>
+
+<label>
+Prezzo/litro €
+<input id="price" type="number" step=".001">
+</label>
+
+<label>
+Importo €
+<input id="amount" type="number" step=".01">
+</label>
+
+<label>
+Km
+<input id="fuelKm" type="number">
+</label>
+
+</div>
+
+<button onclick="saveExpenses()">
+💾 Salva
 </button>
 
 </div>
@@ -609,30 +782,166 @@ placeholder="Descrizione del guasto/danno">
 
 <div class="card">
 
-<h2>
-📝 Note
-</h2>
+<h2>Pedaggi</h2>
 
-<textarea
-id="notes"
-placeholder="Note della giornata">
-</textarea>
+<div class="grid">
+
+<label>
+Pedaggi €
+<input id="tolls" type="number" step=".01">
+</label>
+
+<label>
+Mancati pedaggi
+<input id="missed" type="number">
+</label>
 
 </div>
 
+<button onclick="saveExpenses()">
+💾 Salva
+</button>
+
+</div>
+
+</section>
+
+
+<!-- RUOLINO -->
+
+<section id="route" class="screen">
+
+<h1>📄 Ruolino</h1>
+
+<div class="card">
+
+<h2>Ruolino di lavoro</h2>
+
+<p>
+Il documento originale resta invariato.
+</p>
+
+<div class="status">
+Qui verrà collegato il ruolino originale.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- BUSTE PAGA -->
+
+<section id="payslips" class="screen">
+
+<h1>💰 Buste paga</h1>
+
+<div class="card">
+
+<h2>Archivio</h2>
+
+<p>
+Sezione dedicata ai documenti delle buste paga.
+</p>
+
+<button onclick="info('payslipMsg','Selezione documento pronta.')">
+📎 Aggiungi documento
+</button>
+
+<div id="payslipMsg" class="status">
+Nessun documento.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- STATISTICHE -->
+
+<section id="stats" class="screen">
+
+<h1>📊 Statistiche</h1>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+
+<div id="statStops" class="big">
+0
+</div>
+
+<div class="muted">
+Stop oggi
+</div>
+
+</div>
+
+<div>
+
+<div id="statParcels" class="big">
+0
+</div>
+
+<div class="muted">
+Pacchi oggi
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- IMPOSTAZIONI -->
+
+<section id="settings" class="screen">
+
+<h1>⚙️ Impostazioni</h1>
+
+<div class="card">
+
+<label class="check">
+
+<input id="autoSave" type="checkbox" checked>
+
+Salvataggio automatico
+
+</label>
+
+<button onclick="clearToday()">
+🗑️ Azzera giornata
+</button>
+
+<div id="settingsMsg" class="status warn">
+
+I dati fissi del driver non vengono cancellati.
+
+</div>
+
+</div>
+
+</section>
+
 </main>
+
 
 <script>
 
-const key =
+const dayKey =
 'upsworkplace.day.' +
 new Date().toISOString().slice(0,10);
 
+const fixedKey =
+'upsworkplace.fixed';
+
 const ids = [
-'driver',
-'code',
-'plate',
-'kmOut',
+
 'start',
 'exit',
 'parcels',
@@ -646,52 +955,67 @@ const ids = [
 'extraStops',
 'extraParcels',
 'failed',
+'return',
+'kmReturn',
+'end',
+'cleaning',
+'notes',
 'liters',
 'price',
 'amount',
 'fuelKm',
 'tolls',
-'missed',
-'return',
-'kmReturn',
-'end',
-'cleaning',
-'damageText',
-'notes'
+'missed'
+
 ];
 
-const saved =
-JSON.parse(localStorage.getItem(key) || '{}');
+const $ =
+id => document.getElementById(id);
 
-document.getElementById('date').textContent =
+
+$('date').textContent =
 new Date().toLocaleDateString('it-IT');
+
+
+function load(){
+
+let d =
+JSON.parse(
+localStorage.getItem(dayKey) || '{}'
+);
 
 ids.forEach(id => {
 
-const e = document.getElementById(id);
+let e = $(id);
 
-if(saved[id] !== undefined){
+if(d[id] !== undefined){
 
 if(e.type === 'checkbox')
-e.checked = saved[id];
+e.checked = d[id];
 
 else
-e.value = saved[id];
+e.value = d[id];
 
 }
 
-e.addEventListener('input',save);
-e.addEventListener('change',save);
-
 });
+
+loadFixed();
+
+stats();
+
+hours();
+
+}
+
 
 function save(){
 
-const d = {};
+let d = {};
 
 ids.forEach(id => {
 
-const e = document.getElementById(id);
+let e = $(id);
 
 d[id] =
 e.type === 'checkbox'
@@ -700,46 +1024,52 @@ e.type === 'checkbox'
 
 });
 
-d.updatedAt =
-new Date().toISOString();
-
 localStorage.setItem(
-key,
+dayKey,
 JSON.stringify(d)
 );
 
-document.getElementById('save').textContent =
-'✓ Salvato automaticamente';
+stats();
+
+hours();
 
 }
 
-function now(){
 
-const d = new Date();
+ids.forEach(id => {
 
-return String(d.getHours()).padStart(2,'0')
-+ ':'
-+ String(d.getMinutes()).padStart(2,'0');
+let e = $(id);
 
-}
+e.addEventListener(
+'input',
+save
+);
+
+e.addEventListener(
+'change',
+save
+);
+
+});
+
 
 function setNow(id){
 
-document.getElementById(id).value =
-now();
+$(id).value =
+new Date()
+.toTimeString()
+.slice(0,5);
 
 save();
 
 }
 
+
 function warehouseExit(){
 
-const m =
-document.getElementById('exitMsg');
+if(!$('finalized').checked){
 
-if(!document.getElementById('finalized').checked){
-
-m.textContent =
+$('exitMsg').textContent =
 '⚠️ Itinerario non finalizzato: uscita non registrata.';
 
 return;
@@ -748,172 +1078,427 @@ return;
 
 setNow('exit');
 
-m.textContent =
+$('exitMsg').textContent =
 '✓ Uscita dal magazzino registrata.';
 
-m.className =
+$('exitMsg').className =
 'status ok';
 
 }
 
-function firstStop(){
 
-setNow('first');
+let ps = 0;
 
-document.getElementById('gpsMsg').textContent =
-'✓ Primo stop registrato. Il collegamento GPS nativo verrà associato a questo evento.';
-
-}
-
-let ps = null;
 
 function pauseStart(){
 
-ps = new Date();
+ps = Date.now();
 
-document.getElementById('pause').textContent =
-'▶ Inizio pausa ' +
-ps.toLocaleTimeString(
-'it-IT',
-{
-hour:'2-digit',
-minute:'2-digit'
-}
-);
+$('pause').textContent =
+'▶ Pausa iniziata.';
 
 }
+
 
 function pauseEnd(){
 
 if(!ps){
 
-document.getElementById('pause').textContent =
+$('pause').textContent =
 '⚠️ Nessuna pausa in corso.';
 
 return;
 
 }
 
-const e = new Date();
-
-document.getElementById('pause').textContent =
-'✓ ' +
-ps.toLocaleTimeString(
-'it-IT',
-{
-hour:'2-digit',
-minute:'2-digit'
-}
-)
-+
-' → ' +
-e.toLocaleTimeString(
-'it-IT',
-{
-hour:'2-digit',
-minute:'2-digit'
-}
+let m =
+Math.round(
+(Date.now()-ps)/60000
 );
 
-ps = null;
+$('pause').textContent =
+'✓ Pausa: ' +
+m +
+' min';
 
-save();
-
-}
-
-function goTo(id,el){
-
-const target =
-document.getElementById(id);
-
-if(target){
-
-document
-.querySelectorAll('.item')
-.forEach(x =>
-x.classList.remove('active')
-);
-
-if(el)
-el.classList.add('active');
-
-closeMenu();
-
-setTimeout(
-() => target.scrollIntoView({
-behavior:'smooth',
-block:'start'
-}),
-80
-);
+ps = 0;
 
 }
 
-}
-
-function menuInfo(message,el){
-
-document
-.querySelectorAll('.item')
-.forEach(x =>
-x.classList.remove('active')
-);
-
-if(el)
-el.classList.add('active');
-
-closeMenu();
-
-const old =
-document.getElementById('menuToast');
-
-if(old)
-old.remove();
-
-const t =
-document.createElement('div');
-
-t.id =
-'menuToast';
-
-t.textContent =
-message;
-
-t.style.cssText =
-'position:fixed;left:16px;right:16px;bottom:24px;background:#351c15;color:white;padding:14px 16px;border-radius:12px;z-index:50;font-weight:700;box-shadow:0 3px 14px #0005';
-
-document.body.appendChild(t);
-
-setTimeout(
-() => t.remove(),
-3000
-);
-
-}
 
 function openMenu(){
 
-document
-.getElementById('drawer')
-.classList.add('open');
+$('drawer')
+.classList
+.add('open');
 
-document
-.getElementById('shade')
-.classList.add('open');
+$('shade')
+.classList
+.add('open');
 
 }
+
 
 function closeMenu(){
 
-document
-.getElementById('drawer')
-.classList.remove('open');
+$('drawer')
+.classList
+.remove('open');
 
-document
-.getElementById('shade')
-.classList.remove('open');
+$('shade')
+.classList
+.remove('open');
 
 }
+
+
+function show(id,el){
+
+document
+.querySelectorAll('.screen')
+.forEach(
+x => x.classList.remove('active')
+);
+
+$(id)
+.classList
+.add('active');
+
+document
+.querySelectorAll('.item')
+.forEach(
+x => x.classList.remove('active')
+);
+
+el.classList.add('active');
+
+closeMenu();
+
+window.scrollTo(0,0);
+
+if(id === 'history')
+historyList();
+
+if(id === 'hours')
+hours();
+
+if(id === 'stats')
+stats();
+
+if(id === 'driver')
+loadFixed();
+
+}
+
+
+function saveFixed(){
+
+localStorage.setItem(
+
+fixedKey,
+
+JSON.stringify({
+
+name:
+$('driverName').value,
+
+code:
+$('driverCode').value,
+
+plate:
+$('plate').value,
+
+kmOut:
+$('kmOut').value
+
+})
+
+);
+
+}
+
+
+function loadFixed(){
+
+let d =
+JSON.parse(
+localStorage.getItem(fixedKey) || '{}'
+);
+
+$('driverName').value =
+d.name || '';
+
+$('driverCode').value =
+d.code || '';
+
+$('plate').value =
+d.plate || '';
+
+$('kmOut').value =
+d.kmOut || '';
+
+}
+
+
+function historyList(){
+
+let a = [];
+
+for(
+let i=0;
+i<localStorage.length;
+i++
+){
+
+let k =
+localStorage.key(i);
+
+if(
+k &&
+k.startsWith(
+'upsworkplace.day.'
+)
+){
+
+a.push(
+k.slice(17)
+);
+
+}
+
+}
+
+a.sort().reverse();
+
+$('historyList').innerHTML =
+a.length
+
+?
+
+a.map(
+
+x =>
+
+'<div class="row">' +
+
+'<b>' +
+
+new Date(
+x+'T12:00:00'
+)
+.toLocaleDateString(
+'it-IT'
+)
+
++
+
+'</b>' +
+
+'<span>Salvata</span>' +
+
+'</div>'
+
+).join('')
+
+:
+
+'<div class="muted">' +
+'Nessuna giornata salvata.' +
+'</div>';
+
+}
+
+
+function hours(){
+
+let s =
+$('start').value;
+
+let e =
+$('end').value;
+
+if(!s || !e){
+
+$('hoursTotal').textContent =
+'—';
+
+return;
+
+}
+
+let a =
+s.split(':')
+.map(Number);
+
+let b =
+e.split(':')
+.map(Number);
+
+let m =
+b[0]*60+b[1] -
+a[0]*60-a[1];
+
+if(m < 0)
+m += 1440;
+
+$('hoursTotal').textContent =
+Math.floor(m/60) +
+'h ' +
+String(m%60)
+.padStart(2,'0') +
+'m';
+
+}
+
+
+function stats(){
+
+$('statStops').textContent =
+$('stops').value || 0;
+
+$('statParcels').textContent =
+$('parcels').value || 0;
+
+}
+
+
+function saveLeave(){
+
+localStorage.setItem(
+
+'upsworkplace.leave',
+
+JSON.stringify({
+
+type:
+$('leaveType').value,
+
+date:
+$('leaveDate').value,
+
+note:
+$('leaveNote').value
+
+})
+
+);
+
+$('leaveMsg').textContent =
+'✓ Registrato.';
+
+}
+
+
+function saveVehicle(){
+
+localStorage.setItem(
+
+'upsworkplace.vehicle',
+
+JSON.stringify({
+
+plate:
+$('vehiclePlate').value,
+
+km:
+$('vehicleKm').value,
+
+state:
+$('vehicleState').value,
+
+note:
+$('vehicleNote').value
+
+})
+
+);
+
+}
+
+
+function saveDamage(){
+
+localStorage.setItem(
+
+'upsworkplace.damage',
+
+JSON.stringify({
+
+text:
+$('damageText').value,
+
+date:
+new Date().toISOString()
+
+})
+
+);
+
+$('damageMsg').textContent =
+'✓ Segnalazione salvata.';
+
+}
+
+
+function saveExpenses(){
+
+localStorage.setItem(
+
+'upsworkplace.expenses',
+
+JSON.stringify({
+
+liters:
+$('liters').value,
+
+price:
+$('price').value,
+
+amount:
+$('amount').value,
+
+km:
+$('fuelKm').value,
+
+tolls:
+$('tolls').value,
+
+missed:
+$('missed').value
+
+})
+
+);
+
+}
+
+
+function info(id,msg){
+
+$(id).textContent =
+msg;
+
+}
+
+
+function clearToday(){
+
+if(
+confirm(
+'Azzera i dati della giornata?'
+)
+){
+
+localStorage.removeItem(dayKey);
+
+location.reload();
+
+}
+
+}
+
+
+load();
 
 </script>
 
