@@ -3,6 +3,8 @@
     <application
         android:theme="@style/AppTheme"
         android:label="UpsWorkPlace"
+        android:icon="@drawable/ups_logo"
+        android:roundIcon="@drawable/ups_logo"
         android:allowBackup="true"
         android:supportsRtl="true">
 
@@ -12,8 +14,11 @@
             android:exported="true">
 
             <intent-filter>
+
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
+
             </intent-filter>
 
         </activity>
