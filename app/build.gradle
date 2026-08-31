@@ -10,7 +10,11 @@ android {
         applicationId 'com.upsworkplace.app'
         minSdk 23
         targetSdk 34
-        versionCode 6
-        versionName '1.0.2'
+        versionCode 7
+        versionName '1.0.3'
     }
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.15.0'
 }
