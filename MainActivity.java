@@ -18,7 +18,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-import android.util.Base64;
 
 import androidx.core.content.FileProvider;
 
@@ -64,37 +63,68 @@ public class MainActivity extends Activity {
         settings.setAllowContentAccess(true);
 
         web.addJavascriptInterface(new AndroidBridge(), "Android");
+
         setContentView(web);
 
-        String saved = getPreferences(MODE_PRIVATE).getString("last_pdf", null);
+        String saved = getPreferences(MODE_PRIVATE)
+                .getString("last_pdf", null);
+
         if (saved != null) {
             File f = new File(saved);
-            if (f.exists()) lastPdfFile = f;
+            if (f.exists()) {
+                lastPdfFile = f;
+            }
         }
 
         web.loadUrl("file:///android_asset/index.html");
     }
 
     private void injectCompatibilityFields(WebView v) {
-        String js = "javascript:(function(){"
-                + "function addField(card,id,label){"
-                + "if(document.getElementById(id))return;"
-                + "var wrap=document.createElement('label');"
-                + "wrap.style.marginTop='10px';"
-                + "wrap.innerHTML=label+'<input id=\\\"'+id+'\\\" type=\\\"number\\\">';"
-                + "card.appendChild(wrap);"
-                + "}"
+
+        String js =
+                "javascript:(function(){"
+
                 + "var cards=[...document.querySelectorAll('#today .card')];"
-                + "var loadCard=cards.find(c=>(c.querySelector('h2')||{}).textContent&&c.querySelector('h2').textContent.includes('Carico del mattino'));"
-                + "if(loadCard){var g=loadCard.querySelector('.grid');if(g&&!document.getElementById('loop')){var wrap=document.createElement('label');wrap.innerHTML='Loop<input id=\\\"loop\\\" type=\\\"text\\\">';g.appendChild(wrap);}}"
-                + "var eventCard=cards.find(c=>(c.querySelector('h2')||{}).textContent&&c.querySelector('h2').textContent.includes('Eventi durante'));"
-                + "if(eventCard){var g=eventCard.querySelector('.grid');if(g){[['eventSciopero','Sciopero'],['eventVacanza','Vacanza'],['eventCessata','Deceduto / Cess. attività']].forEach(function(a){if(!document.getElementById(a[0])){var w=document.createElement('label');w.innerHTML=a[1]+'<input id=\\\"'+a[0]+'\\\" type=\\\"number\\\">';g.appendChild(w);}});}}"
-                + "if(window.__uwCompat)return;window.__uwCompat=true;"
+
+                + "var loadCard=cards.find(c=>"
+                + "(c.querySelector('h2')||{}).textContent&&"
+                + "c.querySelector('h2').textContent.includes('Carico del mattino'));"
+
+                + "if(loadCard){"
+                + "var g=loadCard.querySelector('.grid');"
+                + "if(g&&!document.getElementById('loop')){"
+                + "var w=document.createElement('label');"
+                + "w.innerHTML='Loop<input id=\"loop\" type=\"text\">';"
+                + "g.appendChild(w);"
+                + "}"
+                + "}"
+
+                + "if(window.__uwCompat)return;"
+                + "window.__uwCompat=true;"
+
                 + "var oldSave=window.saveDay;"
-                + "window.saveDay=function(){oldSave();day.loop=value('loop');day.events=day.events||{};day.events.sciopero=numberValue('eventSciopero');day.events.vacanza=numberValue('eventVacanza');day.events.cessata=numberValue('eventCessata');localStorage.setItem('ups_day_'+todayKey,JSON.stringify(day));};"
+
+                + "window.saveDay=function(){"
+                + "oldSave();"
+
+                + "if(typeof day!=='undefined'){"
+                + "day.loop=document.getElementById('loop')?"
+                + "document.getElementById('loop').value:'';"
+                + "localStorage.setItem('ups_day_'+todayKey,JSON.stringify(day));"
+                + "}"
+                + "};"
+
                 + "var oldLoad=window.loadDay;"
-                + "window.loadDay=function(){oldLoad();setValue('loop',day.loop||'');if(day.events){setValue('eventSciopero',day.events.sciopero||0);setValue('eventVacanza',day.events.vacanza||0);setValue('eventCessata',day.events.cessata||0);}};"
+
+                + "window.loadDay=function(){"
+                + "oldLoad();"
+
+                + "if(typeof day!=='undefined'&&document.getElementById('loop'))"
+                + "document.getElementById('loop').value=day.loop||'';"
+                + "};"
+
                 + "window.loadDay();"
+
                 + "})();";
 
         v.evaluateJavascript(js, null);
@@ -104,24 +134,58 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public void generateRuolino(String json) {
+
             runOnUiThread(() -> {
+
                 try {
+
                     lastPdfFile = buildRuolino(new JSONObject(json));
 
-                    getPreferences(MODE_PRIVATE).edit()
-                            .putString("last_pdf", lastPdfFile.getAbsolutePath())
+                    getPreferences(MODE_PRIVATE)
+                            .edit()
+                            .putString(
+                                    "last_pdf",
+                                    lastPdfFile.getAbsolutePath()
+                            )
                             .apply();
 
-                    web.evaluateJavascript("(function(){"
-                            + "if(window.saveRouteToHistory)window.saveRouteToHistory();"
+                    web.evaluateJavascript(
+                            "(function(){"
+                            + "if(window.saveRouteToHistory)"
+                            + "window.saveRouteToHistory();"
                             + "var e=document.getElementById('generateMsg');"
-                            + "if(e){e.className='status ok';e.innerHTML='✓ Ruolino generato e salvato.';}"
-                            + "})();", null);
+                            + "if(e){"
+                            + "e.className='status ok';"
+                            + "e.innerHTML='✓ Ruolino generato e salvato.';"
+                            + "}"
+                            + "})();",
+                            null
+                    );
 
-                    Toast.makeText(MainActivity.this, "Ruolino generato e salvato", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            MainActivity.this,
+                            "Ruolino generato e salvato",
+                            Toast.LENGTH_SHORT
+                    ).show();
+
                 } catch (Exception e) {
-                    web.evaluateJavascript("(function(){var e=document.getElementById('generateMsg');if(e){e.className='status error';e.innerHTML='⚠️ Errore nella generazione del ruolino.';}})();", null);
-                    Toast.makeText(MainActivity.this, "Errore nella generazione del ruolino", Toast.LENGTH_LONG).show();
+
+                    web.evaluateJavascript(
+                            "(function(){"
+                            + "var e=document.getElementById('generateMsg');"
+                            + "if(e){"
+                            + "e.className='status error';"
+                            + "e.innerHTML='⚠️ Errore nella generazione del ruolino.';"
+                            + "}"
+                            + "})();",
+                            null
+                    );
+
+                    Toast.makeText(
+                            MainActivity.this,
+                            "Errore nella generazione del ruolino",
+                            Toast.LENGTH_LONG
+                    ).show();
                 }
             });
         }
@@ -133,21 +197,39 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public void shareEmail() {
+
             Intent i = makeShareIntent();
-            i.putExtra(Intent.EXTRA_SUBJECT, "Ruolino UpsWorkPlace");
-            i.putExtra(Intent.EXTRA_TEXT, "Ruolino di lavoro");
+
+            i.putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    "Ruolino UpsWorkPlace"
+            );
+
+            i.putExtra(
+                    Intent.EXTRA_TEXT,
+                    "Ruolino di lavoro"
+            );
+
             share(i, "Invia ruolino via email");
         }
 
         @JavascriptInterface
         public void shareWhatsApp() {
+
             Intent i = makeShareIntent();
             i.setPackage("com.whatsapp");
-            if (!safeStart(i)) share(makeShareIntent(), "Condividi ruolino");
+
+            if (!safeStart(i)) {
+                share(
+                        makeShareIntent(),
+                        "Condividi ruolino"
+                );
+            }
         }
     }
 
     private boolean safeStart(Intent i) {
+
         try {
             startActivity(i);
             return true;
@@ -157,199 +239,869 @@ public class MainActivity extends Activity {
     }
 
     private void share(Intent i, String title) {
+
         if (lastPdfFile == null || !lastPdfFile.exists()) {
-            Toast.makeText(this, "Genera prima il ruolino", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(
+                    this,
+                    "Genera prima il ruolino",
+                    Toast.LENGTH_SHORT
+            ).show();
+
             return;
         }
 
         try {
-            startActivity(Intent.createChooser(i, title));
+
+            startActivity(
+                    Intent.createChooser(i, title)
+            );
+
         } catch (Exception e) {
-            Toast.makeText(this, "Impossibile condividere il ruolino", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(
+                    this,
+                    "Impossibile condividere il ruolino",
+                    Toast.LENGTH_LONG
+            ).show();
         }
     }
 
     private Intent makeShareIntent() {
+
         Intent i = new Intent(Intent.ACTION_SEND);
+
         i.setType("application/pdf");
 
-        if (lastPdfFile != null && lastPdfFile.exists()) {
-            Uri uri = FileProvider.getUriForFile(
-                    this,
-                    getPackageName() + ".fileprovider",
-                    lastPdfFile
-            );
-            i.putExtra(Intent.EXTRA_STREAM, uri);
-            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
+        Uri uri = FileProvider.getUriForFile(
+                this,
+                getPackageName() + ".fileprovider",
+                lastPdfFile
+        );
+
+        i.putExtra(Intent.EXTRA_STREAM, uri);
+
+        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         return i;
     }
 
     private File buildRuolino(JSONObject d) throws Exception {
-        File dir = new File(getFilesDir(), "ruolini");
-        if (!dir.exists() && !dir.mkdirs()) throw new Exception("Impossibile creare cartella ruolini");
 
-        String date = str(d, "date");
-        if (date.isEmpty()) date = new SimpleDateFormat("yyyy-MM-dd", Locale.ITALY).format(new Date());
-        String safeDate = date.replaceAll("[^0-9-]", "_");
+        File dir = new File(
+                getFilesDir(),
+                "ruolini"
+        );
 
-        File out = new File(dir, "ruolino_" + safeDate + ".pdf");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String date =
+                d.optString(
+                        "date",
+                        new SimpleDateFormat(
+                                "dd-MM-yyyy",
+                                Locale.ITALIAN
+                        ).format(new Date())
+                );
+
+        File out = new File(
+                dir,
+                "ruolino_" + date.replace("/", "-") + ".pdf"
+        );
 
         Bitmap template;
-        try (InputStream in = getAssets().open("ruolino_template.png")) {
-            template = BitmapFactory.decodeStream(in);
+
+        try (InputStream is =
+                     getAssets().open("ruolino_template.png")) {
+
+            template = BitmapFactory.decodeStream(is);
         }
-        if (template == null) throw new Exception("Template ruolino non trovato");
+
+        if (template == null) {
+            throw new Exception("Template ruolino non trovato");
+        }
 
         PdfDocument document = new PdfDocument();
-        PdfDocument.PageInfo info = new PdfDocument.PageInfo.Builder(PDF_W, PDF_H, 1).create();
-        PdfDocument.Page page = document.startPage(info);
-        Canvas c = page.getCanvas();
 
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-        c.drawBitmap(template, null, new Rect(0, 0, PDF_W, PDF_H), p);
+        PdfDocument.PageInfo pageInfo =
+                new PdfDocument.PageInfo.Builder(
+                        PDF_W,
+                        PDF_H,
+                        1
+                ).create();
+
+        PdfDocument.Page page =
+                document.startPage(pageInfo);
+
+        Canvas canvas = page.getCanvas();
+
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setFilterBitmap(true);
+
+        Rect src = new Rect(
+                0,
+                0,
+                template.getWidth(),
+                template.getHeight()
+        );
+
+        RectF dst = new RectF(
+                0,
+                0,
+                PDF_W,
+                PDF_H
+        );
+
+        canvas.drawBitmap(
+                template,
+                src,
+                dst,
+                paint
+        );
 
         Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
         text.setColor(Color.BLACK);
-        text.setTypeface(Typeface.create(Typeface.SERIF, Typeface.NORMAL));
-        text.setTextSize(9.2f);
+        text.setTypeface(Typeface.create(
+                Typeface.SERIF,
+                Typeface.NORMAL
+        ));
 
-        put(c, text, str(d,"driverName"), 28, 31, 330);
-        putBoxes(c, text, str(d,"plate"), 444, 30, 590, 45, 7);
-        put(c, text, str(d,"start"), 72, 105, 245);
-        put(c, text, str(d,"end"), 475, 105, 585);
-        put(c, text, str(d,"driverCode"), 110, 137, 160);
-        put(c, text, str(d,"exit"), 305, 137, 400);
-        putBoxes(c, text, str(d,"kmOut"), 485, 137, 590, 151, 5);
-        put(c, text, str(d,"return"), 305, 169, 400);
-        putBoxes(c, text, str(d,"kmReturn"), 485, 169, 590, 183, 5);
-
-        // Nel ruolino l'abitacolo viene validato solo con una spunta.
-        if ("SI".equalsIgnoreCase(str(d,"cleaning"))) {
-            text.setTypeface(Typeface.DEFAULT_BOLD);
-            text.setTextSize(13);
-            c.drawText("✓", 530, 188, text);
-            text.setTypeface(Typeface.create(Typeface.SERIF, Typeface.NORMAL));
-            text.setTextSize(9.2f);
-        }
-
-        put(c, text, num(d,"parcels"), 150, 219, 205);
-        put(c, text, num(d,"stops"), 215, 219, 260);
-        put(c, text, num(d,"pickups"), 270, 219, 315);
-        put(c, text, num(d,"picked"), 325, 219, 365);
-
-        JSONObject fuel = lastObject(d, "fuelRecords");
-        if (fuel != null) {
-            put(c, text, num(fuel,"liters"), 385, 219, 435);
-            put(c, text, money(fuel,"amount"), 440, 219, 500);
-            put(c, text, num(fuel,"km"), 505, 219, 585);
-        }
-
-        JSONObject toll = lastObject(d, "tollRecords");
-        if (toll != null) {
-            put(c, text, money(toll,"amount"), 60, 255, 130);
-            put(c, text, num(toll,"count"), 135, 255, 165);
-        }
-
-        put(c, text, str(d,"first"), 390, 350, 420);
-        put(c, text, str(d,"last"), 520, 350, 585);
-        put(c, text, num(d,"stops"), 390, 383, 420);
-        put(c, text, num(d,"parcels"), 390, 416, 420);
-        put(c, text, num(d,"pickupStops"), 390, 449, 420);
-        put(c, text, num(d,"pickupPackages"), 390, 482, 420);
-        put(c, text, num(d,"futureL"), 390, 515, 420);
-        put(c, text, num(d,"emergencyK"), 390, 548, 420);
-
-        JSONObject ev = d.optJSONObject("events");
-        if (ev != null) {
-            put(c,text,num(ev,"g348"),530,383,585);
-            put(c,text,num(ev,"l1kx"),530,416,585);
-            put(c,text,num(ev,"ay49"),530,449,585);
-            put(c,text,num(ev,"si"),530,482,585);
-            put(c,text,num(ev,"kz"),530,515,585);
-            put(c,text,num(ev,"s2"),530,548,585);
-            put(c,text,num(ev,"transfer"),530,581,585);
-            put(c,text,num(ev,"address"),530,614,585);
-            put(c,text,num(ev,"recipient"),530,647,585);
-            put(c,text,num(ev,"refused"),530,680,585);
-        }
-
-        String sig = str(d, "signature");
-        if (!sig.isEmpty()) {
-            try {
-                String b64 = sig.contains(",") ? sig.substring(sig.indexOf(',') + 1) : sig;
-                byte[] bytes = Base64.decode(b64, Base64.DEFAULT);
-                Bitmap sign = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                if (sign != null) {
-                    RectF dst = new RectF(360, 842, 585, 884);
-                    c.drawBitmap(sign, null, dst, p);
-                }
-            } catch (Exception ignored) { }
-        }
+        drawRuolino(canvas, text, d);
 
         document.finishPage(page);
-        try (FileOutputStream fos = new FileOutputStream(out)) {
-            document.writeTo(fos);
-        }
+
+        FileOutputStream fos =
+                new FileOutputStream(out);
+
+        document.writeTo(fos);
+        fos.close();
+
         document.close();
-        template.recycle();
 
         return out;
     }
+        private void drawRuolino(
+            Canvas canvas,
+            Paint text,
+            JSONObject d
+    ) {
 
-    private JSONObject lastObject(JSONObject d, String key) {
+        /*
+         * DATI PRINCIPALI
+         */
+
+        String driver =
+                d.optString("driverName", "");
+
+        String code =
+                d.optString("driverCode", "");
+
+        String plate =
+                d.optString("plate", "");
+
+        String date =
+                d.optString("date", "");
+
+        String start =
+                d.optString("start", "");
+
+        String exit =
+                d.optString("exit", "");
+
+        String first =
+                d.optString("first", "");
+
+        String last =
+                d.optString("last", "");
+
+        String ret =
+                d.optString("return", "");
+
+        String end =
+                d.optString("end", "");
+
+        String kmOut =
+                d.optString("kmOut", "");
+
+        String kmReturn =
+                d.optString("kmReturn", "");
+
+
+        /*
+         * NUMERI
+         */
+
+        int parcels =
+                d.optInt("parcels", 0);
+
+        int stops =
+                d.optInt("stops", 0);
+
+        int pickups =
+                d.optInt("pickups", 0);
+
+        int picked =
+                d.optInt("picked", 0);
+
+        int rites =
+                d.optInt("rites", 0);
+
+        int pickupStops =
+                d.optInt("pickupStops", 0);
+
+        int pickupPackages =
+                d.optInt("pickupPackages", 0);
+
+
+        /*
+         * EVENTI
+         */
+
+        JSONObject events =
+                d.optJSONObject("events");
+
+        if (events == null) {
+            events = new JSONObject();
+        }
+
+
+        int g348 =
+                events.optInt("g348", 0);
+
+        int l1kx =
+                events.optInt("l1kx", 0);
+
+        int ay49 =
+                events.optInt("ay49", 0);
+
+        int si =
+                events.optInt("si", 0);
+
+        int kz =
+                events.optInt("kz", 0);
+
+        int s2 =
+                events.optInt("s2", 0);
+
+        int transfer =
+                events.optInt("transfer", 0);
+
+        int address =
+                events.optInt("address", 0);
+
+        int recipient =
+                events.optInt("recipient", 0);
+
+        int refused =
+                events.optInt("refused", 0);
+
+
+        /*
+         * TESTO
+         */
+
+        text.setTextSize(8);
+        text.setTypeface(
+                Typeface.create(
+                        Typeface.SERIF,
+                        Typeface.NORMAL
+                )
+        );
+
+        text.setColor(Color.BLACK);
+
+
+        /*
+         * INTESTAZIONE
+         */
+
+        drawText(
+                canvas,
+                text,
+                driver,
+                55,
+                62
+        );
+
+        drawText(
+                canvas,
+                text,
+                code,
+                215,
+                62
+        );
+
+        drawText(
+                canvas,
+                text,
+                plate,
+                390,
+                62
+        );
+
+        drawText(
+                canvas,
+                text,
+                date,
+                500,
+                62
+        );
+
+
+        /*
+         * ORARI
+         */
+
+        drawText(
+                canvas,
+                text,
+                start,
+                75,
+                125
+        );
+
+        drawText(
+                canvas,
+                text,
+                exit,
+                175,
+                125
+        );
+
+        drawText(
+                canvas,
+                text,
+                first,
+                275,
+                125
+        );
+
+        drawText(
+                canvas,
+                text,
+                last,
+                375,
+                125
+        );
+
+        drawText(
+                canvas,
+                text,
+                ret,
+                475,
+                125
+        );
+
+        drawText(
+                canvas,
+                text,
+                end,
+                545,
+                125
+        );
+
+
+        /*
+         * KM
+         */
+
+        drawText(
+                canvas,
+                text,
+                kmOut,
+                75,
+                155
+        );
+
+        drawText(
+                canvas,
+                text,
+                kmReturn,
+                175,
+                155
+        );
+
+
+        /*
+         * PACCHI / STOP
+         */
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(parcels),
+                75,
+                205
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(stops),
+                175,
+                205
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(pickups),
+                275,
+                205
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(picked),
+                375,
+                205
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(rites),
+                475,
+                205
+        );
+
+
+        /*
+         * RITIRI
+         */
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(pickupStops),
+                75,
+                235
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(pickupPackages),
+                175,
+                235
+        );
+
+
+        /*
+         * EVENTI
+         */
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(g348),
+                75,
+                300
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(l1kx),
+                175,
+                300
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(ay49),
+                275,
+                300
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(si),
+                375,
+                300
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(kz),
+                475,
+                300
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(s2),
+                75,
+                330
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(transfer),
+                175,
+                330
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(address),
+                275,
+                330
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(recipient),
+                375,
+                330
+        );
+
+        drawText(
+                canvas,
+                text,
+                String.valueOf(refused),
+                475,
+                330
+        );
+
+
+        /*
+         * LOOP
+         */
+
+        String loop =
+                d.optString("loop", "");
+
+        drawText(
+                canvas,
+                text,
+                loop,
+                75,
+                365
+        );
+
+
+        /*
+         * PULIZIA ABITACOLO
+         *
+         * Non viene più utilizzato un voto 1-5.
+         * Il campo dell'app è SI / NO.
+         */
+
+        String cleaning =
+                d.optString("cleaning", "");
+
+        if ("SI".equalsIgnoreCase(cleaning)) {
+
+            drawText(
+                    canvas,
+                    text,
+                    "✓",
+                    475,
+                    365
+            );
+
+        } else if ("NO".equalsIgnoreCase(cleaning)) {
+
+            drawText(
+                    canvas,
+                    text,
+                    "X",
+                    475,
+                    365
+            );
+        }
+
+
+        /*
+         * FIRMA
+         */
+
+        String signature =
+                d.optString(
+                        "signature",
+                        ""
+                );
+
+        if (!signature.isEmpty()) {
+
+            try {
+
+                String encoded =
+                        signature.substring(
+                                signature.indexOf(",") + 1
+                        );
+
+                byte[] bytes =
+                        android.util.Base64.decode(
+                                encoded,
+                                android.util.Base64.DEFAULT
+                        );
+
+                Bitmap sign =
+                        BitmapFactory.decodeByteArray(
+                                bytes,
+                                0,
+                                bytes.length
+                        );
+
+                if (sign != null) {
+
+                    Rect src =
+                            new Rect(
+                                    0,
+                                    0,
+                                    sign.getWidth(),
+                                    sign.getHeight()
+                            );
+
+                    RectF dst =
+                            new RectF(
+                                    365,
+                                    785,
+                                    565,
+                                    860
+                            );
+
+                    Paint signaturePaint =
+                            new Paint(
+                                    Paint.ANTI_ALIAS_FLAG
+                            );
+
+                    signaturePaint.setFilterBitmap(true);
+
+                    canvas.drawBitmap(
+                            sign,
+                            src,
+                            dst,
+                            signaturePaint
+                    );
+                }
+
+            } catch (Exception ignored) {
+            }
+        }
+
+
+        /*
+         * NOTE
+         */
+
+        String notes =
+                d.optString(
+                        "notes",
+                        ""
+                );
+
+        if (!notes.isEmpty()) {
+
+            drawWrappedText(
+                    canvas,
+                    text,
+                    notes,
+                    55,
+                    410,
+                    500,
+                    12
+            );
+        }
+
+
+        /*
+         * GPS PRIMO STOP
+         */
+
+        String gps =
+                d.optString(
+                        "firstGps",
+                        ""
+                );
+
+        if (!gps.isEmpty()) {
+
+            drawText(
+                    canvas,
+                    text,
+                    gps,
+                    55,
+                    455
+            );
+        }
+
+
+        /*
+         * PAUSE
+         */
+
         try {
-            org.json.JSONArray a = d.optJSONArray(key);
-            if (a == null || a.length() == 0) return null;
-            return a.optJSONObject(a.length() - 1);
-        } catch (Exception e) {
-            return null;
+
+            org.json.JSONArray pauses =
+                    d.optJSONArray("pauses");
+
+            if (pauses != null) {
+
+                int y = 490;
+
+                for (
+                        int i = 0;
+                        i < pauses.length();
+                        i++
+                ) {
+
+                    JSONObject p =
+                            pauses.optJSONObject(i);
+
+                    if (p == null)
+                        continue;
+
+                    String ps =
+                            p.optString(
+                                    "start",
+                                    ""
+                            );
+
+                    String pe =
+                            p.optString(
+                                    "end",
+                                    ""
+                            );
+
+                    String pm =
+                            p.optString(
+                                    "minutes",
+                                    ""
+                            );
+
+                    drawText(
+                            canvas,
+                            text,
+                            "Pausa " +
+                            (i + 1) +
+                            ": " +
+                            ps +
+                            " - " +
+                            pe +
+                            " (" +
+                            pm +
+                            " min)",
+                            55,
+                            y
+                    );
+
+                    y += 14;
+
+                    if (y > 550)
+                        break;
+                }
+            }
+
+        } catch (Exception ignored) {
         }
     }
 
-    private String str(JSONObject o, String key) {
-        if (o == null) return "";
-        Object v = o.opt(key);
-        return v == null || v == JSONObject.NULL ? "" : String.valueOf(v);
+
+    private void drawText(
+            Canvas canvas,
+            Paint paint,
+            String value,
+            float x,
+            float y
+    ) {
+
+        if (value == null)
+            return;
+
+        if (value.trim().isEmpty())
+            return;
+
+        canvas.drawText(
+                value,
+                x,
+                y,
+                paint
+        );
     }
 
-    private String num(JSONObject o, String key) {
-        if (o == null) return "";
-        Object v = o.opt(key);
-        if (v == null || v == JSONObject.NULL) return "";
-        if (v instanceof Number) return String.valueOf(((Number)v).intValue());
-        String s = String.valueOf(v);
-        return s.equals("0") ? "" : s;
-    }
 
-    private String money(JSONObject o, String key) {
-        if (o == null) return "";
-        double v = o.optDouble(key, 0);
-        return v == 0 ? "" : String.format(Locale.ITALY, "%.2f", v);
-    }
+    private void drawWrappedText(
+            Canvas canvas,
+            Paint paint,
+            String value,
+            float x,
+            float y,
+            float maxWidth,
+            float lineHeight
+    ) {
 
-    private void put(Canvas c, Paint p, String value, float left, float y, float right) {
-        if (value == null || value.trim().isEmpty()) return;
-        String s = value.trim();
-        float max = right - left;
-        while (s.length() > 1 && p.measureText(s) > max) {
-            s = s.substring(0, s.length() - 1);
+        if (value == null)
+            return;
+
+        if (value.trim().isEmpty())
+            return;
+
+        String[] words =
+                value.split("\\s+");
+
+        String line = "";
+
+        float currentY = y;
+
+        for (String word : words) {
+
+            String test;
+
+            if (line.isEmpty())
+                test = word;
+            else
+                test = line + " " + word;
+
+            if (
+                    paint.measureText(test)
+                    > maxWidth
+            ) {
+
+                canvas.drawText(
+                        line,
+                        x,
+                        currentY,
+                        paint
+                );
+
+                currentY += lineHeight;
+
+                line = word;
+
+            } else {
+
+                line = test;
+            }
+
+            if (currentY > PDF_H - 20)
+                break;
         }
-        c.drawText(s, left, y, p);
+
+        if (
+                !line.isEmpty() &&
+                currentY <= PDF_H - 20
+        ) {
+
+            canvas.drawText(
+                    line,
+                    x,
+                    currentY,
+                    paint
+            );
+        }
     }
 
-    private void putBoxes(Canvas c, Paint p, String value, float left, float top, float right, float bottom, int boxes) {
-        if (value == null || value.trim().isEmpty()) return;
-        String s = value.trim().replace(" ", "");
-        float width = (right - left) / boxes;
-        p.setTextAlign(Paint.Align.CENTER);
-        for (int i = 0; i < s.length() && i < boxes; i++) {
-            c.drawText(String.valueOf(s.charAt(i)),
-                    left + width * i + width / 2f,
-                    top + (bottom - top) * .78f,
-                    p);
-        }
-        p.setTextAlign(Paint.Align.LEFT);
-    }
 }
