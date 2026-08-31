@@ -1,215 +1,338 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
 <title>UpsWorkPlace</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  font-family:Arial,sans-serif;
+  background:#f3f3f3;
+  color:#171717;
+}
 
 body{
-margin:0;
-background:#f2f2f2;
-color:#171717;
-font-family:Arial,sans-serif
+  padding-top:0;
 }
 
 header{
-height:64px;
-background:#351c15;
-color:#fff;
-display:flex;
-align-items:center;
-padding:0 14px;
-gap:14px;
-position:sticky;
-top:0;
-z-index:5
+  height:64px;
+  background:#351c15;
+  color:white;
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  gap:12px;
+  position:sticky;
+  top:0;
+  z-index:10;
 }
 
 .menu{
-font-size:30px;
-padding:8px;
-cursor:pointer
+  font-size:32px;
+  padding:6px;
+  cursor:pointer;
+  line-height:1;
 }
 
 .title{
-font-size:21px;
-font-weight:800
+  font-size:22px;
+  font-weight:800;
 }
 
 main{
-padding:12px;
-max-width:760px;
-margin:auto
+  width:100%;
+  max-width:760px;
+  margin:auto;
+  padding:12px;
+  padding-bottom:40px;
 }
 
 .screen{
-display:none
+  display:none;
 }
 
 .screen.active{
-display:block
-}
-
-.card{
-background:#fff;
-border-radius:16px;
-padding:15px;
-margin:12px 0;
-box-shadow:0 1px 6px #0002
+  display:block;
 }
 
 h1{
-font-size:24px;
-margin:8px 4px 16px
+  font-size:28px;
+  margin:12px 4px 18px;
 }
 
 h2{
-font-size:18px;
-margin:0 0 12px
+  font-size:21px;
+  margin:0 0 14px;
+}
+
+h3{
+  font-size:17px;
+  margin:10px 0;
+}
+
+.card{
+  background:white;
+  border-radius:17px;
+  padding:16px;
+  margin:12px 0;
+  box-shadow:0 2px 8px #0002;
 }
 
 .grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
 }
 
 label{
-font-size:13px;
-font-weight:700;
-color:#555;
-display:block
+  display:block;
+  color:#555;
+  font-size:14px;
+  font-weight:700;
 }
 
-input,textarea,select{
-width:100%;
-margin-top:5px;
-padding:11px;
-border:1px solid #ccc;
-border-radius:10px;
-font-size:16px;
-background:#fff
+input,
+select,
+textarea{
+  width:100%;
+  margin-top:6px;
+  padding:13px;
+  border:1px solid #ccc;
+  border-radius:11px;
+  font-size:17px;
+  background:white;
+  color:#171717;
 }
 
 textarea{
-min-height:80px
-}
-
-.check{
-margin:12px 0
-}
-
-.check input{
-width:auto
+  min-height:90px;
+  resize:vertical;
 }
 
 button{
-border:0;
-border-radius:11px;
-padding:12px 14px;
-margin:4px 4px 4px 0;
-background:#351c15;
-color:#fff;
-font-weight:800;
-cursor:pointer
+  border:0;
+  border-radius:12px;
+  padding:13px 15px;
+  margin:5px 4px 5px 0;
+  background:#351c15;
+  color:white;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+button:active{
+  transform:scale(.98);
 }
 
 .secondary{
-background:#eee;
-color:#222
+  background:#e8e8e8;
+  color:#222;
+}
+
+.green{
+  background:#287a3e;
+}
+
+.red{
+  background:#9d2929;
 }
 
 .status{
-padding:10px;
-background:#f0f0f0;
-border-radius:10px;
-font-size:13px
+  padding:12px;
+  border-radius:11px;
+  background:#eee;
+  margin-top:10px;
+  font-size:14px;
 }
 
-.ok{
-background:#eaf6ec
+.status.ok{
+  background:#e7f5e9;
 }
 
-.warn{
-background:#fff0d3
+.status.warn{
+  background:#fff0d0;
 }
 
-.drawer{
-position:fixed;
-left:-90%;
-top:0;
-bottom:0;
-width:86%;
-max-width:350px;
-background:#fff;
-z-index:20;
-transition:.2s;
-box-shadow:4px 0 15px #0003;
-overflow:auto
-}
-
-.drawer.open{
-left:0
-}
-
-.shade{
-display:none;
-position:fixed;
-inset:0;
-background:#0007;
-z-index:15
-}
-
-.shade.open{
-display:block
-}
-
-.dhead{
-background:#351c15;
-color:#fff;
-padding:28px 20px 20px;
-font-size:23px;
-font-weight:800
-}
-
-.dsub{
-font-size:12px;
-opacity:.75;
-margin-top:5px
-}
-
-.item{
-padding:15px 18px;
-border-bottom:1px solid #eee;
-font-weight:700;
-font-size:16px;
-cursor:pointer
-}
-
-.item.active{
-background:#f0e7e2;
-border-left:4px solid #351c15
+.status.error{
+  background:#ffe3e3;
 }
 
 .big{
-font-size:28px;
-font-weight:800
+  font-size:30px;
+  font-weight:800;
 }
 
 .muted{
-color:#666;
-font-size:13px
+  color:#666;
+  font-size:13px;
 }
 
-.row{
-padding:12px 0;
-border-bottom:1px solid #eee;
-display:flex;
-justify-content:space-between
+.separator{
+  height:1px;
+  background:#ddd;
+  margin:15px 0;
+}
+
+/* MENU */
+
+.drawer{
+  position:fixed;
+  left:-100%;
+  top:0;
+  bottom:0;
+  width:86%;
+  max-width:370px;
+  background:white;
+  z-index:100;
+  transition:.22s;
+  box-shadow:5px 0 18px #0004;
+  overflow-y:auto;
+}
+
+.drawer.open{
+  left:0;
+}
+
+.shade{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  z-index:90;
+}
+
+.shade.open{
+  display:block;
+}
+
+.dhead{
+  background:#351c15;
+  color:white;
+  padding:32px 20px 22px;
+  font-size:27px;
+  font-weight:800;
+}
+
+.dsub{
+  margin-top:5px;
+  font-size:14px;
+  opacity:.8;
+}
+
+.item{
+  padding:18px 18px;
+  border-bottom:1px solid #e5e5e5;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.item.active{
+  background:#f0e7e2;
+  border-left:5px solid #351c15;
+}
+
+/* FIRMA */
+
+#signatureCanvas{
+  width:100%;
+  height:220px;
+  border:2px dashed #999;
+  border-radius:12px;
+  background:white;
+  touch-action:none;
+}
+
+.signatureButtons{
+  margin-top:8px;
+}
+
+/* FOTO */
+
+.photo-preview{
+  max-width:100%;
+  border-radius:12px;
+  margin-top:10px;
+  display:none;
+}
+
+/* LISTE */
+
+.list-item{
+  padding:13px 0;
+  border-bottom:1px solid #ddd;
+}
+
+.list-item:last-child{
+  border-bottom:0;
+}
+
+/* RUOLINO */
+
+.routePreview{
+  width:100%;
+  border:1px solid #ccc;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.shareButtons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+}
+
+.shareButtons button{
+  flex:1;
+  min-width:130px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  h1{
+    font-size:27px;
+  }
+
+  h2{
+    font-size:20px;
+  }
+
+  input,
+  select,
+  textarea{
+    font-size:16px;
+  }
+
+  button{
+    font-size:15px;
+  }
+}
+
+@media(max-width:390px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
 }
 </style>
 </head>
@@ -220,76 +343,73 @@ justify-content:space-between
 
 <aside id="drawer" class="drawer">
 
-<div class="dhead">
-UpsWorkPlace
-<div class="dsub">
-Gestione del lavoro del driver
-</div>
-</div>
+  <div class="dhead">
+    UpsWorkPlace
+    <div class="dsub">
+      Gestione del lavoro del driver
+    </div>
+  </div>
 
-<div class="item active" onclick="show('today',this)">
-🏠 Giornata di oggi
-</div>
+  <div class="item active" onclick="show('today',this)">
+    🏠 Giornata di oggi
+  </div>
 
-<div class="item" onclick="show('driver',this)">
-👤 Driver
-</div>
+  <div class="item" onclick="show('driver',this)">
+    👤 Driver
+  </div>
 
-<div class="item" onclick="show('history',this)">
-📚 Storico giornate
-</div>
+  <div class="item" onclick="show('history',this)">
+    📚 Storico giornate
+  </div>
 
-<div class="item" onclick="show('hours',this)">
-⏱️ Ore lavorate
-</div>
+  <div class="item" onclick="show('hours',this)">
+    ⏱️ Ore lavorate
+  </div>
 
-<div class="item" onclick="show('leave',this)">
-🏖️ Ferie / Permessi / Malattia
-</div>
+  <div class="item" onclick="show('leave',this)">
+    🏖️ Ferie / Permessi / Malattia
+  </div>
 
-<div class="item" onclick="show('vehicle',this)">
-🚐 Veicolo
-</div>
+  <div class="item" onclick="show('vehicle',this)">
+    🚐 Veicolo
+  </div>
 
-<div class="item" onclick="show('damage',this)">
-🔧 Guasti e danni
-</div>
+  <div class="item" onclick="show('damage',this)">
+    🔧 Guasti e danni
+  </div>
 
-<div class="item" onclick="show('expenses',this)">
-💶 Rifornimenti e pedaggi
-</div>
+  <div class="item" onclick="show('expenses',this)">
+    💶 Rifornimenti e pedaggi
+  </div>
 
-<div class="item" onclick="show('route',this)">
-📄 Ruolino
-</div>
+  <div class="item" onclick="show('route',this)">
+    📄 Ruolino
+  </div>
 
-<div class="item" onclick="show('payslips',this)">
-💰 Buste paga
-</div>
+  <div class="item" onclick="show('payslips',this)">
+    💰 Buste paga
+  </div>
 
-<div class="item" onclick="show('stats',this)">
-📊 Statistiche
-</div>
+  <div class="item" onclick="show('stats',this)">
+    📊 Statistiche
+  </div>
 
-<div class="item" onclick="show('settings',this)">
-⚙️ Impostazioni
-</div>
+  <div class="item" onclick="show('settings',this)">
+    ⚙️ Impostazioni
+  </div>
 
 </aside>
 
 <header>
-
-<span class="menu" onclick="openMenu()">☰</span>
-
-<span class="title">
-UpsWorkPlace
-</span>
-
+  <span class="menu" onclick="openMenu()">☰</span>
+  <span class="title">UpsWorkPlace</span>
 </header>
 
 <main>
 
+<!-- ================================================= -->
 <!-- GIORNATA -->
+<!-- ================================================= -->
 
 <section id="today" class="screen active">
 
@@ -297,25 +417,25 @@ UpsWorkPlace
 
 <div class="card">
 
-<div class="status">
+  <div class="status">
 
-Data:
-<b id="date"></b>
+    Data:
+    <b id="todayDate"></b>
 
-<br>
+    <br>
 
-✓ Salvato automaticamente
+    ✓ Salvataggio automatico attivo
+
+  </div>
 
 </div>
 
-</div>
 
+<!-- 1 ARRIVO -->
 
 <div class="card">
 
-<h2>
-🚚 Mattina / uscita dal magazzino
-</h2>
+<h2>🏭 1. Arrivo in magazzino</h2>
 
 <div class="grid">
 
@@ -325,9 +445,30 @@ Ora inizio lavoro
 </label>
 
 <label>
-Ora uscita magazzino
-<input id="exit" type="time">
+Km iniziali
+<input id="kmOut" type="number">
 </label>
+
+</div>
+
+<button onclick="setNow('start')">
+⏱️ Registra inizio
+</button>
+
+<div id="startMsg" class="status">
+Inizio giornata non ancora registrato.
+</div>
+
+</div>
+
+
+<!-- 2 CARICO -->
+
+<div class="card">
+
+<h2>📦 2. Carico del mattino</h2>
+
+<div class="grid">
 
 <label>
 Pacchi in consegna
@@ -340,49 +481,162 @@ Stop di consegna
 </label>
 
 <label>
-Espressi in consegna
+Ritiri
+<input id="pickups" type="number">
+</label>
+
+<label>
+Pacchi in ritiro
+<input id="picked" type="number">
+</label>
+
+<label>
+Espressi
 <input id="express" type="number">
+</label>
+
+<label>
+Riti
+<input id="rites" type="number">
 </label>
 
 </div>
 
-<label class="check">
+<div class="status">
+ℹ️ Gli espressi vengono registrati per le statistiche,
+ma <b>non vengono sommati al totale pacchi</b> e
+<b>non vengono inseriti nel ruolino</b>.
+</div>
 
-<input id="finalized" type="checkbox">
+</div>
 
-Itinerario finalizzato
 
+<!-- 3 USCITA -->
+
+<div class="card">
+
+<h2>🚚 3. Uscita dal magazzino</h2>
+
+<div class="grid">
+
+<label>
+Ora uscita
+<input id="exit" type="time">
 </label>
 
-<button onclick="setNow('start')">
-⏱ Registra inizio
-</button>
+</div>
+
+<label style="margin-top:12px">
+
+<input id="finalized"
+       type="checkbox"
+       style="width:auto">
+
+ Itinerario finalizzato
+
+</label>
 
 <button onclick="warehouseExit()">
 🚚 Registra uscita
 </button>
 
 <div id="exitMsg" class="status warn">
-
 Prima dell'uscita devi finalizzare l'itinerario.
-
 </div>
 
 </div>
 
+
+<!-- 4 RIFORNIMENTI -->
 
 <div class="card">
 
-<h2>
-📍 Durante il giro
-</h2>
+<h2>⛽ 4. Rifornimenti</h2>
 
-<button onclick="setNow('first')">
-📍 Primo stop + GPS
+<div class="grid">
+
+<label>
+Litri
+<input id="fuelLiters" type="number" step=".01">
+</label>
+
+<label>
+Prezzo/litro €
+<input id="fuelPrice" type="number" step=".001">
+</label>
+
+<label>
+Totale €
+<input id="fuelAmount" type="number" step=".01">
+</label>
+
+<label>
+Km rifornimento
+<input id="fuelKm" type="number">
+</label>
+
+</div>
+
+<button onclick="saveFuel()">
+⛽ Registra rifornimento
 </button>
 
-<button onclick="setNow('last')">
-🏁 Ultimo stop
+<button onclick="openCamera('fuelPhoto')">
+📷 Foto scontrino
+</button>
+
+<input id="fuelPhoto"
+       type="file"
+       accept="image/*"
+       capture="environment"
+       style="display:none"
+       onchange="photoSelected(this,'fuelPreview')">
+
+<img id="fuelPreview"
+     class="photo-preview">
+
+<div id="fuelMsg" class="status">
+Nessun rifornimento registrato.
+</div>
+
+</div>
+
+
+<!-- 5 PEDAGGI -->
+
+<div class="card">
+
+<h2>🛣️ 5. Pedaggi</h2>
+
+<div class="grid">
+
+<label>
+Importo €
+<input id="tollAmount" type="number" step=".01">
+</label>
+
+<label>
+Numero pedaggi
+<input id="tollCount" type="number">
+</label>
+
+</div>
+
+<button onclick="saveToll()">
+💶 Registra pedaggio
+</button>
+
+</div>
+
+
+<!-- 6 PRIMA CONSEGNA -->
+
+<div class="card">
+
+<h2>📍 6. Prima consegna</h2>
+
+<button onclick="registerFirstStop()">
+📍 Primo stop + GPS
 </button>
 
 <div class="grid">
@@ -393,85 +647,179 @@ Ora primo stop
 </label>
 
 <label>
+GPS
+<input id="firstGps"
+       readonly
+       placeholder="Non registrato">
+</label>
+
+</div>
+
+<div id="firstMsg" class="status">
+Primo stop non registrato.
+</div>
+
+</div>
+
+
+<!-- 7 EVENTI CONSEGNA -->
+
+<div class="card">
+
+<h2>📦 7. Eventi durante le consegne</h2>
+
+<p class="muted">
+Registra gli eventi che impediscono o modificano la consegna.
+</p>
+
+<div class="grid">
+
+<label>
+Assente / Chiuso 1
+<input id="eventG348" type="number">
+</label>
+
+<label>
+Assente / Chiuso 2
+<input id="eventL1KX" type="number">
+</label>
+
+<label>
+Assente / Chiuso 3
+<input id="eventAY49" type="number">
+</label>
+
+<label>
+No denaro 1
+<input id="eventSI" type="number">
+</label>
+
+<label>
+No denaro 2
+<input id="eventKZ" type="number">
+</label>
+
+<label>
+No denaro 3
+<input id="eventS2" type="number">
+</label>
+
+<label>
+Trasferito
+<input id="eventTransfer" type="number">
+</label>
+
+<label>
+No numero / strada / cit.
+<input id="eventAddress" type="number">
+</label>
+
+<label>
+No destinatario
+<input id="eventRecipient" type="number">
+</label>
+
+<label>
+Rifiutato
+<input id="eventRefused" type="number">
+</label>
+
+</div>
+
+<textarea id="eventNotes"
+placeholder="Note sugli eventi di consegna"></textarea>
+
+</div>
+
+
+<!-- 8 RITIRI -->
+
+<div class="card">
+
+<h2>📦 8. Ritiri e attività aggiuntive</h2>
+
+<div class="grid">
+
+<label>
+Stop pickup
+<input id="pickupStops" type="number">
+</label>
+
+<label>
+Pacchi in ritiro
+<input id="pickupPackages" type="number">
+</label>
+
+<label>
+L futura
+<input id="futureL" type="number">
+</label>
+
+<label>
+K emergenze
+<input id="emergencyK" type="number">
+</label>
+
+</div>
+
+</div>
+
+
+<!-- 9 PAUSE -->
+
+<div class="card">
+
+<h2>⏸️ 9. Pause</h2>
+
+<button onclick="pauseStart()">
+▶️ Inizio pausa
+</button>
+
+<button class="secondary"
+        onclick="pauseEnd()">
+⏹️ Fine pausa
+</button>
+
+<div id="pauseMsg" class="status">
+Nessuna pausa registrata.
+</div>
+
+<div id="pauseList"></div>
+
+</div>
+
+
+<!-- 10 ULTIMO STOP -->
+
+<div class="card">
+
+<h2>🏁 10. Ultimo stop</h2>
+
+<button onclick="registerLastStop()">
+🏁 Registra ultimo stop
+</button>
+
+<div class="grid">
+
+<label>
 Ora ultimo stop
 <input id="last" type="time">
 </label>
 
 </div>
 
+<div id="lastMsg" class="status">
+Ultimo stop non registrato.
 </div>
 
+</div>
+
+
+<!-- 11 RIENTRO -->
 
 <div class="card">
 
-<h2>
-⏸ Pause
-</h2>
-
-<button onclick="pauseStart()">
-▶ Inizio pausa
-</button>
-
-<button class="secondary" onclick="pauseEnd()">
-■ Fine pausa
-</button>
-
-<div id="pause" class="status">
-Nessuna pausa in corso.
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>
-📦 Ritiri e consegne aggiuntive
-</h2>
-
-<div class="grid">
-
-<label>
-Stop ritiri
-<input id="pickups" type="number">
-</label>
-
-<label>
-Pacchi ritirati
-<input id="picked" type="number">
-</label>
-
-<label>
-Stop aggiuntivi
-<input id="extraStops" type="number">
-</label>
-
-<label>
-Pacchi aggiuntivi
-<input id="extraParcels" type="number">
-</label>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>
-⚠️ Mancate consegne
-</h2>
-
-<textarea id="failed"></textarea>
-
-</div>
-
-
-<div class="card">
-
-<h2>
-🏁 Rientro
-</h2>
+<h2>🏭 11. Rientro in magazzino</h2>
 
 <div class="grid">
 
@@ -485,6 +833,23 @@ Km rientro
 <input id="kmReturn" type="number">
 </label>
 
+</div>
+
+<button onclick="setNow('return')">
+🏁 Registra rientro
+</button>
+
+</div>
+
+
+<!-- 12 FINE LAVORO -->
+
+<div class="card">
+
+<h2>🏠 12. Fine giornata</h2>
+
+<div class="grid">
+
 <label>
 Ora fine lavoro
 <input id="end" type="time">
@@ -492,36 +857,97 @@ Ora fine lavoro
 
 <label>
 Pulizia abitacolo
-<input id="cleaning" type="number" min="1" max="5">
+<select id="cleaning">
+<option value="">Seleziona</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
 </label>
 
 </div>
 
-<button onclick="setNow('return')">
-🏁 Registra rientro
+<button onclick="setNow('end')">
+⏱️ Registra fine lavoro
 </button>
 
-<button onclick="setNow('end')">
-⏱ Fine lavoro
-</button>
+<div id="endMsg" class="status">
+Fine giornata non registrata.
+</div>
 
 </div>
 
 
+<!-- 13 GUASTI -->
+
 <div class="card">
 
-<h2>
-📝 Note
-</h2>
+<h2>🔧 13. Guasti e danni</h2>
 
-<textarea id="notes"></textarea>
+<textarea id="damageText"
+placeholder="Descrizione guasto o danno"></textarea>
+
+<button onclick="saveDamage()">
+🔧 Registra guasto/danno
+</button>
+
+<button onclick="openCamera('damagePhoto')">
+📷 Scatta foto
+</button>
+
+<input id="damagePhoto"
+       type="file"
+       accept="image/*"
+       capture="environment"
+       style="display:none"
+       onchange="photoSelected(this,'damagePreview')">
+
+<img id="damagePreview"
+     class="photo-preview">
+
+<div id="damageMsg" class="status">
+Nessun guasto registrato.
+</div>
+
+</div>
+
+
+<!-- 14 NOTE -->
+
+<div class="card">
+
+<h2>📝 14. Note di fine giornata</h2>
+
+<textarea id="notes"
+placeholder="Eventuali note..."></textarea>
+
+</div>
+
+
+<!-- 15 RUOLINO -->
+
+<div class="card">
+
+<h2>📄 15. Dopo ruolino</h2>
+
+<div class="status">
+
+Prima di generare il ruolino controlla i dati
+e inserisci la firma.
+
+</div>
+
+<button onclick="openRouteSection()">
+📄 Controlla e prepara ruolino
+</button>
 
 </div>
 
 </section>
 
 
+<!-- ================================================= -->
 <!-- DRIVER -->
+<!-- ================================================= -->
 
 <section id="driver" class="screen">
 
@@ -529,7 +955,7 @@ Pulizia abitacolo
 
 <div class="card">
 
-<h2>Dati fissi del driver</h2>
+<h2>Dati fissi</h2>
 
 <div class="grid">
 
@@ -548,21 +974,14 @@ Targa
 <input id="plate">
 </label>
 
-<label>
-Km uscita
-<input id="kmOut" type="number">
-</label>
-
 </div>
 
 <button onclick="saveFixed()">
-💾 Salva dati
+💾 Salva dati driver
 </button>
 
-<div class="status">
-
-Questi dati restano salvati anche nei giorni successivi.
-
+<div class="status ok">
+Questi dati rimangono salvati per i giorni successivi.
 </div>
 
 </div>
@@ -570,7 +989,9 @@ Questi dati restano salvati anche nei giorni successivi.
 </section>
 
 
+<!-- ================================================= -->
 <!-- STORICO -->
+<!-- ================================================= -->
 
 <section id="history" class="screen">
 
@@ -578,7 +999,7 @@ Questi dati restano salvati anche nei giorni successivi.
 
 <div class="card">
 
-<h2>Giornate salvate</h2>
+<h2>Tutte le giornate</h2>
 
 <div id="historyList"></div>
 
@@ -587,7 +1008,9 @@ Questi dati restano salvati anche nei giorni successivi.
 </section>
 
 
+<!-- ================================================= -->
 <!-- ORE -->
+<!-- ================================================= -->
 
 <section id="hours" class="screen">
 
@@ -595,14 +1018,20 @@ Questi dati restano salvati anche nei giorni successivi.
 
 <div class="card">
 
-<h2>Totale giornata</h2>
+<h2>Oggi</h2>
 
-<div id="hoursTotal" class="big">
+<div id="todayHours" class="big">
 —
 </div>
 
-<div class="muted">
-Calcolato tra inizio e fine lavoro.
+</div>
+
+<div class="card">
+
+<h2>Totale storico</h2>
+
+<div id="historyHours" class="big">
+—
 </div>
 
 </div>
@@ -610,7 +1039,9 @@ Calcolato tra inizio e fine lavoro.
 </section>
 
 
+<!-- ================================================= -->
 <!-- FERIE -->
+<!-- ================================================= -->
 
 <section id="leave" class="screen">
 
@@ -622,32 +1053,22 @@ Calcolato tra inizio e fine lavoro.
 
 <label>
 Tipo
-
 <select id="leaveType">
-
 <option>Ferie</option>
 <option>Permesso</option>
 <option>Malattia</option>
-
 </select>
-
 </label>
 
 <label>
 Data
-
 <input id="leaveDate" type="date">
-
 </label>
 
 </div>
 
-<label>
-Note
-
-<textarea id="leaveNote"></textarea>
-
-</label>
+<textarea id="leaveNote"
+placeholder="Note"></textarea>
 
 <button onclick="saveLeave()">
 💾 Salva
@@ -662,7 +1083,9 @@ Nessuna registrazione.
 </section>
 
 
+<!-- ================================================= -->
 <!-- VEICOLO -->
+<!-- ================================================= -->
 
 <section id="vehicle" class="screen">
 
@@ -682,27 +1105,10 @@ Km
 <input id="vehicleKm" type="number">
 </label>
 
-<label>
-Stato
-
-<select id="vehicleState">
-
-<option>OK</option>
-<option>Da controllare</option>
-<option>Fermo</option>
-
-</select>
-
-</label>
-
 </div>
 
-<label>
-Note
-
-<textarea id="vehicleNote"></textarea>
-
-</label>
+<textarea id="vehicleNote"
+placeholder="Note sul veicolo"></textarea>
 
 <button onclick="saveVehicle()">
 💾 Salva
@@ -713,7 +1119,9 @@ Note
 </section>
 
 
+<!-- ================================================= -->
 <!-- GUASTI -->
+<!-- ================================================= -->
 
 <section id="damage" class="screen">
 
@@ -721,25 +1129,21 @@ Note
 
 <div class="card">
 
-<textarea
-id="damageText"
-placeholder="Descrizione del guasto o danno">
-</textarea>
+<textarea id="damageHistory"
+placeholder="Descrizione"></textarea>
 
-<button onclick="saveDamage()">
+<button onclick="saveDamageHistory()">
 💾 Registra
 </button>
-
-<div id="damageMsg" class="status">
-Nessuna segnalazione.
-</div>
 
 </div>
 
 </section>
 
 
+<!-- ================================================= -->
 <!-- SPESE -->
+<!-- ================================================= -->
 
 <section id="expenses" class="screen">
 
@@ -747,67 +1151,26 @@ Nessuna segnalazione.
 
 <div class="card">
 
-<h2>Rifornimento</h2>
+<h2>Rifornimenti registrati</h2>
 
-<div class="grid">
-
-<label>
-Litri
-<input id="liters" type="number" step=".01">
-</label>
-
-<label>
-Prezzo/litro €
-<input id="price" type="number" step=".001">
-</label>
-
-<label>
-Importo €
-<input id="amount" type="number" step=".01">
-</label>
-
-<label>
-Km
-<input id="fuelKm" type="number">
-</label>
+<div id="fuelHistory"></div>
 
 </div>
-
-<button onclick="saveExpenses()">
-💾 Salva
-</button>
-
-</div>
-
 
 <div class="card">
 
-<h2>Pedaggi</h2>
+<h2>Pedaggi registrati</h2>
 
-<div class="grid">
-
-<label>
-Pedaggi €
-<input id="tolls" type="number" step=".01">
-</label>
-
-<label>
-Mancati pedaggi
-<input id="missed" type="number">
-</label>
-
-</div>
-
-<button onclick="saveExpenses()">
-💾 Salva
-</button>
+<div id="tollHistory"></div>
 
 </div>
 
 </section>
 
 
+<!-- ================================================= -->
 <!-- RUOLINO -->
+<!-- ================================================= -->
 
 <section id="route" class="screen">
 
@@ -815,22 +1178,108 @@ Mancati pedaggi
 
 <div class="card">
 
-<h2>Ruolino di lavoro</h2>
+<h2>Ruolino della giornata</h2>
 
-<p>
-Il documento originale resta invariato.
+<div id="routeSummary"></div>
+
+</div>
+
+
+<div class="card">
+
+<h2>✍️ Firma capo</h2>
+
+<p class="muted">
+Firma direttamente con il dito nello spazio sottostante.
 </p>
 
-<div class="status">
-Qui verrà collegato il ruolino originale.
+<canvas id="signatureCanvas"></canvas>
+
+<div class="signatureButtons">
+
+<button onclick="clearSignature()">
+🗑️ Cancella firma
+</button>
+
+<button onclick="saveSignature()">
+✍️ Conferma firma
+</button>
+
 </div>
+
+<div id="signatureMsg" class="status">
+Firma non ancora inserita.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📄 Generazione ruolino</h2>
+
+<div class="status">
+
+Il modello utilizzato sarà:
+
+<b>ruolino_template.png</b>
+
+<br><br>
+
+Gli espressi non saranno inseriti nel ruolino
+e non saranno conteggiati nel totale.
+
+</div>
+
+<button class="green"
+        onclick="generateRoute()">
+📄 GENERA RUOLINO
+</button>
+
+<div id="generateMsg" class="status">
+Il ruolino non è ancora stato generato.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📤 Condivisione</h2>
+
+<div class="shareButtons">
+
+<button onclick="shareRoute()">
+📤 Condividi
+</button>
+
+<button onclick="shareEmail()">
+✉️ Email
+</button>
+
+<button onclick="shareWhatsApp()">
+🟢 WhatsApp
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>🗂️ Ruolini salvati</h2>
+
+<div id="routeHistory"></div>
 
 </div>
 
 </section>
 
 
+<!-- ================================================= -->
 <!-- BUSTE PAGA -->
+<!-- ================================================= -->
 
 <section id="payslips" class="screen">
 
@@ -838,26 +1287,18 @@ Qui verrà collegato il ruolino originale.
 
 <div class="card">
 
-<h2>Archivio</h2>
-
 <p>
-Sezione dedicata ai documenti delle buste paga.
+Archivio personale delle buste paga.
 </p>
-
-<button onclick="info('payslipMsg','Selezione documento pronta.')">
-📎 Aggiungi documento
-</button>
-
-<div id="payslipMsg" class="status">
-Nessun documento.
-</div>
 
 </div>
 
 </section>
 
 
+<!-- ================================================= -->
 <!-- STATISTICHE -->
+<!-- ================================================= -->
 
 <section id="stats" class="screen">
 
@@ -865,40 +1306,34 @@ Nessun documento.
 
 <div class="card">
 
-<div class="grid">
+<h2>📅 Statistiche giornaliere</h2>
 
-<div>
-
-<div id="statStops" class="big">
-0
-</div>
-
-<div class="muted">
-Stop oggi
-</div>
+<div id="dailyStats"></div>
 
 </div>
 
-<div>
+<div class="card">
 
-<div id="statParcels" class="big">
-0
-</div>
+<h2>📅 Statistiche settimanali</h2>
 
-<div class="muted">
-Pacchi oggi
-</div>
+<div id="weeklyStats"></div>
 
 </div>
 
-</div>
+<div class="card">
+
+<h2>📅 Statistiche mensili</h2>
+
+<div id="monthlyStats"></div>
 
 </div>
 
 </section>
 
 
+<!-- ================================================= -->
 <!-- IMPOSTAZIONI -->
+<!-- ================================================= -->
 
 <section id="settings" class="screen">
 
@@ -906,23 +1341,16 @@ Pacchi oggi
 
 <div class="card">
 
-<label class="check">
+<h2>Dati applicazione</h2>
 
-<input id="autoSave" type="checkbox" checked>
-
-Salvataggio automatico
-
-</label>
-
-<button onclick="clearToday()">
-🗑️ Azzera giornata
+<button onclick="exportData()">
+📤 Esporta dati
 </button>
 
-<div id="settingsMsg" class="status warn">
-
-I dati fissi del driver non vengono cancellati.
-
-</div>
+<button class="secondary"
+        onclick="resetToday()">
+♻️ Nuova giornata
+</button>
 
 </div>
 
@@ -933,572 +1361,1714 @@ I dati fissi del driver non vengono cancellati.
 
 <script>
 
-const dayKey =
-'upsworkplace.day.' +
-new Date().toISOString().slice(0,10);
+/* =====================================================
+   DATI
+===================================================== */
 
-const fixedKey =
-'upsworkplace.fixed';
+const todayKey =
+  new Date().toISOString().slice(0,10);
 
-const ids = [
+let day =
+  JSON.parse(
+    localStorage.getItem("ups_day_"+todayKey)
+    || "{}"
+  );
 
-'start',
-'exit',
-'parcels',
-'stops',
-'express',
-'finalized',
-'first',
-'last',
-'pickups',
-'picked',
-'extraStops',
-'extraParcels',
-'failed',
-'return',
-'kmReturn',
-'end',
-'cleaning',
-'notes',
-'liters',
-'price',
-'amount',
-'fuelKm',
-'tolls',
-'missed'
+let fixed =
+  JSON.parse(
+    localStorage.getItem("ups_fixed")
+    || "{}"
+  );
 
-];
+let history =
+  JSON.parse(
+    localStorage.getItem("ups_history")
+    || "[]"
+  );
 
-const $ =
-id => document.getElementById(id);
+let routes =
+  JSON.parse(
+    localStorage.getItem("ups_routes")
+    || "[]"
+  );
 
+let pauses =
+  day.pauses || [];
 
-$('date').textContent =
-new Date().toLocaleDateString('it-IT');
+let fuelRecords =
+  day.fuelRecords || [];
+
+let tollRecords =
+  day.tollRecords || [];
+
+let signatureData =
+  day.signature || null;
 
 
-function load(){
+/* =====================================================
+   UTILITÀ
+===================================================== */
 
-let d =
-JSON.parse(
-localStorage.getItem(dayKey) || '{}'
-);
-
-ids.forEach(id => {
-
-let e = $(id);
-
-if(d[id] !== undefined){
-
-if(e.type === 'checkbox')
-e.checked = d[id];
-
-else
-e.value = d[id];
-
+function $(id){
+  return document.getElementById(id);
 }
 
-});
+function value(id){
+  return $(id) ? $(id).value : "";
+}
 
-loadFixed();
+function setValue(id,v){
+  if($(id)) $(id).value = v ?? "";
+}
 
-stats();
+function numberValue(id){
+  return Number(value(id) || 0);
+}
 
-hours();
+function nowTime(){
 
+  const d = new Date();
+
+  return String(d.getHours()).padStart(2,"0")
+       + ":"
+       + String(d.getMinutes()).padStart(2,"0");
+}
+
+function todayItalian(){
+
+  const d = new Date();
+
+  return String(d.getDate()).padStart(2,"0")
+       + "/"
+       + String(d.getMonth()+1).padStart(2,"0")
+       + "/"
+       + d.getFullYear();
+}
+
+function saveDay(){
+
+  day.date = todayKey;
+
+  day.driverName = value("driverName");
+  day.driverCode = value("driverCode");
+  day.plate = value("plate");
+
+  day.start = value("start");
+  day.kmOut = value("kmOut");
+
+  day.parcels = numberValue("parcels");
+  day.stops = numberValue("stops");
+  day.pickups = numberValue("pickups");
+  day.picked = numberValue("picked");
+
+  day.express = numberValue("express");
+  day.rites = numberValue("rites");
+
+  day.exit = value("exit");
+
+  day.first = value("first");
+  day.firstGps = value("firstGps");
+
+  day.last = value("last");
+
+  day.return = value("return");
+  day.kmReturn = value("kmReturn");
+
+  day.end = value("end");
+
+  day.cleaning = value("cleaning");
+
+  day.notes = value("notes");
+
+  day.finalized =
+    $("finalized") ?
+    $("finalized").checked :
+    false;
+
+  day.pauses = pauses;
+  day.fuelRecords = fuelRecords;
+  day.tollRecords = tollRecords;
+
+  day.events = {
+
+    g348:numberValue("eventG348"),
+    l1kx:numberValue("eventL1KX"),
+    ay49:numberValue("eventAY49"),
+
+    si:numberValue("eventSI"),
+    kz:numberValue("eventKZ"),
+    s2:numberValue("eventS2"),
+
+    transfer:numberValue("eventTransfer"),
+    address:numberValue("eventAddress"),
+    recipient:numberValue("eventRecipient"),
+    refused:numberValue("eventRefused"),
+
+    notes:value("eventNotes")
+  };
+
+  day.pickupStops =
+    numberValue("pickupStops");
+
+  day.pickupPackages =
+    numberValue("pickupPackages");
+
+  day.futureL =
+    numberValue("futureL");
+
+  day.emergencyK =
+    numberValue("emergencyK");
+
+  day.damage =
+    value("damageText");
+
+  day.signature =
+    signatureData;
+
+  localStorage.setItem(
+    "ups_day_"+todayKey,
+    JSON.stringify(day)
+  );
+
+  updateCalculations();
 }
 
 
-function save(){
+/* =====================================================
+   MENU
+===================================================== */
 
-let d = {};
+function openMenu(){
 
-ids.forEach(id => {
+  $("drawer").classList.add("open");
+  $("shade").classList.add("open");
+}
 
-let e = $(id);
+function closeMenu(){
 
-d[id] =
-e.type === 'checkbox'
-? e.checked
-: e.value;
+  $("drawer").classList.remove("open");
+  $("shade").classList.remove("open");
+}
 
-});
+function show(id,element){
 
-localStorage.setItem(
-dayKey,
-JSON.stringify(d)
-);
+  document.querySelectorAll(".screen")
+    .forEach(s=>s.classList.remove("active"));
 
-stats();
+  const target = $(id);
 
-hours();
+  if(target)
+    target.classList.add("active");
 
+  document.querySelectorAll(".item")
+    .forEach(i=>i.classList.remove("active"));
+
+  if(element)
+    element.classList.add("active");
+
+  closeMenu();
+
+  if(id==="history")
+    renderHistory();
+
+  if(id==="route"){
+    renderRouteSummary();
+    renderRouteHistory();
+  }
+
+  if(id==="expenses")
+    renderExpenses();
+
+  if(id==="stats")
+    renderStats();
+
+  if(id==="hours")
+    updateCalculations();
 }
 
 
-ids.forEach(id => {
-
-let e = $(id);
-
-e.addEventListener(
-'input',
-save
-);
-
-e.addEventListener(
-'change',
-save
-);
-
-});
-
+/* =====================================================
+   ORARI
+===================================================== */
 
 function setNow(id){
 
-$(id).value =
-new Date()
-.toTimeString()
-.slice(0,5);
+  const t = nowTime();
 
-save();
+  setValue(id,t);
 
+  saveDay();
+
+  if(id==="start")
+    $("startMsg").className="status ok";
+
+  if(id==="end")
+    $("endMsg").className="status ok";
 }
 
 
 function warehouseExit(){
 
-if(!$('finalized').checked){
+  if(!$("finalized").checked){
 
-$('exitMsg').textContent =
-'⚠️ Itinerario non finalizzato: uscita non registrata.';
+    $("exitMsg").className="status warn";
 
-return;
+    $("exitMsg").innerHTML =
+      "⚠️ Prima dell'uscita devi finalizzare l'itinerario.";
 
+    return;
+  }
+
+  setValue("exit",nowTime());
+
+  saveDay();
+
+  $("exitMsg").className="status ok";
+
+  $("exitMsg").innerHTML =
+    "✓ Uscita dal magazzino registrata.";
 }
 
-setNow('exit');
 
-$('exitMsg').textContent =
-'✓ Uscita dal magazzino registrata.';
+/* =====================================================
+   PRIMO STOP + GPS
+===================================================== */
 
-$('exitMsg').className =
-'status ok';
+function registerFirstStop(){
 
+  setValue("first",nowTime());
+
+  if(
+    navigator.geolocation
+  ){
+
+    navigator.geolocation.getCurrentPosition(
+
+      function(pos){
+
+        const lat =
+          pos.coords.latitude.toFixed(6);
+
+        const lon =
+          pos.coords.longitude.toFixed(6);
+
+        setValue(
+          "firstGps",
+          lat+","+lon
+        );
+
+        saveDay();
+
+        $("firstMsg").className="status ok";
+
+        $("firstMsg").innerHTML =
+          "✓ Primo stop registrato con GPS.";
+
+      },
+
+      function(){
+
+        saveDay();
+
+        $("firstMsg").className="status warn";
+
+        $("firstMsg").innerHTML =
+          "Ora registrata, ma GPS non disponibile.";
+
+      },
+
+      {
+        enableHighAccuracy:true,
+        timeout:10000
+      }
+    );
+
+  }else{
+
+    saveDay();
+
+  }
 }
 
 
-let ps = 0;
+/* =====================================================
+   ULTIMO STOP
+===================================================== */
 
+function registerLastStop(){
+
+  setValue("last",nowTime());
+
+  saveDay();
+
+  $("lastMsg").className="status ok";
+
+  $("lastMsg").innerHTML =
+    "✓ Ultimo stop registrato.";
+}
+
+
+/* =====================================================
+   PAUSE
+===================================================== */
 
 function pauseStart(){
 
-ps = Date.now();
+  if(day.currentPause){
 
-$('pause').textContent =
-'▶ Pausa iniziata.';
+    alert("C'è già una pausa in corso.");
 
+    return;
+  }
+
+  day.currentPause = {
+    start:nowTime()
+  };
+
+  $("pauseMsg").className="status warn";
+
+  $("pauseMsg").innerHTML =
+    "⏸️ Pausa iniziata alle "
+    + day.currentPause.start;
+
+  saveDay();
 }
 
 
 function pauseEnd(){
 
-if(!ps){
+  if(!day.currentPause){
 
-$('pause').textContent =
-'⚠️ Nessuna pausa in corso.';
+    alert("Non c'è una pausa in corso.");
 
-return;
+    return;
+  }
 
-}
+  const end = nowTime();
 
-let m =
-Math.round(
-(Date.now()-ps)/60000
-);
+  const start =
+    day.currentPause.start;
 
-$('pause').textContent =
-'✓ Pausa: ' +
-m +
-' min';
+  const minutes =
+    diffMinutes(start,end);
 
-ps = 0;
+  pauses.push({
 
-}
+    start:start,
+    end:end,
+    minutes:minutes
 
+  });
 
-function openMenu(){
+  day.currentPause=null;
 
-$('drawer')
-.classList
-.add('open');
+  saveDay();
 
-$('shade')
-.classList
-.add('open');
+  $("pauseMsg").className="status ok";
 
-}
+  $("pauseMsg").innerHTML =
+    "✓ Pausa terminata alle "
+    + end
+    + " — "
+    + minutes
+    + " minuti.";
 
-
-function closeMenu(){
-
-$('drawer')
-.classList
-.remove('open');
-
-$('shade')
-.classList
-.remove('open');
-
+  renderPauseList();
 }
 
 
-function show(id,el){
+function renderPauseList(){
 
-document
-.querySelectorAll('.screen')
-.forEach(
-x => x.classList.remove('active')
-);
+  if(!pauses.length){
 
-$(id)
-.classList
-.add('active');
+    $("pauseList").innerHTML="";
 
-document
-.querySelectorAll('.item')
-.forEach(
-x => x.classList.remove('active')
-);
+    return;
+  }
 
-el.classList.add('active');
+  let html="<div class='separator'></div>";
 
-closeMenu();
+  pauses.forEach((p,i)=>{
 
-window.scrollTo(0,0);
+    html +=
+      "<div class='list-item'>"
+      +"⏸️ Pausa "+(i+1)
+      +"<br>"
+      +"Inizio: <b>"+p.start+"</b>"
+      +"<br>"
+      +"Fine: <b>"+p.end+"</b>"
+      +"<br>"
+      +"Durata: <b>"+p.minutes+" min</b>"
+      +"</div>";
 
-if(id === 'history')
-historyList();
+  });
 
-if(id === 'hours')
-hours();
-
-if(id === 'stats')
-stats();
-
-if(id === 'driver')
-loadFixed();
-
+  $("pauseList").innerHTML=html;
 }
 
 
-function saveFixed(){
+/* =====================================================
+   MINUTI
+===================================================== */
 
-localStorage.setItem(
+function diffMinutes(a,b){
 
-fixedKey,
+  if(!a || !b)
+    return 0;
 
-JSON.stringify({
+  const pa=a.split(":");
+  const pb=b.split(":");
 
-name:
-$('driverName').value,
+  let ma =
+    Number(pa[0])*60+
+    Number(pa[1]);
 
-code:
-$('driverCode').value,
+  let mb =
+    Number(pb[0])*60+
+    Number(pb[1]);
 
-plate:
-$('plate').value,
+  if(mb<ma)
+    mb+=24*60;
 
-kmOut:
-$('kmOut').value
-
-})
-
-);
-
+  return mb-ma;
 }
 
 
-function loadFixed(){
+function workMinutes(){
 
-let d =
-JSON.parse(
-localStorage.getItem(fixedKey) || '{}'
-);
-
-$('driverName').value =
-d.name || '';
-
-$('driverCode').value =
-d.code || '';
-
-$('plate').value =
-d.plate || '';
-
-$('kmOut').value =
-d.kmOut || '';
-
+  return diffMinutes(
+    value("start"),
+    value("end")
+  );
 }
 
 
-function historyList(){
+/* =====================================================
+   RIFORNIMENTI
+===================================================== */
 
-let a = [];
+function saveFuel(){
 
-for(
-let i=0;
-i<localStorage.length;
-i++
-){
+  const record={
 
-let k =
-localStorage.key(i);
+    date:todayItalian(),
 
-if(
-k &&
-k.startsWith(
-'upsworkplace.day.'
-)
-){
+    liters:numberValue("fuelLiters"),
 
-a.push(
-k.slice(17)
-);
+    price:numberValue("fuelPrice"),
 
-}
+    amount:numberValue("fuelAmount"),
 
-}
+    km:numberValue("fuelKm")
 
-a.sort().reverse();
+  };
 
-$('historyList').innerHTML =
-a.length
+  fuelRecords.push(record);
 
-?
+  saveDay();
 
-a.map(
+  $("fuelMsg").className="status ok";
 
-x =>
+  $("fuelMsg").innerHTML =
+    "✓ Rifornimento registrato.";
 
-'<div class="row">' +
+  setValue("fuelLiters","");
+  setValue("fuelPrice","");
+  setValue("fuelAmount","");
+  setValue("fuelKm","");
 
-'<b>' +
-
-new Date(
-x+'T12:00:00'
-)
-.toLocaleDateString(
-'it-IT'
-)
-
-+
-
-'</b>' +
-
-'<span>Salvata</span>' +
-
-'</div>'
-
-).join('')
-
-:
-
-'<div class="muted">' +
-'Nessuna giornata salvata.' +
-'</div>';
-
+  renderExpenses();
 }
 
 
-function hours(){
+/* =====================================================
+   PEDAGGI
+===================================================== */
 
-let s =
-$('start').value;
+function saveToll(){
 
-let e =
-$('end').value;
+  tollRecords.push({
 
-if(!s || !e){
+    date:todayItalian(),
 
-$('hoursTotal').textContent =
-'—';
+    amount:numberValue("tollAmount"),
 
-return;
+    count:numberValue("tollCount")
 
-}
+  });
 
-let a =
-s.split(':')
-.map(Number);
+  saveDay();
 
-let b =
-e.split(':')
-.map(Number);
+  setValue("tollAmount","");
+  setValue("tollCount","");
 
-let m =
-b[0]*60+b[1] -
-a[0]*60-a[1];
+  alert("✓ Pedaggio registrato.");
 
-if(m < 0)
-m += 1440;
-
-$('hoursTotal').textContent =
-Math.floor(m/60) +
-'h ' +
-String(m%60)
-.padStart(2,'0') +
-'m';
-
+  renderExpenses();
 }
 
 
-function stats(){
-
-$('statStops').textContent =
-$('stops').value || 0;
-
-$('statParcels').textContent =
-$('parcels').value || 0;
-
-}
-
-
-function saveLeave(){
-
-localStorage.setItem(
-
-'upsworkplace.leave',
-
-JSON.stringify({
-
-type:
-$('leaveType').value,
-
-date:
-$('leaveDate').value,
-
-note:
-$('leaveNote').value
-
-})
-
-);
-
-$('leaveMsg').textContent =
-'✓ Registrato.';
-
-}
-
-
-function saveVehicle(){
-
-localStorage.setItem(
-
-'upsworkplace.vehicle',
-
-JSON.stringify({
-
-plate:
-$('vehiclePlate').value,
-
-km:
-$('vehicleKm').value,
-
-state:
-$('vehicleState').value,
-
-note:
-$('vehicleNote').value
-
-})
-
-);
-
-}
-
+/* =====================================================
+   GUASTI
+===================================================== */
 
 function saveDamage(){
 
-localStorage.setItem(
+  const text=value("damageText");
 
-'upsworkplace.damage',
+  if(!text){
 
-JSON.stringify({
+    alert("Inserisci una descrizione.");
 
-text:
-$('damageText').value,
+    return;
+  }
 
-date:
-new Date().toISOString()
+  day.damage=text;
 
-})
+  saveDay();
 
+  $("damageMsg").className="status ok";
+
+  $("damageMsg").innerHTML =
+    "✓ Guasto/danno registrato.";
+}
+
+
+/* =====================================================
+   FOTO
+===================================================== */
+
+function openCamera(id){
+
+  $(id).click();
+
+}
+
+function photoSelected(input,previewId){
+
+  const file=input.files[0];
+
+  if(!file)
+    return;
+
+  const reader=new FileReader();
+
+  reader.onload=function(e){
+
+    const img=$(previewId);
+
+    img.src=e.target.result;
+
+    img.style.display="block";
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* =====================================================
+   DRIVER
+===================================================== */
+
+function saveFixed(){
+
+  fixed={
+
+    driverName:value("driverName"),
+
+    driverCode:value("driverCode"),
+
+    plate:value("plate")
+
+  };
+
+  localStorage.setItem(
+    "ups_fixed",
+    JSON.stringify(fixed)
+  );
+
+  day.driverName=fixed.driverName;
+  day.driverCode=fixed.driverCode;
+  day.plate=fixed.plate;
+
+  saveDay();
+
+  alert("✓ Dati driver salvati.");
+}
+
+
+/* =====================================================
+   FIRMA
+===================================================== */
+
+const canvas=$("signatureCanvas");
+
+const ctx=
+  canvas.getContext("2d");
+
+let drawing=false;
+
+
+function resizeCanvas(){
+
+  const ratio =
+    window.devicePixelRatio || 1;
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  canvas.width =
+    rect.width*ratio;
+
+  canvas.height =
+    rect.height*ratio;
+
+  ctx.scale(ratio,ratio);
+
+  ctx.lineWidth=2.5;
+  ctx.lineCap="round";
+  ctx.strokeStyle="#111";
+
+}
+
+resizeCanvas();
+
+window.addEventListener(
+  "resize",
+  resizeCanvas
 );
 
-$('damageMsg').textContent =
-'✓ Segnalazione salvata.';
 
+function pointerPosition(e){
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  return {
+
+    x:e.clientX-rect.left,
+
+    y:e.clientY-rect.top
+
+  };
 }
 
 
-function saveExpenses(){
+canvas.addEventListener(
+  "pointerdown",
+  function(e){
 
-localStorage.setItem(
+    drawing=true;
 
-'upsworkplace.expenses',
+    const p=pointerPosition(e);
 
-JSON.stringify({
+    ctx.beginPath();
 
-liters:
-$('liters').value,
+    ctx.moveTo(p.x,p.y);
 
-price:
-$('price').value,
-
-amount:
-$('amount').value,
-
-km:
-$('fuelKm').value,
-
-tolls:
-$('tolls').value,
-
-missed:
-$('missed').value
-
-})
-
+  }
 );
 
+
+canvas.addEventListener(
+  "pointermove",
+  function(e){
+
+    if(!drawing)
+      return;
+
+    const p=pointerPosition(e);
+
+    ctx.lineTo(p.x,p.y);
+
+    ctx.stroke();
+
+  }
+);
+
+
+canvas.addEventListener(
+  "pointerup",
+  function(){
+
+    drawing=false;
+
+  }
+);
+
+
+canvas.addEventListener(
+  "pointercancel",
+  function(){
+
+    drawing=false;
+
+  }
+);
+
+
+function clearSignature(){
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  signatureData=null;
+
+  $("signatureMsg").className="status";
+
+  $("signatureMsg").innerHTML =
+    "Firma cancellata.";
+
 }
 
 
-function info(id,msg){
+function saveSignature(){
 
-$(id).textContent =
-msg;
+  signatureData =
+    canvas.toDataURL("image/png");
 
-}
+  day.signature =
+    signatureData;
 
+  saveDay();
 
-function clearToday(){
+  $("signatureMsg").className="status ok";
 
-if(
-confirm(
-'Azzera i dati della giornata?'
-)
-){
-
-localStorage.removeItem(dayKey);
-
-location.reload();
-
-}
+  $("signatureMsg").innerHTML =
+    "✓ Firma acquisita.";
 
 }
 
 
-load();
+/* =====================================================
+   RUOLINO
+===================================================== */
+
+function openRouteSection(){
+
+  const item =
+    [...document.querySelectorAll(".item")]
+      .find(x=>x.textContent.includes("Ruolino"));
+
+  show("route",item);
+
+  renderRouteSummary();
+}
+
+
+function renderRouteSummary(){
+
+  const totalPackages =
+    numberValue("parcels");
+
+  const stops =
+    numberValue("stops");
+
+  const express =
+    numberValue("express");
+
+  const totalHours =
+    formatMinutes(workMinutes());
+
+  $("routeSummary").innerHTML =
+
+    "<div class='list-item'>"
+    +"👤 Driver: <b>"
+    +(value("driverName")||"—")
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"🚐 Targa: <b>"
+    +(value("plate")||"—")
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"⏱️ Inizio: <b>"
+    +(value("start")||"—")
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"🚚 Uscita: <b>"
+    +(value("exit")||"—")
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"📍 Primo stop: <b>"
+    +(value("first")||"—")
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"🏁 Ultimo stop: <b>"
+    +(value("last")||"—")
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"🏭 Rientro: <b>"
+    +(value("return")||"—")
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"🏠 Fine lavoro: <b>"
+    +(value("end")||"—")
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"📦 Pacchi consegna: <b>"
+    +totalPackages
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"🛑 Stop consegna: <b>"
+    +stops
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"⏱️ Totale ore: <b>"
+    +totalHours
+    +"</b></div>"
+
+    +"<div class='list-item'>"
+    +"ℹ️ Espressi registrati solo internamente: <b>"
+    +express
+    +"</b></div>";
+
+}
+
+
+function generateRoute(){
+
+  saveDay();
+
+  if(!signatureData){
+
+    $("generateMsg").className=
+      "status warn";
+
+    $("generateMsg").innerHTML =
+      "⚠️ Inserisci prima la firma.";
+
+    return;
+  }
+
+  const routeData =
+    JSON.stringify(day);
+
+  /*
+    Questa funzione verrà collegata
+    al codice Android nel prossimo passaggio.
+
+    Android.generateRuolino(...)
+    riceverà tutti i dati e produrrà
+    il PDF usando ruolino_template.png.
+  */
+
+  if(
+    window.Android &&
+    typeof Android.generateRuolino==="function"
+  ){
+
+    Android.generateRuolino(
+      routeData
+    );
+
+  }else{
+
+    $("generateMsg").className=
+      "status warn";
+
+    $("generateMsg").innerHTML =
+      "⚠️ Dati pronti. La generazione PDF "
+      +"verrà collegata alla parte Android.";
+
+  }
+
+}
+
+
+/* =====================================================
+   CONDIVISIONE
+===================================================== */
+
+function shareRoute(){
+
+  if(
+    window.Android &&
+    typeof Android.shareRuolino==="function"
+  ){
+
+    Android.shareRuolino();
+
+    return;
+  }
+
+  if(
+    navigator.share
+  ){
+
+    navigator.share({
+
+      title:"Ruolino UpsWorkPlace",
+
+      text:"Ruolino di lavoro"
+
+    });
+
+  }else{
+
+    alert(
+      "La condivisione verrà collegata "
+      +"alla versione Android."
+    );
+
+  }
+
+}
+
+
+function shareEmail(){
+
+  if(
+    window.Android &&
+    typeof Android.shareEmail==="function"
+  ){
+
+    Android.shareEmail();
+
+  }else{
+
+    shareRoute();
+
+  }
+
+}
+
+
+function shareWhatsApp(){
+
+  if(
+    window.Android &&
+    typeof Android.shareWhatsApp==="function"
+  ){
+
+    Android.shareWhatsApp();
+
+  }else{
+
+    shareRoute();
+
+  }
+
+}
+
+
+/* =====================================================
+   STORICO GIORNATE
+===================================================== */
+
+function archiveToday(){
+
+  saveDay();
+
+  const copy =
+    JSON.parse(JSON.stringify(day));
+
+  const index =
+    history.findIndex(
+      x=>x.date===todayKey
+    );
+
+  if(index>=0)
+    history[index]=copy;
+  else
+    history.push(copy);
+
+  localStorage.setItem(
+    "ups_history",
+    JSON.stringify(history)
+  );
+
+}
+
+
+function renderHistory(){
+
+  archiveToday();
+
+  if(!history.length){
+
+    $("historyList").innerHTML =
+      "Nessuna giornata salvata.";
+
+    return;
+
+  }
+
+  let html="";
+
+  [...history]
+    .reverse()
+    .forEach(d=>{
+
+      html +=
+
+        "<div class='list-item'>"
+
+        +"📅 <b>"
+        +formatDate(d.date)
+        +"</b>"
+
+        +"<br>"
+
+        +"🚚 Uscita: "
+        +(d.exit||"—")
+
+        +" | 🏁 Rientro: "
+        +(d.return||"—")
+
+        +"<br>"
+
+        +"📦 Pacchi: "
+        +(d.parcels||0)
+
+        +" | 🛑 Stop: "
+        +(d.stops||0)
+
+        +"</div>";
+
+    });
+
+  $("historyList").innerHTML=html;
+
+}
+
+
+/* =====================================================
+   ORE
+===================================================== */
+
+function updateCalculations(){
+
+  const mins =
+    workMinutes();
+
+  $("todayHours").textContent =
+    formatMinutes(mins);
+
+  let total=0;
+
+  history.forEach(d=>{
+
+    total +=
+      diffMinutes(
+        d.start,
+        d.end
+      );
+
+  });
+
+  total += mins;
+
+  $("historyHours").textContent =
+    formatMinutes(total);
+
+}
+
+
+/* =====================================================
+   SPESE
+===================================================== */
+
+function renderExpenses(){
+
+  let fuel="";
+
+  fuelRecords.forEach(f=>{
+
+    fuel +=
+      "<div class='list-item'>"
+      +"⛽ "+f.liters+" L"
+      +" — € "+f.price+"/L"
+      +" — € "+f.amount
+      +" — Km "+f.km
+      +"</div>";
+
+  });
+
+  $("fuelHistory").innerHTML =
+    fuel || "Nessun rifornimento.";
+
+
+  let toll="";
+
+  tollRecords.forEach(t=>{
+
+    toll +=
+      "<div class='list-item'>"
+      +"🛣️ € "+t.amount
+      +" — "+t.count+" pedaggi"
+      +"</div>";
+
+  });
+
+  $("tollHistory").innerHTML =
+    toll || "Nessun pedaggio.";
+
+}
+
+
+/* =====================================================
+   RUOLINI SALVATI
+===================================================== */
+
+function saveRouteToHistory(){
+
+  const route={
+
+    date:todayKey,
+
+    created:
+      new Date().toISOString(),
+
+    data:
+      JSON.parse(JSON.stringify(day))
+
+  };
+
+  routes.push(route);
+
+  localStorage.setItem(
+    "ups_routes",
+    JSON.stringify(routes)
+  );
+
+}
+
+
+function renderRouteHistory(){
+
+  if(!routes.length){
+
+    $("routeHistory").innerHTML =
+      "Nessun ruolino generato.";
+
+    return;
+
+  }
+
+  let html="";
+
+  [...routes]
+    .reverse()
+    .forEach(r=>{
+
+      html +=
+
+        "<div class='list-item'>"
+
+        +"📄 Ruolino "
+        +"<b>"
+        +formatDate(r.date)
+        +"</b>"
+
+        +"<br>"
+
+        +"<span class='muted'>"
+        +new Date(r.created)
+          .toLocaleString("it-IT")
+        +"</span>"
+
+        +"</div>";
+
+    });
+
+  $("routeHistory").innerHTML=html;
+
+}
+
+
+/* =====================================================
+   STATISTICHE
+===================================================== */
+
+function renderStats(){
+
+  archiveToday();
+
+  let totalStops=0;
+  let totalPackages=0;
+  let totalExpress=0;
+  let totalHours=0;
+
+  history.forEach(d=>{
+
+    totalStops +=
+      Number(d.stops||0);
+
+    totalPackages +=
+      Number(d.parcels||0);
+
+    totalExpress +=
+      Number(d.express||0);
+
+    totalHours +=
+      diffMinutes(
+        d.start,
+        d.end
+      );
+
+  });
+
+  $("dailyStats").innerHTML =
+
+    "📦 Pacchi: <b>"
+    +(day.parcels||0)
+    +"</b><br>"
+
+    +"🛑 Stop: <b>"
+    +(day.stops||0)
+    +"</b><br>"
+
+    +"⏱️ Ore: <b>"
+    +formatMinutes(
+      workMinutes()
+    )
+    +"</b>";
+
+
+  $("weeklyStats").innerHTML =
+
+    "📦 Pacchi: <b>"
+    +totalPackages
+    +"</b><br>"
+
+    +"🛑 Stop: <b>"
+    +totalStops
+    +"</b><br>"
+
+    +"⏱️ Ore: <b>"
+    +formatMinutes(totalHours)
+    +"</b>";
+
+
+  $("monthlyStats").innerHTML =
+
+    "📦 Pacchi: <b>"
+    +totalPackages
+    +"</b><br>"
+
+    +"🛑 Stop: <b>"
+    +totalStops
+    +"</b><br>"
+
+    +"⏱️ Ore: <b>"
+    +formatMinutes(totalHours)
+    +"</b><br>"
+
+    +"ℹ️ Espressi: <b>"
+    +totalExpress
+    +"</b>";
+
+}
+
+
+/* =====================================================
+   FERIE
+===================================================== */
+
+function saveLeave(){
+
+  const record={
+
+    type:value("leaveType"),
+
+    date:value("leaveDate"),
+
+    note:value("leaveNote")
+
+  };
+
+  localStorage.setItem(
+    "ups_leave_"+record.date,
+    JSON.stringify(record)
+  );
+
+  $("leaveMsg").className="status ok";
+
+  $("leaveMsg").innerHTML =
+    "✓ Registrato.";
+
+}
+
+
+/* =====================================================
+   VEICOLO
+===================================================== */
+
+function saveVehicle(){
+
+  const record={
+
+    plate:value("vehiclePlate"),
+
+    km:value("vehicleKm"),
+
+    note:value("vehicleNote")
+
+  };
+
+  localStorage.setItem(
+    "ups_vehicle",
+    JSON.stringify(record)
+  );
+
+  alert("✓ Dati veicolo salvati.");
+
+}
+
+
+/* =====================================================
+   GUASTI STORICO
+===================================================== */
+
+function saveDamageHistory(){
+
+  const text=
+    value("damageHistory");
+
+  if(!text)
+    return;
+
+  const key=
+    "ups_damage_"
+    +Date.now();
+
+  localStorage.setItem(
+    key,
+    text
+  );
+
+  $("damageHistory").value="";
+
+  alert("✓ Guasto registrato.");
+
+}
+
+
+/* =====================================================
+   ESPORTAZIONE
+===================================================== */
+
+function exportData(){
+
+  saveDay();
+
+  archiveToday();
+
+  const data={
+
+    fixed:fixed,
+
+    today:day,
+
+    history:history,
+
+    routes:routes
+
+  };
+
+  const blob=
+    new Blob(
+      [JSON.stringify(data,null,2)],
+      {
+        type:"application/json"
+      }
+    );
+
+  const url=
+    URL.createObjectURL(blob);
+
+  const a=
+    document.createElement("a");
+
+  a.href=url;
+
+  a.download=
+    "UpsWorkPlace_backup_"
+    +todayKey
+    +".json";
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+function resetToday(){
+
+  if(
+    !confirm(
+      "Vuoi iniziare una nuova giornata?"
+    )
+  )
+    return;
+
+  archiveToday();
+
+  localStorage.removeItem(
+    "ups_day_"+todayKey
+  );
+
+  location.reload();
+
+}
+
+
+/* =====================================================
+   FORMATTAZIONE
+===================================================== */
+
+function formatMinutes(mins){
+
+  if(!mins)
+    return "0h 00m";
+
+  const h=
+    Math.floor(mins/60);
+
+  const m=
+    mins%60;
+
+  return h+"h "
+    +String(m).padStart(2,"0")
+    +"m";
+
+}
+
+
+function formatDate(date){
+
+  if(!date)
+    return "—";
+
+  const p=
+    date.split("-");
+
+  if(p.length!==3)
+    return date;
+
+  return p[2]+"/"+p[1]+"/"+p[0];
+
+}
+
+
+/* =====================================================
+   CARICAMENTO DATI
+===================================================== */
+
+function loadFixed(){
+
+  setValue(
+    "driverName",
+    fixed.driverName
+  );
+
+  setValue(
+    "driverCode",
+    fixed.driverCode
+  );
+
+  setValue(
+    "plate",
+    fixed.plate
+  );
+
+}
+
+
+function loadDay(){
+
+  setValue("start",day.start);
+  setValue("kmOut",day.kmOut);
+
+  setValue("parcels",day.parcels);
+  setValue("stops",day.stops);
+
+  setValue("pickups",day.pickups);
+  setValue("picked",day.picked);
+
+  setValue("express",day.express);
+  setValue("rites",day.rites);
+
+  setValue("exit",day.exit);
+
+  setValue("first",day.first);
+  setValue("firstGps",day.firstGps);
+
+  setValue("last",day.last);
+
+  setValue("return",day.return);
+  setValue("kmReturn",day.kmReturn);
+
+  setValue("end",day.end);
+
+  setValue("cleaning",day.cleaning);
+
+  setValue("notes",day.notes);
+
+  if($("finalized"))
+    $("finalized").checked=
+      !!day.finalized;
+
+  if(day.events){
+
+    setValue(
+      "eventG348",
+      day.events.g348
+    );
+
+    setValue(
+      "eventL1KX",
+      day.events.l1kx
+    );
+
+    setValue(
+      "eventAY49",
+      day.events.ay49
+    );
+
+    setValue(
+      "eventSI",
+      day.events.si
+    );
+
+    setValue(
+      "eventKZ",
+      day.events.kz
+    );
+
+    setValue(
+      "eventS2",
+      day.events.s2
+    );
+
+    setValue(
+      "eventTransfer",
+      day.events.transfer
+    );
+
+    setValue(
+      "eventAddress",
+      day.events.address
+    );
+
+    setValue(
+      "eventRecipient",
+      day.events.recipient
+    );
+
+    setValue(
+      "eventRefused",
+      day.events.refused
+    );
+
+    setValue(
+      "eventNotes",
+      day.events.notes
+    );
+
+  }
+
+  setValue(
+    "pickupStops",
+    day.pickupStops
+  );
+
+  setValue(
+    "pickupPackages",
+    day.pickupPackages
+  );
+
+  setValue(
+    "futureL",
+    day.futureL
+  );
+
+  setValue(
+    "emergencyK",
+    day.emergencyK
+  );
+
+  setValue(
+    "damageText",
+    day.damage
+  );
+
+  signatureData=
+    day.signature || null;
+
+  pauses=
+    day.pauses || [];
+
+  fuelRecords=
+    day.fuelRecords || [];
+
+  tollRecords=
+    day.tollRecords || [];
+
+}
+
+
+/* =====================================================
+   AUTOSAVE INPUT
+===================================================== */
+
+document.addEventListener(
+  "input",
+  function(e){
+
+    if(
+      e.target.tagName==="INPUT" ||
+      e.target.tagName==="TEXTAREA" ||
+      e.target.tagName==="SELECT"
+    ){
+
+      saveDay();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   AVVIO
+===================================================== */
+
+$("todayDate").textContent =
+  todayItalian();
+
+loadFixed();
+
+loadDay();
+
+renderPauseList();
+
+renderExpenses();
+
+updateCalculations();
+
+renderStats();
 
 </script>
 
