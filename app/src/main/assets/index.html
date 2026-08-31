@@ -12,7 +12,7 @@ body{
 margin:0;
 background:#f2f2f2;
 color:#171717;
-font-family:Arial,sans-serif
+font-family:Arial,sans-serif;
 }
 
 header{
@@ -25,16 +25,24 @@ padding:0 14px;
 gap:14px;
 position:sticky;
 top:0;
-z-index:5
+z-index:5;
 }
 
-.menu{font-size:30px}
-.title{font-size:21px;font-weight:800}
+.menu{
+font-size:30px;
+cursor:pointer;
+padding:8px;
+}
+
+.title{
+font-size:21px;
+font-weight:800;
+}
 
 main{
 padding:12px;
 max-width:760px;
-margin:auto
+margin:auto;
 }
 
 .card{
@@ -42,24 +50,25 @@ background:#fff;
 border-radius:16px;
 padding:15px;
 margin:12px 0;
-box-shadow:0 1px 6px #0002
+box-shadow:0 1px 6px #0002;
+scroll-margin-top:76px;
 }
 
 h2{
 font-size:17px;
-margin:0 0 12px
+margin:0 0 12px;
 }
 
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px
+gap:10px;
 }
 
 label{
 font-size:12px;
 font-weight:700;
-color:#555
+color:#555;
 }
 
 input,textarea,select{
@@ -69,10 +78,12 @@ padding:11px;
 border:1px solid #ccc;
 border-radius:10px;
 font-size:16px;
-background:#fff
+background:#fff;
 }
 
-textarea{min-height:75px}
+textarea{
+min-height:75px;
+}
 
 button{
 border:0;
@@ -81,32 +92,38 @@ padding:12px 14px;
 margin:4px 4px 4px 0;
 background:#351c15;
 color:#fff;
-font-weight:800
+font-weight:800;
+cursor:pointer;
 }
 
 .secondary{
 background:#eee;
-color:#222
+color:#222;
 }
 
 .status{
 padding:10px;
 background:#f0f0f0;
 border-radius:10px;
-font-size:13px
+font-size:13px;
 }
 
-.ok{background:#eaf6ec}
-.warn{background:#fff0d3}
+.ok{
+background:#eaf6ec;
+}
+
+.warn{
+background:#fff0d3;
+}
 
 .check{
 display:block;
-margin:12px 0
+margin:12px 0;
 }
 
 .small{
 font-size:12px;
-color:#666
+color:#666;
 }
 
 .drawer{
@@ -120,46 +137,52 @@ background:#fff;
 z-index:20;
 transition:.2s;
 box-shadow:4px 0 15px #0003;
-overflow:auto
+overflow:auto;
 }
 
-.drawer.open{left:0}
+.drawer.open{
+left:0;
+}
 
 .shade{
 display:none;
 position:fixed;
 inset:0;
 background:#0007;
-z-index:15
+z-index:15;
 }
 
-.shade.open{display:block}
+.shade.open{
+display:block;
+}
 
 .dhead{
 background:#351c15;
 color:#fff;
 padding:30px 20px 20px;
 font-size:23px;
-font-weight:800
+font-weight:800;
 }
 
 .dsub{
 font-size:12px;
 opacity:.75;
-margin-top:5px
+margin-top:5px;
 }
 
 .item{
 padding:15px 18px;
 border-bottom:1px solid #eee;
 font-weight:700;
-font-size:16px
+font-size:16px;
+cursor:pointer;
 }
 
 .item.active{
 background:#f0e7e2;
-border-left:4px solid #351c15
+border-left:4px solid #351c15;
 }
+
 </style>
 </head>
 
@@ -171,45 +194,96 @@ border-left:4px solid #351c15
 
 <div class="dhead">
 UpsWorkPlace
-<div class="dsub">Gestione del lavoro del driver</div>
+<div class="dsub">
+Gestione del lavoro del driver
+</div>
 </div>
 
-<div class="item active">🏠 Giornata di oggi</div>
-<div class="item">👤 Driver</div>
-<div class="item">📚 Storico giornate</div>
-<div class="item">⏱️ Ore lavorate</div>
-<div class="item">🏖️ Ferie / Permessi / Malattia</div>
-<div class="item">🚐 Veicolo</div>
-<div class="item">🔧 Guasti e danni</div>
-<div class="item">💶 Rifornimenti e pedaggi</div>
-<div class="item">📄 Ruolino</div>
-<div class="item">💰 Buste paga</div>
-<div class="item">📊 Statistiche</div>
-<div class="item">⚙️ Impostazioni</div>
+<div class="item active" onclick="goTo('today',this)">
+🏠 Giornata di oggi
+</div>
+
+<div class="item" onclick="goTo('driver',this)">
+👤 Driver
+</div>
+
+<div class="item" onclick="menuInfo('Lo storico giornaliero verrà collegato al salvataggio delle giornate.',this)">
+📚 Storico giornate
+</div>
+
+<div class="item" onclick="goTo('work',this)">
+⏱️ Ore lavorate
+</div>
+
+<div class="item" onclick="menuInfo('La sezione ferie / permessi / malattia sarà aggiunta nella prossima fase.',this)">
+🏖️ Ferie / Permessi / Malattia
+</div>
+
+<div class="item" onclick="goTo('driver',this)">
+🚐 Veicolo
+</div>
+
+<div class="item" onclick="goTo('damage',this)">
+🔧 Guasti e danni
+</div>
+
+<div class="item" onclick="goTo('fuel',this)">
+💶 Rifornimenti e pedaggi
+</div>
+
+<div class="item" onclick="menuInfo('Il ruolino PDF verrà collegato direttamente all’app.',this)">
+📄 Ruolino
+</div>
+
+<div class="item" onclick="menuInfo('La sezione buste paga sarà aggiunta nella prossima fase.',this)">
+💰 Buste paga
+</div>
+
+<div class="item" onclick="menuInfo('Le statistiche saranno collegate allo storico delle giornate.',this)">
+📊 Statistiche
+</div>
+
+<div class="item" onclick="menuInfo('Le impostazioni saranno aggiunte nella prossima fase.',this)">
+⚙️ Impostazioni
+</div>
 
 </aside>
 
 <header>
-<span class="menu" onclick="openMenu()">☰</span>
-<span class="title">UpsWorkPlace</span>
+
+<span class="menu" onclick="openMenu()">
+☰
+</span>
+
+<span class="title">
+UpsWorkPlace
+</span>
+
 </header>
 
 <main>
 
-<div class="card">
+<div id="today" class="card">
 
 <h2>☀️ La mia giornata</h2>
 
 <div class="status">
-Data: <b id="date"></b>
+
+Data:
+<b id="date"></b>
+
 <br>
-<span id="save">Salvataggio automatico attivo</span>
-</div>
+
+<span id="save">
+Salvataggio automatico attivo
+</span>
 
 </div>
 
+</div>
 
-<div class="card">
+
+<div id="driver" class="card">
 
 <h2>👤 Driver e veicolo</h2>
 
@@ -240,9 +314,11 @@ Km uscita
 </div>
 
 
-<div class="card">
+<div id="work" class="card">
 
-<h2>🚚 Mattina / uscita dal magazzino</h2>
+<h2>
+🚚 Mattina / uscita dal magazzino
+</h2>
 
 <div class="grid">
 
@@ -274,8 +350,11 @@ Espressi in consegna
 </div>
 
 <label class="check">
+
 <input id="finalized" type="checkbox">
+
 Itinerario finalizzato
+
 </label>
 
 <button onclick="setNow('start')">
@@ -287,7 +366,9 @@ Itinerario finalizzato
 </button>
 
 <div id="exitMsg" class="status warn">
+
 Prima dell'uscita devi finalizzare l'itinerario.
+
 </div>
 
 </div>
@@ -295,7 +376,9 @@ Prima dell'uscita devi finalizzare l'itinerario.
 
 <div class="card">
 
-<h2>📍 Durante il giro</h2>
+<h2>
+📍 Durante il giro
+</h2>
 
 <button onclick="firstStop()">
 📍 Primo stop + GPS
@@ -320,8 +403,10 @@ Ora ultimo stop
 </div>
 
 <div id="gpsMsg" class="status">
+
 Il primo stop registra l'orario.
 Il GPS nativo verrà collegato nel modulo dedicato.
+
 </div>
 
 </div>
@@ -329,7 +414,9 @@ Il GPS nativo verrà collegato nel modulo dedicato.
 
 <div class="card">
 
-<h2>⏸ Pause</h2>
+<h2>
+⏸ Pause
+</h2>
 
 <button onclick="pauseStart()">
 ▶ Inizio pausa
@@ -340,7 +427,9 @@ Il GPS nativo verrà collegato nel modulo dedicato.
 </button>
 
 <div id="pause" class="status">
+
 Le pause vengono archiviate come intervalli inizio → fine.
+
 </div>
 
 </div>
@@ -348,7 +437,9 @@ Le pause vengono archiviate come intervalli inizio → fine.
 
 <div class="card">
 
-<h2>📦 Ritiri e consegne aggiuntive</h2>
+<h2>
+📦 Ritiri e consegne aggiuntive
+</h2>
 
 <div class="grid">
 
@@ -379,7 +470,9 @@ Pacchi aggiuntivi
 
 <div class="card">
 
-<h2>⚠️ Mancate consegne</h2>
+<h2>
+⚠️ Mancate consegne
+</h2>
 
 <textarea
 id="failed"
@@ -389,9 +482,11 @@ placeholder="Evento, motivazione, destinatario, note">
 </div>
 
 
-<div class="card">
+<div id="fuel" class="card">
 
-<h2>⛽ Rifornimenti</h2>
+<h2>
+⛽ Rifornimenti
+</h2>
 
 <div class="grid">
 
@@ -422,7 +517,9 @@ Km
 </button>
 
 <div class="small">
+
 Lo scontrino sarà associato al rifornimento quando verrà collegata la fotocamera nativa.
+
 </div>
 
 </div>
@@ -430,7 +527,9 @@ Lo scontrino sarà associato al rifornimento quando verrà collegata la fotocame
 
 <div class="card">
 
-<h2>🛣️ Pedaggi</h2>
+<h2>
+🛣️ Pedaggi
+</h2>
 
 <div class="grid">
 
@@ -451,7 +550,9 @@ Mancati pedaggi
 
 <div class="card">
 
-<h2>🏁 Rientro</h2>
+<h2>
+🏁 Rientro
+</h2>
 
 <div class="grid">
 
@@ -488,12 +589,14 @@ Pulizia abitacolo
 </div>
 
 
-<div class="card">
+<div id="damage" class="card">
 
-<h2>🔧 Guasti e danni</h2>
+<h2>
+🔧 Guasti e danni
+</h2>
 
 <textarea
-id="damage"
+id="damageText"
 placeholder="Descrizione del guasto/danno">
 </textarea>
 
@@ -506,7 +609,9 @@ placeholder="Descrizione del guasto/danno">
 
 <div class="card">
 
-<h2>📝 Note</h2>
+<h2>
+📝 Note
+</h2>
 
 <textarea
 id="notes"
@@ -517,7 +622,6 @@ placeholder="Note della giornata">
 
 </main>
 
-
 <script>
 
 const key =
@@ -525,7 +629,6 @@ const key =
 new Date().toISOString().slice(0,10);
 
 const ids = [
-
 'driver',
 'code',
 'plate',
@@ -553,9 +656,8 @@ const ids = [
 'kmReturn',
 'end',
 'cleaning',
-'damage',
+'damageText',
 'notes'
-
 ];
 
 const saved =
@@ -563,7 +665,6 @@ JSON.parse(localStorage.getItem(key) || '{}');
 
 document.getElementById('date').textContent =
 new Date().toLocaleDateString('it-IT');
-
 
 ids.forEach(id => {
 
@@ -583,7 +684,6 @@ e.addEventListener('input',save);
 e.addEventListener('change',save);
 
 });
-
 
 function save(){
 
@@ -613,7 +713,6 @@ document.getElementById('save').textContent =
 
 }
 
-
 function now(){
 
 const d = new Date();
@@ -624,15 +723,14 @@ return String(d.getHours()).padStart(2,'0')
 
 }
 
-
 function setNow(id){
 
-document.getElementById(id).value = now();
+document.getElementById(id).value =
+now();
 
 save();
 
 }
-
 
 function warehouseExit(){
 
@@ -658,7 +756,6 @@ m.className =
 
 }
 
-
 function firstStop(){
 
 setNow('first');
@@ -668,9 +765,7 @@ document.getElementById('gpsMsg').textContent =
 
 }
 
-
 let ps = null;
-
 
 function pauseStart(){
 
@@ -687,7 +782,6 @@ minute:'2-digit'
 );
 
 }
-
 
 function pauseEnd(){
 
@@ -727,24 +821,96 @@ save();
 
 }
 
+function goTo(id,el){
+
+const target =
+document.getElementById(id);
+
+if(target){
+
+document
+.querySelectorAll('.item')
+.forEach(x =>
+x.classList.remove('active')
+);
+
+if(el)
+el.classList.add('active');
+
+closeMenu();
+
+setTimeout(
+() => target.scrollIntoView({
+behavior:'smooth',
+block:'start'
+}),
+80
+);
+
+}
+
+}
+
+function menuInfo(message,el){
+
+document
+.querySelectorAll('.item')
+.forEach(x =>
+x.classList.remove('active')
+);
+
+if(el)
+el.classList.add('active');
+
+closeMenu();
+
+const old =
+document.getElementById('menuToast');
+
+if(old)
+old.remove();
+
+const t =
+document.createElement('div');
+
+t.id =
+'menuToast';
+
+t.textContent =
+message;
+
+t.style.cssText =
+'position:fixed;left:16px;right:16px;bottom:24px;background:#351c15;color:white;padding:14px 16px;border-radius:12px;z-index:50;font-weight:700;box-shadow:0 3px 14px #0005';
+
+document.body.appendChild(t);
+
+setTimeout(
+() => t.remove(),
+3000
+);
+
+}
 
 function openMenu(){
 
-document.getElementById('drawer')
+document
+.getElementById('drawer')
 .classList.add('open');
 
-document.getElementById('shade')
+document
+.getElementById('shade')
 .classList.add('open');
 
 }
 
-
 function closeMenu(){
 
-document.getElementById('drawer')
+document
+.getElementById('drawer')
 .classList.remove('open');
 
-document.getElementById('shade')
+document
+.getElementById('shade')
 .classList.remove('open');
 
 }
