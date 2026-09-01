@@ -290,6 +290,67 @@ button:active{
   font-weight:800;
 }
 
+.counterGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+}
+.counterBox{
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:10px;
+  background:#fafafa;
+}
+.counterBox .counterLabel{
+  font-weight:700;
+  color:#555;
+  margin-bottom:7px;
+}
+.counterButton{
+  width:100%;
+  margin:0;
+}
+.counterValue{
+  text-align:center;
+  font-size:26px;
+  font-weight:800;
+  margin-top:5px;
+}
+.statDetails{
+  margin-top:10px;
+}
+.statDetails summary{
+  cursor:pointer;
+  font-weight:800;
+  font-size:18px;
+}
+.chart{
+  margin-top:14px;
+}
+.barRow{
+  display:grid;
+  grid-template-columns:72px 1fr 42px;
+  gap:7px;
+  align-items:center;
+  margin:8px 0;
+  font-size:13px;
+}
+.barTrack{
+  height:18px;
+  background:#eee;
+  border-radius:9px;
+  overflow:hidden;
+}
+.barFill{
+  height:100%;
+  background:#351c15;
+  border-radius:9px;
+}
+.photo-card img{
+  width:100%;
+  border-radius:12px;
+  margin-top:8px;
+}
 /* LISTE */
 
 .list-item{
@@ -754,6 +815,16 @@ Rifiutato
 <input id="eventRefused" type="number" style="display:none">
 </label>
 
+<label>
+L futura
+<input id="futureL" type="number" style="display:none">
+</label>
+
+<label>
+K emergenze
+<input id="emergencyK" type="number" style="display:none">
+</label>
+
 </div>
 
 <textarea id="eventNotes"
@@ -768,29 +839,39 @@ placeholder="Note sugli eventi di consegna"></textarea>
 
 <h2>📦 8. Ritiri e attività aggiuntive</h2>
 
-<div class="grid">
+<div class="counterGrid">
 
-<label>
-Stop pickup
-<input id="pickupStops" type="number">
-</label>
+<div class="counterBox">
+<div class="counterLabel">Stop pickup</div>
+<input id="pickupStops" type="number" value="0" style="display:none">
+<button class="counterButton" onclick="activityClick('pickupStops')">➕ Aggiungi stop pickup</button>
+<div id="pickupStopsCount" class="counterValue">0</div>
+</div>
 
-<label>
-Pacchi in ritiro
-<input id="pickupPackages" type="number">
-</label>
+<div class="counterBox">
+<div class="counterLabel">Pacchi in ritiro</div>
+<input id="pickupPackages" type="number" value="0" style="display:none">
+<button class="counterButton" onclick="activityClick('pickupPackages')">➕ Aggiungi pacco in ritiro</button>
+<div id="pickupPackagesCount" class="counterValue">0</div>
+</div>
 
-<label>
-L futura
-<input id="futureL" type="number">
-</label>
+<div class="counterBox">
+<div class="counterLabel">Stop in consegna</div>
+<input id="deliveryStops" type="number" value="0" style="display:none">
+<button class="counterButton" onclick="activityClick('deliveryStops')">➕ Aggiungi stop in consegna</button>
+<div id="deliveryStopsCount" class="counterValue">0</div>
+</div>
 
-<label>
-K emergenze
-<input id="emergencyK" type="number">
-</label>
+<div class="counterBox">
+<div class="counterLabel">Pacchi in consegna</div>
+<input id="deliveryPackages" type="number" value="0" style="display:none">
+<button class="counterButton" onclick="activityClick('deliveryPackages')">➕ Aggiungi pacco in consegna</button>
+<div id="deliveryPackagesCount" class="counterValue">0</div>
+</div>
 
 </div>
+
+<div class="status">1 tocco = +1. I conteggi vengono salvati nella giornata.</div>
 
 </div>
 
@@ -964,6 +1045,10 @@ Nessun guasto registrato.
 <textarea id="notes"
 placeholder="Eventuali note..."></textarea>
 
+<button onclick="saveNotes()">💾 Registra note</button>
+
+<div id="notesMsg" class="status">Nessuna nota registrata.</div>
+
 </div>
 
 
@@ -1121,6 +1206,9 @@ placeholder="Note"></textarea>
 <div id="leaveMsg" class="status">
 Nessuna registrazione.
 </div>
+
+<h3>📚 Registrazioni</h3>
+<div id="leaveHistory"></div>
 
 </div>
 
@@ -1330,11 +1418,30 @@ Il ruolino non è ancora stato generato.
 <h1>💰 Buste paga</h1>
 
 <div class="card">
+<h2>Carica busta paga</h2>
+<p class="muted">PDF o foto. La busta viene associata al mese scelto.</p>
+<div class="grid">
+<label>Mese<input id="payslipMonth" type="month"></label>
+</div>
+<input id="payslipFile" type="file" accept="application/pdf,image/*" style="display:none" onchange="payslipSelected(this)">
+<button onclick="document.getElementById('payslipFile').click()">📎 Carica busta paga</button>
+<div id="payslipMsg" class="status">Nessuna busta paga caricata.</div>
+</div>
 
-<p>
-Archivio personale delle buste paga.
-</p>
+<div class="card">
+<h2>📁 Archivio buste paga</h2>
+<div id="payslipHistory"></div>
+</div>
 
+<div class="card">
+<h2>⏱️ Confronto ore</h2>
+<p class="muted">Inserisci le ore pagate indicate in busta per confrontarle con quelle registrate nell'app.</p>
+<div class="grid">
+<label>Ore pagate<input id="payslipPaidHours" type="number" step="0.01"></label>
+<label>Mese<input id="compareMonth" type="month"></label>
+</div>
+<button onclick="comparePayslipHours()">📊 Confronta ore</button>
+<div id="payslipCompare" class="status">Nessun confronto eseguito.</div>
 </div>
 
 </section>
@@ -1349,27 +1456,27 @@ Archivio personale delle buste paga.
 <h1>📊 Statistiche</h1>
 
 <div class="card">
-
-<h2>📅 Statistiche giornaliere</h2>
-
+<details class="statDetails" open>
+<summary>📅 Statistiche giornaliere</summary>
 <div id="dailyStats"></div>
-
+<div id="dailyChart" class="chart"></div>
+</details>
 </div>
 
 <div class="card">
-
-<h2>📅 Statistiche settimanali</h2>
-
+<details class="statDetails">
+<summary>📅 Statistiche settimanali</summary>
 <div id="weeklyStats"></div>
-
+<div id="weeklyChart" class="chart"></div>
+</details>
 </div>
 
 <div class="card">
-
-<h2>📅 Statistiche mensili</h2>
-
+<details class="statDetails">
+<summary>🗓️ Statistiche mensili</summary>
 <div id="monthlyStats"></div>
-
+<div id="monthlyChart" class="chart"></div>
+</details>
 </div>
 
 </section>
@@ -1502,73 +1609,51 @@ function formatMinutes(m){
 ===================================================== */
 
 function saveDay(){
-
   day.date=todayKey;
-
   day.driverName=value("driverName");
   day.driverCode=value("driverCode");
   day.plate=value("plate");
-
   day.start=value("start");
   day.kmOut=value("kmOut");
-
   day.parcels=numberValue("parcels");
   day.stops=numberValue("stops");
   day.pickups=numberValue("pickups");
   day.picked=numberValue("picked");
-
   day.express=numberValue("express");
-day.exit=value("exit");
-
+  day.exit=value("exit");
   day.first=value("first");
   day.firstGps=value("firstGps");
-
   day.last=value("last");
-
   day.return=value("return");
   day.kmReturn=value("kmReturn");
-
   day.end=value("end");
   day.cleaning=value("cleaning");
   day.notes=value("notes");
-
-  day.finalized=$("finalized")
-    ? $("finalized").checked
-    : false;
-
+  day.finalized=$("finalized") ? $("finalized").checked : false;
   day.pickupStops=numberValue("pickupStops");
   day.pickupPackages=numberValue("pickupPackages");
+  day.deliveryStops=numberValue("deliveryStops");
+  day.deliveryPackages=numberValue("deliveryPackages");
   day.futureL=numberValue("futureL");
   day.emergencyK=numberValue("emergencyK");
-
   day.damage=value("damageText");
-
   day.events={
-    g348:numberValue("eventG348"),
-    l1kx:numberValue("eventL1KX"),
-    ay49:numberValue("eventAY49"),
-    si:numberValue("eventSI"),
-    kz:numberValue("eventKZ"),
-    s2:numberValue("eventS2"),
-    transfer:numberValue("eventTransfer"),
-    address:numberValue("eventAddress"),
-    recipient:numberValue("eventRecipient"),
-    refused:numberValue("eventRefused"),
-    notes:value("eventNotes")
+    g348:numberValue("eventG348"),l1kx:numberValue("eventL1KX"),ay49:numberValue("eventAY49"),
+    si:numberValue("eventSI"),kz:numberValue("eventKZ"),s2:numberValue("eventS2"),
+    transfer:numberValue("eventTransfer"),address:numberValue("eventAddress"),
+    recipient:numberValue("eventRecipient"),refused:numberValue("eventRefused"),
+    futureL:numberValue("futureL"),emergencyK:numberValue("emergencyK"),notes:value("eventNotes")
   };
-
   day.pauses=pauses;
   day.fuelRecords=fuelRecords;
   day.tollRecords=tollRecords;
   day.signature=signatureData;
-
   if(!day.photos) day.photos={};
-
-  localStorage.setItem(
-    "ups_day_"+todayKey,
-    JSON.stringify(day)
-  );
-
+  localStorage.setItem("ups_day_"+todayKey,JSON.stringify(day));
+  const copy=JSON.parse(JSON.stringify(day));
+  const hi=history.findIndex(x=>x.date===todayKey);
+  if(hi>=0) history[hi]=copy; else history.push(copy);
+  localStorage.setItem("ups_history",JSON.stringify(history));
   updateCalculations();
 }
 
@@ -1616,6 +1701,8 @@ function show(id,element){
   if(id==="stats") renderStats();
 
   if(id==="hours") updateCalculations();
+  if(id==="leave") renderLeaveHistory();
+  if(id==="payslips") renderPayslips();
 }
 
 
@@ -1741,7 +1828,9 @@ const eventDefinitions={
   eventTransfer:["transfer","Trasferito"],
   eventAddress:["address","No numero / strada / cit."],
   eventRecipient:["recipient","No destinatario"],
-  eventRefused:["refused","Rifiutato"]
+  eventRefused:["refused","Rifiutato"],
+  futureL:["futureL","L futura"],
+  emergencyK:["emergencyK","K emergenze"]
 };
 
 function eventClick(inputId){
@@ -1797,6 +1886,26 @@ function updateEventButtons(){
   });
 }
 
+
+function activityClick(id){
+  const current=numberValue(id)+1;
+  setValue(id,current);
+  saveDay();
+  const map={pickupStops:"pickupStopsCount",pickupPackages:"pickupPackagesCount",deliveryStops:"deliveryStopsCount",deliveryPackages:"deliveryPackagesCount"};
+  if($(map[id])) $(map[id]).textContent=current;
+}
+
+function updateActivityCounters(){
+  const map={pickupStops:"pickupStopsCount",pickupPackages:"pickupPackagesCount",deliveryStops:"deliveryStopsCount",deliveryPackages:"deliveryPackagesCount"};
+  Object.keys(map).forEach(id=>{if($(map[id])) $(map[id]).textContent=numberValue(id);});
+}
+
+function saveNotes(){
+  day.notes=value("notes");
+  saveDay();
+  $("notesMsg").className="status ok";
+  $("notesMsg").innerHTML="✓ Note di fine giornata registrate.";
+}
 
 /* =====================================================
    PAUSE
@@ -1893,34 +2002,26 @@ function openCamera(id){
 }
 
 function photoSelected(input,previewId,key){
-
-  const file=input && input.files
-    ? input.files[0]
-    : null;
-
+  const file=input && input.files ? input.files[0] : null;
   if(!file) return;
-
   const reader=new FileReader();
-
   reader.onload=function(e){
-
     ensurePhotos();
-
     const data=e.target.result;
-
-    day.photos[key]=data;
-
     const img=$(previewId);
-
-    if(img){
-
-      img.src=data;
-      img.style.display="block";
+    if(img){img.src=data;img.style.display="block";}
+    if(key==="fuel"){
+      if(fuelRecords.length) fuelRecords[fuelRecords.length-1].photo=data;
+      else day.photos.fuelPending=data;
+    } else if(key==="damage"){
+      if(day.damages && day.damages.length) day.damages[day.damages.length-1].photo=data;
+      else day.photos.damagePending=data;
+    } else {
+      day.photos[key]=data;
     }
-
     saveDay();
+    if(key==="fuel" || key==="damage") renderExpenses();
   };
-
   reader.readAsDataURL(file);
 }
 
@@ -1937,7 +2038,7 @@ function restorePhotos(){
 
   list.forEach(pair=>{
 
-    const data=day.photos[pair[0]];
+    const data=day.photos[pair[0]] || day.photos[pair[0]+"Pending"];
     const img=$(pair[1]);
 
     if(data && img){
@@ -2110,6 +2211,7 @@ function saveSignature(){
   $("signatureMsg").className="status ok";
   $("signatureMsg").innerHTML=
     "✓ Firma acquisita e salvata.";
+  renderRouteSummary();
 }
 
 
@@ -2167,6 +2269,10 @@ function renderRouteSummary(){
     +"</div>"
 
     +"<div class='list-item'>"
+    +"📦 Attività aggiuntive: stop pickup "+(d.pickupStops||0)+" — pacchi ritiro "+(d.pickupPackages||0)+" — stop consegna "+(d.deliveryStops||0)+" — pacchi consegna "+(d.deliveryPackages||0)
+    +"</div>"
+
+    +"<div class='list-item'>"
     +"📊 Eventi: "
     +"Ass./Chiuso "+(e.g348||0)+"/"+(e.l1kx||0)+"/"+(e.ay49||0)
     +" — No denaro "+(e.si||0)+"/"+(e.kz||0)+"/"+(e.s2||0)
@@ -2207,41 +2313,18 @@ function saveRouteToHistory(){
 }
 
 function generateRoute(){
-
   saveDay();
-
   if(!signatureData){
-
-    $("generateMsg").className="status warn";
-    $("generateMsg").innerHTML=
-      "⚠️ Inserisci prima la firma.";
-
-    return;
+    $("generateMsg").className="status warn"; $("generateMsg").innerHTML="⚠️ Inserisci prima la firma."; return;
   }
-
   saveRouteToHistory();
-
   const routeData=JSON.stringify(day);
-
-  if(
-    window.Android &&
-    typeof Android.generateRuolino==="function"
-  ){
-
+  if(window.Android && typeof Android.generateRuolino==="function") {
     Android.generateRuolino(routeData);
-
-    $("generateMsg").className="status ok";
-    $("generateMsg").innerHTML=
-      "✓ Ruolino generato e salvato.";
-
-  }else{
-
-    $("generateMsg").className="status warn";
-    $("generateMsg").innerHTML=
-      "⚠️ Dati salvati. La generazione PDF "
-      +"richiede il collegamento Android.";
+    $("generateMsg").className="status ok"; $("generateMsg").innerHTML="✓ Generazione ruolino avviata e dati salvati.";
+  } else {
+    $("generateMsg").className="status warn"; $("generateMsg").innerHTML="⚠️ Dati salvati. Generazione PDF disponibile nell'app Android.";
   }
-
   renderRouteHistory();
 }
 
@@ -2443,8 +2526,7 @@ function shareWhatsApp(){
 
 function archiveToday(){
 
-  saveDay();
-
+  day.date=todayKey;
   const copy=JSON.parse(JSON.stringify(day));
 
   const index=
@@ -2597,6 +2679,16 @@ function buildHistoryDetail(d){
     +" — Rifiutato: "+(e.refused||0)
     +"</div>";
 
+  html+="<div class='list-item'>📦 Attività aggiuntive: stop pickup "+(d.pickupStops||0)+" — pacchi ritiro "+(d.pickupPackages||0)+" — stop consegna "+(d.deliveryStops||0)+" — pacchi consegna "+(d.deliveryPackages||0)+"</div>";
+
+  if(d.damages && d.damages.length){
+    d.damages.forEach(x=>{html+="<div class='list-item'>🔧 <b>"+x.date+" "+(x.time||"")+"</b><br>"+escapeHtml(x.text)+(x.photo?"<br><img src='"+x.photo+"' style='width:100%;max-width:500px;border-radius:12px;margin-top:8px'>":"")+"</div>";});
+  }
+
+  if(d.pauses && d.pauses.length){
+    html+="<div class='list-item'>⏸️ Pause: "+d.pauses.map(p=>p.start+"–"+p.end+" ("+p.minutes+" min)").join("; ")+"</div>";
+  }
+
   if(d.damage){
 
     html+=
@@ -2647,6 +2739,12 @@ function buildHistoryDetail(d){
         +"</div>";
     }
   });
+
+  if(d.fuelRecords && d.fuelRecords.length){
+    d.fuelRecords.forEach(f=>{
+      if(f.photo){ html+="<div class='list-item'><b>⛽ Scontrino rifornimento — "+f.date+" "+(f.time||"")+"</b><br><img src='"+f.photo+"' style='width:100%;max-width:500px;border-radius:12px;margin-top:8px'></div>"; }
+    });
+  }
 
   html+="</div>";
 
@@ -2700,28 +2798,13 @@ function updateCalculations(){
 ===================================================== */
 
 function saveFuel(){
-
-  fuelRecords.push({
-
-    date:todayItalian(),
-    liters:numberValue("fuelLiters"),
-    price:numberValue("fuelPrice"),
-    amount:numberValue("fuelAmount"),
-    km:numberValue("fuelKm")
-
-  });
-
+  const record={date:todayItalian(),time:nowTime(),liters:numberValue("fuelLiters"),price:numberValue("fuelPrice"),amount:numberValue("fuelAmount"),km:numberValue("fuelKm")};
+  if(day.photos && day.photos.fuelPending){record.photo=day.photos.fuelPending;delete day.photos.fuelPending;}
+  fuelRecords.push(record);
   saveDay();
-
   $("fuelMsg").className="status ok";
-  $("fuelMsg").innerHTML=
-    "✓ Rifornimento registrato.";
-
-  setValue("fuelLiters","");
-  setValue("fuelPrice","");
-  setValue("fuelAmount","");
-  setValue("fuelKm","");
-
+  $("fuelMsg").innerHTML="✓ Rifornimento registrato alle "+record.time+".";
+  setValue("fuelLiters","");setValue("fuelPrice","");setValue("fuelAmount","");setValue("fuelKm","");
   renderExpenses();
 }
 
@@ -2730,6 +2813,7 @@ function saveToll(){
   tollRecords.push({
 
     date:todayItalian(),
+    time:nowTime(),
     amount:numberValue("tollAmount"),
     count:numberValue("tollCount")
 
@@ -2746,34 +2830,14 @@ function saveToll(){
 }
 
 function renderExpenses(){
-
   let fuel="";
-
   fuelRecords.forEach(f=>{
-    fuel+=
-      "<div class='list-item'>"
-      +"⛽ "+f.liters+" L"
-      +" — € "+f.price+"/L"
-      +" — € "+f.amount
-      +" — Km "+f.km
-      +"</div>";
+    fuel+="<div class='list-item photo-card'>"+"⛽ <b>"+f.date+" "+(f.time||"")+"</b><br>"+f.liters+" L — € "+f.price+"/L — € "+f.amount+" — Km "+f.km+(f.photo?"<br><img src='"+f.photo+"'>":"")+"</div>";
   });
-
-  $("fuelHistory").innerHTML=
-    fuel || "Nessun rifornimento.";
-
+  $("fuelHistory").innerHTML=fuel || "Nessun rifornimento.";
   let toll="";
-
-  tollRecords.forEach(t=>{
-    toll+=
-      "<div class='list-item'>"
-      +"🛣️ € "+t.amount
-      +" — "+t.count+" pedaggi"
-      +"</div>";
-  });
-
-  $("tollHistory").innerHTML=
-    toll || "Nessun pedaggio.";
+  tollRecords.forEach(t=>{toll+="<div class='list-item'>🛣️ <b>"+t.date+" "+(t.time||"")+"</b><br>€ "+t.amount+" — "+t.count+" pedaggi</div>";});
+  $("tollHistory").innerHTML=toll || "Nessun pedaggio.";
 }
 
 
@@ -2782,97 +2846,86 @@ function renderExpenses(){
 ===================================================== */
 
 function saveDamage(){
-
   const text=value("damageText");
-
-  if(!text){
-
-    alert("Inserisci una descrizione.");
-    return;
-  }
-
+  if(!text){alert("Inserisci una descrizione.");return;}
+  if(!day.damages) day.damages=[];
+  const record={date:todayItalian(),time:nowTime(),text:text};
+  if(day.photos && day.photos.damagePending){record.photo=day.photos.damagePending;delete day.photos.damagePending;}
+  day.damages.push(record);
   day.damage=text;
-
   saveDay();
-
   $("damageMsg").className="status ok";
-  $("damageMsg").innerHTML=
-    "✓ Guasto/danno registrato.";
+  $("damageMsg").innerHTML="✓ Guasto/danno registrato alle "+record.time+".";
 }
 
+let payslips=JSON.parse(localStorage.getItem("ups_payslips")||"[]");
+function payslipSelected(input){
+  const file=input.files && input.files[0]; if(!file) return;
+  const month=value("payslipMonth") || todayKey.slice(0,7);
+  const reader=new FileReader(); reader.onload=function(e){
+    payslips.push({month:month,name:file.name,type:file.type,data:e.target.result,created:new Date().toISOString()});
+    localStorage.setItem("ups_payslips",JSON.stringify(payslips));
+    $("payslipMsg").className="status ok"; $("payslipMsg").innerHTML="✓ Busta paga salvata per "+month+".";
+    renderPayslips();
+  }; reader.readAsDataURL(file);
+}
+function renderPayslips(){
+  let box=$("payslipHistory"); if(!box) return;
+  box.innerHTML=payslips.length?payslips.slice().reverse().map((p,i)=>"<div class='list-item'>💰 <b>"+p.month+"</b><br>"+escapeHtml(p.name)+"<br><button type='button' onclick='openPayslip("+(payslips.length-1-i)+")'>Apri</button></div>").join(""):"Nessuna busta paga caricata.";
+}
+function openPayslip(i){const p=payslips[i];if(!p)return;const w=window.open();if(w){w.document.write(p.type==="application/pdf"?"<embed src='"+p.data+"' type='application/pdf' width='100%' height='100%'>":"<img src='"+p.data+"' style='max-width:100%'>");}}
+function comparePayslipHours(){
+  const month=value("compareMonth") || todayKey.slice(0,7); const paid=Number(value("payslipPaidHours")||0);
+  const rows=history.filter(d=>String(d.date||"").slice(0,7)===month); const appMinutes=rows.reduce((n,d)=>n+diffMinutes(d.start,d.end),0); const appHours=appMinutes/60; const diff=appHours-paid;
+  $("payslipCompare").className="status ok"; $("payslipCompare").innerHTML="Mese: <b>"+month+"</b><br>Ore registrate nell'app: <b>"+appHours.toFixed(2)+" h</b><br>Ore pagate in busta: <b>"+paid.toFixed(2)+" h</b><br>Differenza: <b>"+(diff>=0?"+":"")+diff.toFixed(2)+" h</b>";
+}
 
 /* =====================================================
    STATISTICHE
 ===================================================== */
 
-function renderStats(){
-
-  archiveToday();
-
-  let totalStops=0;
-  let totalPackages=0;
-  let totalExpress=0;
-  let totalHours=0;
-
-  history.forEach(d=>{
-
-    totalStops+=Number(d.stops||0);
-    totalPackages+=Number(d.parcels||0);
-    totalExpress+=Number(d.express||0);
-
-    totalHours+=
-      diffMinutes(
-        d.start,
-        d.end
-      );
-  });
-
-  $("dailyStats").innerHTML=
-    "📦 Pacchi: <b>"+(day.parcels||0)+"</b>"
-    +"<br>🛑 Stop: <b>"+(day.stops||0)+"</b>"
-    +"<br>⏱️ Ore: <b>"
-    +formatMinutes(workMinutes())
-    +"</b>";
-
-  $("weeklyStats").innerHTML=
-    "📦 Pacchi: <b>"+totalPackages+"</b>"
-    +"<br>🛑 Stop: <b>"+totalStops+"</b>"
-    +"<br>⏱️ Ore: <b>"
-    +formatMinutes(totalHours)
-    +"</b>";
-
-  $("monthlyStats").innerHTML=
-    "📦 Pacchi: <b>"+totalPackages+"</b>"
-    +"<br>🛑 Stop: <b>"+totalStops+"</b>"
-    +"<br>⏱️ Ore: <b>"
-    +formatMinutes(totalHours)
-    +"</b>"
-    +"<br>ℹ️ Espressi: <b>"+totalExpress+"</b>";
+function chartBars(data){
+  if(!data.length) return "<div class='muted'>Nessun dato disponibile.</div>";
+  const max=Math.max(1,...data.map(x=>Number(x.value||0)));
+  return data.map(x=>"<div class='barRow'><span>"+x.label+"</span><div class='barTrack'><div class='barFill' style='width:"+(Number(x.value||0)/max*100)+"%'></div></div><b>"+x.value+"</b></div>").join("");
 }
 
+function renderStats(){
+  archiveToday();
+  const now=new Date();
+  const weekStart=new Date(now); weekStart.setDate(now.getDate()-((now.getDay()+6)%7));
+  const monthKey=todayKey.slice(0,7);
+  const week=history.filter(d=>d.date && new Date(d.date+"T00:00:00")>=weekStart);
+  const month=history.filter(d=>String(d.date||"").slice(0,7)===monthKey);
+  const dayM=workMinutes();
+  const totalStops=a=>a.reduce((n,d)=>n+Number(d.stops||0),0);
+  const totalPackages=a=>a.reduce((n,d)=>n+Number(d.parcels||0),0);
+  const totalHours=a=>a.reduce((n,d)=>n+diffMinutes(d.start,d.end),0);
+  $("dailyStats").innerHTML="📦 Pacchi: <b>"+(day.parcels||0)+"</b><br>🛑 Stop: <b>"+(day.stops||0)+"</b><br>⏱️ Ore: <b>"+formatMinutes(dayM)+"</b><br>📦 Espressi: <b>"+(day.express||0)+"</b>";
+  $("dailyChart").innerHTML=chartBars([{label:"Pacchi",value:day.parcels||0},{label:"Stop",value:day.stops||0},{label:"Espressi",value:day.express||0}]);
+  $("weeklyStats").innerHTML="📦 Pacchi: <b>"+totalPackages(week)+"</b><br>🛑 Stop: <b>"+totalStops(week)+"</b><br>⏱️ Ore: <b>"+formatMinutes(totalHours(week))+"</b>";
+  $("weeklyChart").innerHTML=chartBars(week.map(d=>({label:formatDate(d.date).slice(0,5),value:Number(d.parcels||0)})));
+  $("monthlyStats").innerHTML="📦 Pacchi: <b>"+totalPackages(month)+"</b><br>🛑 Stop: <b>"+totalStops(month)+"</b><br>⏱️ Ore: <b>"+formatMinutes(totalHours(month))+"</b><br>ℹ️ Espressi: <b>"+month.reduce((n,d)=>n+Number(d.express||0),0)+"</b>";
+  $("monthlyChart").innerHTML=chartBars(month.map(d=>({label:formatDate(d.date).slice(0,5),value:Number(d.stops||0)})));
+}
 
 /* =====================================================
    FERIE
 ===================================================== */
 
 function saveLeave(){
-
-  const record={
-    type:value("leaveType"),
-    date:value("leaveDate"),
-    note:value("leaveNote")
-  };
-
-  localStorage.setItem(
-    "ups_leave_"+record.date,
-    JSON.stringify(record)
-  );
-
-  $("leaveMsg").className="status ok";
-  $("leaveMsg").innerHTML=
-    "✓ Registrato.";
+  const record={type:value("leaveType"),date:value("leaveDate"),note:value("leaveNote")};
+  let list=JSON.parse(localStorage.getItem("ups_leave_history")||"[]");
+  list.push(record);
+  localStorage.setItem("ups_leave_history",JSON.stringify(list));
+  $("leaveMsg").className="status ok"; $("leaveMsg").innerHTML="✓ Registrato il "+formatDate(record.date)+".";
+  renderLeaveHistory();
 }
-
+function renderLeaveHistory(){
+  let list=JSON.parse(localStorage.getItem("ups_leave_history")||"[]");
+  let box=$("leaveHistory"); if(!box) return;
+  box.innerHTML=list.length?list.slice().reverse().map(r=>"<div class='list-item'>🏖️ <b>"+r.type+"</b> — "+formatDate(r.date)+(r.note?"<br>"+escapeHtml(r.note):"")+"</div>").join(""):"Nessuna registrazione.";
+}
 
 /* =====================================================
    VEICOLO
@@ -2979,6 +3032,20 @@ function loadFixed(){
   setValue("plate",fixed.plate);
 }
 
+function restoreStatusMessages(){
+  if(day.start && $("startMsg")){ $("startMsg").className="status ok"; $("startMsg").innerHTML="✓ Inizio giornata registrato alle "+day.start+"."; }
+  if(day.exit && $("exitMsg")){ $("exitMsg").className="status ok"; $("exitMsg").innerHTML="✓ Uscita dal magazzino registrata."; }
+  if(day.first && $("firstMsg")){ $("firstMsg").className="status ok"; $("firstMsg").innerHTML="✓ Primo stop registrato"+(day.firstGps?" con GPS.":"."); }
+  if(day.last && $("lastMsg")){ $("lastMsg").className="status ok"; $("lastMsg").innerHTML="✓ Ultimo stop registrato alle "+day.last+"."; }
+  if(day.end && $("endMsg")){ $("endMsg").className="status ok"; $("endMsg").innerHTML="✓ Fine giornata registrata alle "+day.end+"."; }
+  if(day.damage && $("damageMsg")){ $("damageMsg").className="status ok"; $("damageMsg").innerHTML="✓ Guasto/danno registrato."; }
+  if(day.notes && $("notesMsg")){ $("notesMsg").className="status ok"; $("notesMsg").innerHTML="✓ Note di fine giornata registrate."; }
+  if(fuelRecords.length && $("fuelMsg")){ $("fuelMsg").className="status ok"; $("fuelMsg").innerHTML="✓ "+fuelRecords.length+" rifornimento/i registrato/i."; }
+  if(tollRecords.length && $("tollHistory")) renderExpenses();
+  if(pauses.length && $("pauseMsg")){ $("pauseMsg").className="status ok"; $("pauseMsg").innerHTML="✓ "+pauses.length+" pausa/e registrata/e."; }
+  if(day.signature && $("signatureMsg")){ $("signatureMsg").className="status ok"; $("signatureMsg").innerHTML="✓ Firma acquisita e salvata."; }
+}
+
 function loadDay(){
 
   setValue("start",day.start);
@@ -3007,6 +3074,8 @@ setValue("exit",day.exit);
 
   setValue("pickupStops",day.pickupStops);
   setValue("pickupPackages",day.pickupPackages);
+  setValue("deliveryStops",day.deliveryStops);
+  setValue("deliveryPackages",day.deliveryPackages);
   setValue("futureL",day.futureL);
   setValue("emergencyK",day.emergencyK);
 
@@ -3032,10 +3101,13 @@ setValue("exit",day.exit);
   setValue("eventNotes",e.notes);
 
   signatureData=day.signature || null;
+  restoreStatusMessages();
 
   pauses=day.pauses || [];
   fuelRecords=day.fuelRecords || [];
   tollRecords=day.tollRecords || [];
+  if(!day.damages) day.damages=[];
+  updateActivityCounters();
 }
 
 
@@ -3088,6 +3160,8 @@ document.addEventListener(
     updateCalculations();
     renderStats();
     renderRouteHistory();
+    renderLeaveHistory();
+    renderPayslips();
 
     restorePhotos();
     updateEventButtons();
