@@ -476,6 +476,20 @@ Km iniziali
 ⏱️ Registra inizio
 </button>
 
+<button onclick="openCamera('arrivalPhoto')">
+📷 Foto arrivo in magazzino
+</button>
+
+<input id="arrivalPhoto"
+       type="file"
+       accept="image/*"
+       capture="environment"
+       style="display:none"
+       onchange="photoSelected(this,'arrivalPreview','arrival')">
+
+<img id="arrivalPreview"
+     class="photo-preview">
+
 <div id="startMsg" class="status">
 Inizio giornata non ancora registrato.
 </div>
@@ -859,6 +873,20 @@ Km rientro
 <button onclick="setNow('return')">
 🏁 Registra rientro
 </button>
+
+<button onclick="openCamera('returnPhoto')">
+📷 Foto rientro in magazzino
+</button>
+
+<input id="returnPhoto"
+       type="file"
+       accept="image/*"
+       capture="environment"
+       style="display:none"
+       onchange="photoSelected(this,'returnPreview','return')">
+
+<img id="returnPreview"
+     class="photo-preview">
 
 </div>
 
