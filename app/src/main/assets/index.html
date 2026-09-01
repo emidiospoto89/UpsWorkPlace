@@ -530,11 +530,6 @@ Espressi
 <input id="express" type="number">
 </label>
 
-<label>
-Riti
-<input id="rites" type="number">
-</label>
-
 </div>
 
 <div class="status">
@@ -1523,9 +1518,7 @@ function saveDay(){
   day.picked=numberValue("picked");
 
   day.express=numberValue("express");
-  day.rites=numberValue("rites");
-
-  day.exit=value("exit");
+day.exit=value("exit");
 
   day.first=value("first");
   day.firstGps=value("firstGps");
@@ -2998,9 +2991,7 @@ function loadDay(){
   setValue("picked",day.picked);
 
   setValue("express",day.express);
-  setValue("rites",day.rites);
-
-  setValue("exit",day.exit);
+setValue("exit",day.exit);
 
   setValue("first",day.first);
   setValue("firstGps",day.firstGps);
