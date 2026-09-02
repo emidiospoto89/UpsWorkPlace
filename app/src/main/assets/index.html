@@ -2190,27 +2190,34 @@ function clearSignature(){
     "Firma cancellata.";
 }
 
+function setSignatureStatus(ok,text){
+  const msg=$("signatureMsg");
+  if(!msg) return;
+  msg.className=ok?"status ok":"status warn";
+  msg.innerHTML=text;
+}
+
 function saveSignature(){
 
   if(!canvas || !ctx)
     initSignatureCanvas();
 
   if(!canvas){
-
     alert("Area firma non disponibile.");
     return;
   }
 
-  signatureData=
-    canvas.toDataURL("image/png");
+  const data=canvas.toDataURL("image/png");
+  if(!data || data.length<100){
+    setSignatureStatus(false,"⚠️ Firma non acquisita: firma nello spazio e riprova.");
+    return;
+  }
 
-  day.signature=signatureData;
-
+  signatureData=data;
+  day.signature=data;
   saveDay();
 
-  $("signatureMsg").className="status ok";
-  $("signatureMsg").innerHTML=
-    "✓ Firma acquisita e salvata.";
+  setSignatureStatus(true,"✓ Firma acquisita e salvata.");
   renderRouteSummary();
 }
 
@@ -2312,20 +2319,41 @@ function saveRouteToHistory(){
   );
 }
 
+function onRuolinoGenerated(success,message){
+  const msg=$("generateMsg");
+  if(!msg) return;
+  if(success){
+    msg.className="status ok";
+    msg.innerHTML="✓ Ruolino generato e salvato.";
+    saveRouteToHistory();
+    renderRouteHistory();
+  }else{
+    msg.className="status error";
+    msg.innerHTML="❌ "+escapeHtml(message||"Errore nella generazione del ruolino.");
+  }
+}
+
 function generateRoute(){
   saveDay();
-  if(!signatureData){
-    $("generateMsg").className="status warn"; $("generateMsg").innerHTML="⚠️ Inserisci prima la firma."; return;
+  const sig=signatureData || day.signature || "";
+  if(!sig){
+    setSignatureStatus(false,"⚠️ Inserisci e conferma prima la firma.");
+    $("generateMsg").className="status warn";
+    $("generateMsg").innerHTML="⚠️ Inserisci e conferma prima la firma.";
+    return;
   }
-  saveRouteToHistory();
+  signatureData=sig;
+  day.signature=sig;
+  saveDay();
   const routeData=JSON.stringify(day);
   if(window.Android && typeof Android.generateRuolino==="function") {
+    $("generateMsg").className="status warn";
+    $("generateMsg").innerHTML="⏳ Generazione ruolino in corso…";
     Android.generateRuolino(routeData);
-    $("generateMsg").className="status ok"; $("generateMsg").innerHTML="✓ Generazione ruolino avviata e dati salvati.";
   } else {
-    $("generateMsg").className="status warn"; $("generateMsg").innerHTML="⚠️ Dati salvati. Generazione PDF disponibile nell'app Android.";
+    $("generateMsg").className="status error";
+    $("generateMsg").innerHTML="❌ Generazione PDF non disponibile.";
   }
-  renderRouteHistory();
 }
 
 function openSavedRoute(index){
@@ -3043,7 +3071,7 @@ function restoreStatusMessages(){
   if(fuelRecords.length && $("fuelMsg")){ $("fuelMsg").className="status ok"; $("fuelMsg").innerHTML="✓ "+fuelRecords.length+" rifornimento/i registrato/i."; }
   if(tollRecords.length && $("tollHistory")) renderExpenses();
   if(pauses.length && $("pauseMsg")){ $("pauseMsg").className="status ok"; $("pauseMsg").innerHTML="✓ "+pauses.length+" pausa/e registrata/e."; }
-  if(day.signature && $("signatureMsg")){ $("signatureMsg").className="status ok"; $("signatureMsg").innerHTML="✓ Firma acquisita e salvata."; }
+  if(day.signature && $("signatureMsg")){ setSignatureStatus(true,"✓ Firma acquisita e salvata."); }
 }
 
 function loadDay(){
