@@ -1,0 +1,3230 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>UpsWorkPlace</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  font-family:Arial,sans-serif;
+  background:#f3f3f3;
+  color:#171717;
+}
+
+body{
+  padding-top:0;
+}
+
+header{
+  height:64px;
+  background:#351c15;
+  color:white;
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  gap:12px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.menu{
+  font-size:32px;
+  padding:6px;
+  cursor:pointer;
+  line-height:1;
+}
+
+.title{
+  font-size:22px;
+  font-weight:800;
+}
+
+main{
+  width:100%;
+  max-width:760px;
+  margin:auto;
+  padding:12px;
+  padding-bottom:40px;
+}
+
+.screen{
+  display:none;
+}
+
+.screen.active{
+  display:block;
+}
+
+h1{
+  font-size:28px;
+  margin:12px 4px 18px;
+}
+
+h2{
+  font-size:21px;
+  margin:0 0 14px;
+}
+
+h3{
+  font-size:17px;
+  margin:10px 0;
+}
+
+.card{
+  background:white;
+  border-radius:17px;
+  padding:16px;
+  margin:12px 0;
+  box-shadow:0 2px 8px #0002;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+}
+
+label{
+  display:block;
+  color:#555;
+  font-size:14px;
+  font-weight:700;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  margin-top:6px;
+  padding:13px;
+  border:1px solid #ccc;
+  border-radius:11px;
+  font-size:17px;
+  background:white;
+  color:#171717;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+button{
+  border:0;
+  border-radius:12px;
+  padding:13px 15px;
+  margin:5px 4px 5px 0;
+  background:#351c15;
+  color:white;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+.secondary{
+  background:#e8e8e8;
+  color:#222;
+}
+
+.green{
+  background:#287a3e;
+}
+
+.red{
+  background:#9d2929;
+}
+
+.status{
+  padding:12px;
+  border-radius:11px;
+  background:#eee;
+  margin-top:10px;
+  font-size:14px;
+}
+
+.status.ok{
+  background:#e7f5e9;
+}
+
+.status.warn{
+  background:#fff0d0;
+}
+
+.status.error{
+  background:#ffe3e3;
+}
+
+.big{
+  font-size:30px;
+  font-weight:800;
+}
+
+.muted{
+  color:#666;
+  font-size:13px;
+}
+
+.separator{
+  height:1px;
+  background:#ddd;
+  margin:15px 0;
+}
+
+/* MENU */
+
+.drawer{
+  position:fixed;
+  left:-100%;
+  top:0;
+  bottom:0;
+  width:86%;
+  max-width:370px;
+  background:white;
+  z-index:100;
+  transition:.22s;
+  box-shadow:5px 0 18px #0004;
+  overflow-y:auto;
+}
+
+.drawer.open{
+  left:0;
+}
+
+.shade{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  z-index:90;
+}
+
+.shade.open{
+  display:block;
+}
+
+.dhead{
+  background:#351c15;
+  color:white;
+  padding:32px 20px 22px;
+  font-size:27px;
+  font-weight:800;
+}
+
+.dsub{
+  margin-top:5px;
+  font-size:14px;
+  opacity:.8;
+}
+
+.item{
+  padding:18px 18px;
+  border-bottom:1px solid #e5e5e5;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.item.active{
+  background:#f0e7e2;
+  border-left:5px solid #351c15;
+}
+
+/* FIRMA */
+
+#signatureCanvas{
+  width:100%;
+  height:220px;
+  border:2px dashed #999;
+  border-radius:12px;
+  background:white;
+  touch-action:none;
+}
+
+.signatureButtons{
+  margin-top:8px;
+}
+
+/* FOTO */
+
+.photo-preview{
+  max-width:100%;
+  border-radius:12px;
+  margin-top:10px;
+  display:none;
+}
+
+.eventCounter{
+  width:100%;
+  margin-top:6px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.eventCounter button{
+  flex:1;
+  margin:0;
+}
+
+.eventCounter .eventNumber{
+  min-width:48px;
+  text-align:center;
+  font-size:22px;
+  font-weight:800;
+}
+
+.counterGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+}
+.counterBox{
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:10px;
+  background:#fafafa;
+}
+.counterBox .counterLabel{
+  font-weight:700;
+  color:#555;
+  margin-bottom:7px;
+}
+.counterButton{
+  width:100%;
+  margin:0;
+}
+.counterValue{
+  text-align:center;
+  font-size:26px;
+  font-weight:800;
+  margin-top:5px;
+}
+.statDetails{
+  margin-top:10px;
+}
+.statDetails summary{
+  cursor:pointer;
+  font-weight:800;
+  font-size:18px;
+}
+.chart{
+  margin-top:14px;
+}
+.barRow{
+  display:grid;
+  grid-template-columns:72px 1fr 42px;
+  gap:7px;
+  align-items:center;
+  margin:8px 0;
+  font-size:13px;
+}
+.barTrack{
+  height:18px;
+  background:#eee;
+  border-radius:9px;
+  overflow:hidden;
+}
+.barFill{
+  height:100%;
+  background:#351c15;
+  border-radius:9px;
+}
+.photo-card img{
+  width:100%;
+  border-radius:12px;
+  margin-top:8px;
+}
+/* LISTE */
+
+.list-item{
+  padding:13px 0;
+  border-bottom:1px solid #ddd;
+}
+
+.list-item:last-child{
+  border-bottom:0;
+}
+
+/* RUOLINO */
+
+.routePreview{
+  width:100%;
+  border:1px solid #ccc;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.shareButtons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+}
+
+.shareButtons button{
+  flex:1;
+  min-width:130px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  h1{
+    font-size:27px;
+  }
+
+  h2{
+    font-size:20px;
+  }
+
+  input,
+  select,
+  textarea{
+    font-size:16px;
+  }
+
+  button{
+    font-size:15px;
+  }
+}
+
+@media(max-width:390px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div id="shade" class="shade" onclick="closeMenu()"></div>
+
+<aside id="drawer" class="drawer">
+
+  <div class="dhead">
+    UpsWorkPlace
+    <div class="dsub">
+      Gestione del lavoro del driver
+    </div>
+  </div>
+
+  <div class="item active" onclick="show('today',this)">
+    🏠 Giornata di oggi
+  </div>
+
+  <div class="item" onclick="show('driver',this)">
+    👤 Driver
+  </div>
+
+  <div class="item" onclick="show('history',this)">
+    📚 Storico giornate
+  </div>
+
+  <div class="item" onclick="show('hours',this)">
+    ⏱️ Ore lavorate
+  </div>
+
+  <div class="item" onclick="show('leave',this)">
+    🏖️ Ferie / Permessi / Malattia
+  </div>
+
+  <div class="item" onclick="show('vehicle',this)">
+    🚐 Veicolo
+  </div>
+
+  <div class="item" onclick="show('damage',this)">
+    🔧 Guasti e danni
+  </div>
+
+  <div class="item" onclick="show('expenses',this)">
+    💶 Rifornimenti e pedaggi
+  </div>
+
+  <div class="item" onclick="show('route',this)">
+    📄 Ruolino
+  </div>
+
+  <div class="item" onclick="show('payslips',this)">
+    💰 Buste paga
+  </div>
+
+  <div class="item" onclick="show('stats',this)">
+    📊 Statistiche
+  </div>
+
+  <div class="item" onclick="show('settings',this)">
+    ⚙️ Impostazioni
+  </div>
+
+</aside>
+
+<header>
+  <span class="menu" onclick="openMenu()">☰</span>
+  <span class="title">UpsWorkPlace</span>
+</header>
+
+<main>
+
+<!-- ================================================= -->
+<!-- GIORNATA -->
+<!-- ================================================= -->
+
+<section id="today" class="screen active">
+
+<h1>☀️ La mia giornata</h1>
+
+<div class="card">
+
+  <div class="status">
+
+    Data:
+    <b id="todayDate"></b>
+
+    <br>
+
+    ✓ Salvataggio automatico attivo
+
+  </div>
+
+</div>
+
+
+<!-- 1 ARRIVO -->
+
+<div class="card">
+
+<h2>🏭 1. Arrivo in magazzino</h2>
+
+<div class="grid">
+
+<label>
+Ora inizio lavoro
+<input id="start" type="time">
+</label>
+
+<label>
+Km iniziali
+<input id="kmOut" type="number">
+</label>
+
+</div>
+
+<button onclick="setNow('start')">
+⏱️ Registra inizio
+</button>
+
+<button onclick="openCamera('arrivalPhoto')">
+📷 Foto arrivo in magazzino
+</button>
+
+<input id="arrivalPhoto"
+       type="file"
+       accept="image/*"
+       capture="environment"
+       style="display:none"
+       onchange="photoSelected(this,'arrivalPreview','arrival')">
+
+<img id="arrivalPreview"
+     class="photo-preview">
+
+<div id="startMsg" class="status" style="display:none"></div>
+
+</div>
+
+
+<!-- 2 CARICO -->
+
+<div class="card">
+
+<h2>📦 2. Carico del mattino</h2>
+
+<div class="grid">
+
+<label>
+Pacchi in consegna
+<input id="parcels" type="number">
+</label>
+
+<label>
+Stop di consegna
+<input id="stops" type="number">
+</label>
+
+<label>
+Ritiri
+<input id="pickups" type="number">
+</label>
+
+<label>
+Pacchi in ritiro
+<input id="picked" type="number">
+</label>
+
+<label>
+Espressi
+<input id="express" type="number">
+</label>
+
+</div>
+
+<div class="status">
+ℹ️ Gli espressi vengono registrati per le statistiche,
+ma <b>non vengono sommati al totale pacchi</b> e
+<b>non vengono inseriti nel ruolino</b>.
+</div>
+
+</div>
+
+
+<!-- 3 USCITA -->
+
+<div class="card">
+
+<h2>🚚 3. Uscita dal magazzino</h2>
+
+<div class="grid">
+
+<label>
+Ora uscita
+<input id="exit" type="time">
+</label>
+
+</div>
+
+<label style="margin-top:12px">
+
+<input id="finalized"
+       type="checkbox"
+       style="width:auto">
+
+ Itinerario finalizzato
+
+</label>
+
+<button onclick="warehouseExit()">
+🚚 Registra uscita
+</button>
+
+<div id="exitMsg" class="status warn">
+Prima dell'uscita devi finalizzare l'itinerario.
+</div>
+
+</div>
+
+
+<!-- 4 RIFORNIMENTI -->
+
+<div class="card">
+
+<h2>⛽ 4. Rifornimenti</h2>
+
+<div class="grid">
+
+<label>
+Litri
+<input id="fuelLiters" type="number" step=".01">
+</label>
+
+<label>
+Prezzo/litro €
+<input id="fuelPrice" type="number" step=".001">
+</label>
+
+<label>
+Totale €
+<input id="fuelAmount" type="number" step=".01">
+</label>
+
+<label>
+Km rifornimento
+<input id="fuelKm" type="number">
+</label>
+
+</div>
+
+<button onclick="saveFuel()">
+⛽ Registra rifornimento
+</button>
+
+<button onclick="openCamera('fuelPhoto')">
+📷 Foto scontrino
+</button>
+
+<input id="fuelPhoto"
+       type="file"
+       accept="image/*"
+       capture="environment"
+       style="display:none"
+       onchange="photoSelected(this,'fuelPreview','fuel')">
+
+<img id="fuelPreview"
+     class="photo-preview">
+
+<div id="fuelMsg" class="status" style="display:none"></div>
+
+</div>
+
+
+<!-- 5 PEDAGGI -->
+
+<div class="card">
+
+<h2>🛣️ 5. Pedaggi</h2>
+
+<div class="grid">
+
+<label>
+Importo €
+<input id="tollAmount" type="number" step=".01">
+</label>
+
+<label>
+Numero pedaggi
+<input id="tollCount" type="number">
+</label>
+
+</div>
+
+<button onclick="saveToll()">
+💶 Registra pedaggio
+</button>
+
+</div>
+
+
+<!-- 6 PRIMA CONSEGNA -->
+
+<div class="card">
+
+<h2>📍 6. Prima consegna</h2>
+
+<button onclick="registerFirstStop()">
+📍 Primo stop + GPS
+</button>
+
+<div class="grid">
+
+<label>
+Ora primo stop
+<input id="first" type="time">
+</label>
+
+<label>
+GPS
+<input id="firstGps"
+       readonly
+       placeholder="Non registrato">
+</label>
+
+</div>
+
+<div id="firstMsg" class="status" style="display:none"></div>
+
+</div>
+
+
+<!-- 7 EVENTI CONSEGNA -->
+
+<div class="card">
+
+<h2>📦 7. Eventi durante le consegne</h2>
+
+<p class="muted">
+Registra gli eventi che impediscono o modificano la consegna.
+</p>
+
+<div class="grid">
+
+<label>
+Assente / Chiuso 1
+<input id="eventG348" type="number" style="display:none">
+</label>
+
+<label>
+Assente / Chiuso 2
+<input id="eventL1KX" type="number" style="display:none">
+</label>
+
+<label>
+Assente / Chiuso 3
+<input id="eventAY49" type="number" style="display:none">
+</label>
+
+<label>
+No denaro 1
+<input id="eventSI" type="number" style="display:none">
+</label>
+
+<label>
+No denaro 2
+<input id="eventKZ" type="number" style="display:none">
+</label>
+
+<label>
+No denaro 3
+<input id="eventS2" type="number" style="display:none">
+</label>
+
+<label>
+Trasferito
+<input id="eventTransfer" type="number" style="display:none">
+</label>
+
+<label>
+No numero / strada / cit.
+<input id="eventAddress" type="number" style="display:none">
+</label>
+
+<label>
+No destinatario
+<input id="eventRecipient" type="number" style="display:none">
+</label>
+
+<label>
+Rifiutato
+<input id="eventRefused" type="number" style="display:none">
+</label>
+
+<label>
+L futura
+<input id="futureL" type="number" style="display:none">
+</label>
+
+<label>
+K emergenze
+<input id="emergencyK" type="number" style="display:none">
+</label>
+
+</div>
+
+<textarea id="eventNotes"
+placeholder="Note sugli eventi di consegna"></textarea>
+
+</div>
+
+
+<!-- 8 RITIRI -->
+
+<div class="card">
+
+<h2>📦 8. Ritiri e attività aggiuntive</h2>
+
+<div class="counterGrid">
+
+<div class="counterBox">
+<div class="counterLabel">Stop pickup</div>
+<input id="pickupStops" type="number" value="0" style="display:none">
+<button class="counterButton" onclick="activityClick('pickupStops')">➕ Aggiungi stop pickup</button>
+<div id="pickupStopsCount" class="counterValue">0</div>
+</div>
+
+<div class="counterBox">
+<div class="counterLabel">Pacchi in ritiro</div>
+<input id="pickupPackages" type="number" value="0" style="display:none">
+<button class="counterButton" onclick="activityClick('pickupPackages')">➕ Aggiungi pacco in ritiro</button>
+<div id="pickupPackagesCount" class="counterValue">0</div>
+</div>
+
+<div class="counterBox">
+<div class="counterLabel">Stop in consegna</div>
+<input id="deliveryStops" type="number" value="0" style="display:none">
+<button class="counterButton" onclick="activityClick('deliveryStops')">➕ Aggiungi stop in consegna</button>
+<div id="deliveryStopsCount" class="counterValue">0</div>
+</div>
+
+<div class="counterBox">
+<div class="counterLabel">Pacchi in consegna</div>
+<input id="deliveryPackages" type="number" value="0" style="display:none">
+<button class="counterButton" onclick="activityClick('deliveryPackages')">➕ Aggiungi pacco in consegna</button>
+<div id="deliveryPackagesCount" class="counterValue">0</div>
+</div>
+
+</div>
+
+<div class="status">1 tocco = +1. I conteggi vengono salvati nella giornata.</div>
+
+</div>
+
+
+<!-- 9 PAUSE -->
+
+<div class="card">
+
+<h2>⏸️ 9. Pause</h2>
+
+<button onclick="pauseStart()">
+▶️ Inizio pausa
+</button>
+
+<button class="secondary"
+        onclick="pauseEnd()">
+⏹️ Fine pausa
+</button>
+
+<div id="pauseMsg" class="status">
+Nessuna pausa registrata.
+</div>
+
+<div id="pauseList"></div>
+
+</div>
+
+
+<!-- 10 ULTIMO STOP -->
+
+<div class="card">
+
+<h2>🏁 10. Ultimo stop</h2>
+
+<button onclick="registerLastStop()">
+🏁 Registra ultimo stop
+</button>
+
+<div class="grid">
+
+<label>
+Ora ultimo stop
+<input id="last" type="time">
+</label>
+
+</div>
+
+<div id="lastMsg" class="status">
+Ultimo stop non registrato.
+</div>
+
+</div>
+
+
+<!-- 11 RIENTRO -->
+
+<div class="card">
+
+<h2>🏭 11. Rientro in magazzino</h2>
+
+<div class="grid">
+
+<label>
+Ora rientro
+<input id="return" type="time">
+</label>
+
+<label>
+Km rientro
+<input id="kmReturn" type="number">
+</label>
+
+</div>
+
+<button onclick="setNow('return')">
+🏁 Registra rientro
+</button>
+
+<button onclick="openCamera('returnPhoto')">
+📷 Foto rientro in magazzino
+</button>
+
+<input id="returnPhoto"
+       type="file"
+       accept="image/*"
+       capture="environment"
+       style="display:none"
+       onchange="photoSelected(this,'returnPreview','return')">
+
+<img id="returnPreview"
+     class="photo-preview">
+
+</div>
+
+
+<!-- 12 FINE LAVORO -->
+
+<div class="card">
+
+<h2>🏠 12. Fine giornata</h2>
+
+<div class="grid">
+
+<label>
+Ora fine lavoro
+<input id="end" type="time">
+</label>
+
+<label>
+Pulizia abitacolo
+<select id="cleaning">
+<option value="">Seleziona</option>
+<option value="SI">SI</option>
+<option value="NO">NO</option>
+</select>
+</label>
+
+</div>
+
+<button onclick="setNow('end')">
+⏱️ Registra fine lavoro
+</button>
+
+<div id="endMsg" class="status">
+Fine giornata non registrata.
+</div>
+
+</div>
+
+
+<!-- 13 GUASTI -->
+
+<div class="card">
+
+<h2>🔧 13. Guasti e danni</h2>
+
+<textarea id="damageText"
+placeholder="Descrizione guasto o danno"></textarea>
+
+<button onclick="saveDamage()">
+🔧 Registra guasto/danno
+</button>
+
+<button onclick="openCamera('damagePhoto')">
+📷 Scatta foto
+</button>
+
+<input id="damagePhoto"
+       type="file"
+       accept="image/*"
+       capture="environment"
+       style="display:none"
+       onchange="photoSelected(this,'damagePreview','damage')">
+
+<img id="damagePreview"
+     class="photo-preview">
+
+<div id="damageMsg" class="status">
+Nessun guasto registrato.
+</div>
+
+</div>
+
+
+<!-- 14 NOTE -->
+
+<div class="card">
+
+<h2>📝 14. Note di fine giornata</h2>
+
+<textarea id="notes"
+placeholder="Eventuali note..."></textarea>
+
+<button onclick="saveNotes()">💾 Registra note</button>
+
+<div id="notesMsg" class="status">Nessuna nota registrata.</div>
+
+</div>
+
+
+<!-- 15 RUOLINO -->
+
+<div class="card">
+
+<h2>📄 15. Dopo ruolino</h2>
+
+<div class="status">
+
+Prima di generare il ruolino controlla i dati
+e inserisci la firma.
+
+</div>
+
+<button onclick="openRouteSection()">
+📄 Controlla e prepara ruolino
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- DRIVER -->
+<!-- ================================================= -->
+
+<section id="driver" class="screen">
+
+<h1>👤 Driver</h1>
+
+<div class="card">
+
+<h2>Dati fissi</h2>
+
+<div class="grid">
+
+<label>
+Driver
+<input id="driverName">
+</label>
+
+<label>
+Codice driver
+<input id="driverCode">
+</label>
+
+<label>
+Targa
+<input id="plate">
+</label>
+
+</div>
+
+<button onclick="saveFixed()">
+💾 Salva dati driver
+</button>
+
+<div class="status ok">
+Questi dati rimangono salvati per i giorni successivi.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- STORICO -->
+<!-- ================================================= -->
+
+<section id="history" class="screen">
+
+<h1>📚 Storico giornate</h1>
+
+<div class="card">
+
+<h2>Tutte le giornate</h2>
+
+<div id="historyList"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- ORE -->
+<!-- ================================================= -->
+
+<section id="hours" class="screen">
+
+<h1>⏱️ Ore lavorate</h1>
+
+<div class="card">
+
+<h2>Oggi</h2>
+
+<div id="todayHours" class="big">
+—
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Totale storico</h2>
+
+<div id="historyHours" class="big">
+—
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- FERIE -->
+<!-- ================================================= -->
+
+<section id="leave" class="screen">
+
+<h1>🏖️ Ferie / Permessi / Malattia</h1>
+
+<div class="card">
+
+<div class="grid">
+
+<label>
+Tipo
+<select id="leaveType">
+<option>Ferie</option>
+<option>Permesso</option>
+<option>Malattia</option>
+</select>
+</label>
+
+<label>
+Data
+<input id="leaveDate" type="date">
+</label>
+
+</div>
+
+<textarea id="leaveNote"
+placeholder="Note"></textarea>
+
+<button onclick="saveLeave()">
+💾 Salva
+</button>
+
+<div id="leaveMsg" class="status">
+Nessuna registrazione.
+</div>
+
+<h3>📚 Registrazioni</h3>
+<div id="leaveHistory"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- VEICOLO -->
+<!-- ================================================= -->
+
+<section id="vehicle" class="screen">
+
+<h1>🚐 Veicolo</h1>
+
+<div class="card">
+
+<div class="grid">
+
+<label>
+Targa
+<input id="vehiclePlate">
+</label>
+
+<label>
+Km
+<input id="vehicleKm" type="number">
+</label>
+
+</div>
+
+<textarea id="vehicleNote"
+placeholder="Note sul veicolo"></textarea>
+
+<button onclick="saveVehicle()">
+💾 Salva
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- GUASTI -->
+<!-- ================================================= -->
+
+<section id="damage" class="screen">
+
+<h1>🔧 Guasti e danni</h1>
+
+<div class="card">
+
+<textarea id="damageHistory"
+placeholder="Descrizione"></textarea>
+
+<button onclick="saveDamageHistory()">
+💾 Registra
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- SPESE -->
+<!-- ================================================= -->
+
+<section id="expenses" class="screen">
+
+<h1>💶 Rifornimenti e pedaggi</h1>
+
+<div class="card">
+
+<h2>Rifornimenti registrati</h2>
+
+<div id="fuelHistory"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Pedaggi registrati</h2>
+
+<div id="tollHistory"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- RUOLINO -->
+<!-- ================================================= -->
+
+<section id="route" class="screen">
+
+<h1>📄 Ruolino</h1>
+
+<div class="card">
+
+<h2>Ruolino della giornata</h2>
+
+<div id="routeSummary"></div>
+
+</div>
+
+
+<div class="card">
+
+<h2>✍️ Firma capo</h2>
+
+<p class="muted">
+Firma direttamente con il dito nello spazio sottostante.
+</p>
+
+<canvas id="signatureCanvas"></canvas>
+
+<div class="signatureButtons">
+
+<button onclick="clearSignature()">
+🗑️ Cancella firma
+</button>
+
+<button onclick="saveSignature()">
+✍️ Conferma firma
+</button>
+
+</div>
+
+<div id="signatureMsg" class="status">
+Firma non ancora inserita.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📄 Generazione ruolino</h2>
+
+<div class="status">
+
+Il modello utilizzato sarà:
+
+<b>ruolino_template.png</b>
+
+<br><br>
+
+Gli espressi non saranno inseriti nel ruolino
+e non saranno conteggiati nel totale.
+
+</div>
+
+<button class="green"
+        onclick="generateRoute()">
+📄 GENERA RUOLINO
+</button>
+
+<div id="generateMsg" class="status">
+Il ruolino non è ancora stato generato.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📤 Condivisione</h2>
+
+<div class="shareButtons">
+
+<button onclick="shareRoute()">
+📤 Condividi
+</button>
+
+<button onclick="shareEmail()">
+✉️ Email
+</button>
+
+<button onclick="shareWhatsApp()">
+🟢 WhatsApp
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>🗂️ Ruolini salvati</h2>
+
+<div id="routeHistory"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- BUSTE PAGA -->
+<!-- ================================================= -->
+
+<section id="payslips" class="screen">
+
+<h1>💰 Buste paga</h1>
+
+<div class="card">
+<h2>Carica busta paga</h2>
+<p class="muted">PDF o foto. La busta viene associata al mese scelto.</p>
+<div class="grid">
+<label>Mese<input id="payslipMonth" type="month"></label>
+</div>
+<input id="payslipFile" type="file" accept="application/pdf,image/*" style="display:none" onchange="payslipSelected(this)">
+<button onclick="document.getElementById('payslipFile').click()">📎 Carica busta paga</button>
+<div id="payslipMsg" class="status">Nessuna busta paga caricata.</div>
+</div>
+
+<div class="card">
+<h2>📁 Archivio buste paga</h2>
+<div id="payslipHistory"></div>
+</div>
+
+<div class="card">
+<h2>⏱️ Confronto ore</h2>
+<p class="muted">Inserisci le ore pagate indicate in busta per confrontarle con quelle registrate nell'app.</p>
+<div class="grid">
+<label>Ore pagate<input id="payslipPaidHours" type="number" step="0.01"></label>
+<label>Mese<input id="compareMonth" type="month"></label>
+</div>
+<button onclick="comparePayslipHours()">📊 Confronta ore</button>
+<div id="payslipCompare" class="status">Nessun confronto eseguito.</div>
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- STATISTICHE -->
+<!-- ================================================= -->
+
+<section id="stats" class="screen">
+
+<h1>📊 Statistiche</h1>
+
+<div class="card">
+<details class="statDetails" open>
+<summary>📅 Statistiche giornaliere</summary>
+<div id="dailyStats"></div>
+<div id="dailyChart" class="chart"></div>
+</details>
+</div>
+
+<div class="card">
+<details class="statDetails">
+<summary>📅 Statistiche settimanali</summary>
+<div id="weeklyStats"></div>
+<div id="weeklyChart" class="chart"></div>
+</details>
+</div>
+
+<div class="card">
+<details class="statDetails">
+<summary>🗓️ Statistiche mensili</summary>
+<div id="monthlyStats"></div>
+<div id="monthlyChart" class="chart"></div>
+</details>
+</div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- IMPOSTAZIONI -->
+<!-- ================================================= -->
+
+<section id="settings" class="screen">
+
+<h1>⚙️ Impostazioni</h1>
+
+<div class="card">
+
+<h2>Dati applicazione</h2>
+
+<button onclick="exportData()">
+📤 Esporta dati
+</button>
+
+<button class="secondary"
+        onclick="resetToday()">
+♻️ Nuova giornata
+</button>
+
+</div>
+
+</section>
+
+</main>
+
+
+
+<script>
+/* =====================================================
+   UpsWorkPlace - LOGICA GIORNATA
+===================================================== */
+
+const todayKey = new Date().toISOString().slice(0,10);
+
+let day = JSON.parse(
+  localStorage.getItem("ups_day_"+todayKey) || "{}"
+);
+
+let fixed = JSON.parse(
+  localStorage.getItem("ups_fixed") || "{}"
+);
+
+let history = JSON.parse(
+  localStorage.getItem("ups_history") || "[]"
+);
+
+let routes = JSON.parse(
+  localStorage.getItem("ups_routes") || "[]"
+);
+
+let pauses = day.pauses || [];
+let fuelRecords = day.fuelRecords || [];
+let tollRecords = day.tollRecords || [];
+let signatureData = day.signature || null;
+
+
+/* =====================================================
+   UTILITA
+===================================================== */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function value(id){
+  return $(id) ? $(id).value : "";
+}
+
+function setValue(id,v){
+  if($(id)) $(id).value = v ?? "";
+}
+
+function numberValue(id){
+  return Number(value(id) || 0);
+}
+
+function nowTime(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,"0")
+    +":"+String(d.getMinutes()).padStart(2,"0");
+}
+
+function todayItalian(){
+  const d = new Date();
+  return String(d.getDate()).padStart(2,"0")
+    +"/"+String(d.getMonth()+1).padStart(2,"0")
+    +"/"+d.getFullYear();
+}
+
+function formatDate(date){
+  if(!date) return "—";
+  const p=date.split("-");
+  if(p.length!==3) return date;
+  return p[2]+"/"+p[1]+"/"+p[0];
+}
+
+function diffMinutes(a,b){
+  if(!a || !b) return 0;
+
+  const pa=a.split(":");
+  const pb=b.split(":");
+
+  let ma=Number(pa[0])*60+Number(pa[1]);
+  let mb=Number(pb[0])*60+Number(pb[1]);
+
+  if(mb<ma) mb+=24*60;
+
+  return mb-ma;
+}
+
+function formatMinutes(m){
+  if(!m || m<0) return "0h 00m";
+
+  return Math.floor(m/60)
+    +"h "
+    +String(m%60).padStart(2,"0")
+    +"m";
+}
+
+
+/* =====================================================
+   SALVATAGGIO GIORNATA
+===================================================== */
+
+function showStatus(id,cls,text){
+  const el=$(id);
+  if(!el) return;
+  el.style.display="block";
+  el.className=cls||"status";
+  el.innerHTML=text||"";
+}
+
+function saveDay(){
+  day.date=todayKey;
+  day.driverName=value("driverName");
+  day.driverCode=value("driverCode");
+  day.plate=value("plate");
+  day.start=value("start");
+  day.kmOut=value("kmOut");
+  day.parcels=numberValue("parcels");
+  day.stops=numberValue("stops");
+  day.pickups=numberValue("pickups");
+  day.picked=numberValue("picked");
+  day.express=numberValue("express");
+  day.exit=value("exit");
+  day.first=value("first");
+  day.firstGps=value("firstGps");
+  day.last=value("last");
+  day.return=value("return");
+  day.kmReturn=value("kmReturn");
+  day.end=value("end");
+  day.cleaning=value("cleaning");
+  day.notes=value("notes");
+  day.finalized=$("finalized") ? $("finalized").checked : false;
+  day.pickupStops=numberValue("pickupStops");
+  day.pickupPackages=numberValue("pickupPackages");
+  day.deliveryStops=numberValue("deliveryStops");
+  day.deliveryPackages=numberValue("deliveryPackages");
+  day.futureL=numberValue("futureL");
+  day.emergencyK=numberValue("emergencyK");
+  day.damage=value("damageText");
+  day.events={
+    g348:numberValue("eventG348"),l1kx:numberValue("eventL1KX"),ay49:numberValue("eventAY49"),
+    si:numberValue("eventSI"),kz:numberValue("eventKZ"),s2:numberValue("eventS2"),
+    transfer:numberValue("eventTransfer"),address:numberValue("eventAddress"),
+    recipient:numberValue("eventRecipient"),refused:numberValue("eventRefused"),
+    futureL:numberValue("futureL"),emergencyK:numberValue("emergencyK"),notes:value("eventNotes")
+  };
+  day.pauses=pauses;
+  day.fuelRecords=fuelRecords;
+  day.tollRecords=tollRecords;
+  day.signature=signatureData || day.signature || "";
+  if(!day.photos) day.photos={};
+
+  try{
+    localStorage.setItem("ups_day_"+todayKey,JSON.stringify(day));
+  }catch(e){
+    const msg=$("saveDayMsg");
+    if(msg){
+      msg.className="status warn";
+      msg.innerHTML="⚠️ Dati aggiornati, ma lo spazio di archiviazione è pieno. Lo storico verrà salvato alla chiusura della giornata.";
+    }
+  }
+
+  try{ updateCalculations(); }catch(e){ console.error("updateCalculations",e); }
+}
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+function openMenu(){
+  $("drawer").classList.add("open");
+  $("shade").classList.add("open");
+}
+
+function closeMenu(){
+  $("drawer").classList.remove("open");
+  $("shade").classList.remove("open");
+}
+
+function show(id,element){
+
+  document.querySelectorAll(".screen")
+    .forEach(s=>s.classList.remove("active"));
+
+  const target=$(id);
+
+  if(target) target.classList.add("active");
+
+  document.querySelectorAll(".item")
+    .forEach(i=>i.classList.remove("active"));
+
+  if(element) element.classList.add("active");
+
+  closeMenu();
+
+  if(id==="history") renderHistory();
+
+  if(id==="route"){
+    renderRouteSummary();
+    renderRouteHistory();
+    setTimeout(initSignatureCanvas,50);
+  }
+
+  if(id==="expenses") renderExpenses();
+
+  if(id==="stats") renderStats();
+
+  if(id==="hours") updateCalculations();
+  if(id==="leave") renderLeaveHistory();
+  if(id==="payslips") renderPayslips();
+}
+
+
+/* =====================================================
+   ORARI
+===================================================== */
+
+function setNow(id){
+
+  setValue(id,nowTime());
+
+  saveDay();
+
+  if(id==="start"){
+    $("startMsg").style.display="block"; $("startMsg").className="status ok";
+    $("startMsg").innerHTML=
+      "✓ Inizio giornata registrato alle "+value("start")+".";
+  }
+
+  if(id==="return"){
+    const m=$("returnMsg");
+    if(m){
+      m.className="status ok";
+      m.innerHTML=
+        "✓ Rientro registrato alle "+value("return")+".";
+    }
+  }
+
+  if(id==="end"){
+    $("endMsg").style.display="block"; $("endMsg").className="status ok";
+    $("endMsg").innerHTML=
+      "✓ Fine giornata registrata alle "+value("end")+".";
+  }
+}
+
+function warehouseExit(){
+
+  if(!$("finalized").checked){
+
+    $("exitMsg").style.display="block"; $("exitMsg").className="status warn";
+    $("exitMsg").innerHTML=
+      "⚠️ Prima dell'uscita devi finalizzare l'itinerario.";
+
+    return;
+  }
+
+  setValue("exit",nowTime());
+
+  $("exitMsg").style.display="block"; $("exitMsg").className="status ok";
+  $("exitMsg").innerHTML="✓ Uscita dal magazzino registrata.";
+  saveDay();
+
+  $("exitMsg").style.display="block"; $("exitMsg").className="status ok";
+  $("exitMsg").innerHTML=
+    "✓ Uscita dal magazzino registrata.";
+}
+
+
+/* =====================================================
+   PRIMO / ULTIMO STOP
+===================================================== */
+
+function registerFirstStop(){
+
+  setValue("first",nowTime());
+
+  if(navigator.geolocation){
+
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+
+        setValue(
+          "firstGps",
+          pos.coords.latitude.toFixed(6)
+          +","+pos.coords.longitude.toFixed(6)
+        );
+
+        $("firstMsg").style.display="block"; $("firstMsg").className="status ok";
+        $("firstMsg").innerHTML="✓ Primo stop registrato con GPS.";
+        saveDay();
+
+        $("firstMsg").style.display="block"; $("firstMsg").className="status ok";
+        $("firstMsg").innerHTML=
+          "✓ Primo stop registrato con GPS.";
+      },
+      function(){
+
+        $("firstMsg").style.display="block"; $("firstMsg").className="status warn";
+        $("firstMsg").innerHTML="Ora registrata, ma GPS non disponibile.";
+        saveDay();
+
+        $("firstMsg").style.display="block"; $("firstMsg").className="status warn";
+        $("firstMsg").innerHTML=
+          "Ora registrata, ma GPS non disponibile.";
+      },
+      {
+        enableHighAccuracy:true,
+        timeout:10000
+      }
+    );
+
+  }else{
+    saveDay();
+  }
+}
+
+function registerLastStop(){
+
+  setValue("last",nowTime());
+  $("lastMsg").style.display="block"; $("lastMsg").className="status ok";
+  $("lastMsg").innerHTML="✓ Ultimo stop registrato.";
+  saveDay();
+
+  $("lastMsg").style.display="block"; $("lastMsg").className="status ok";
+  $("lastMsg").innerHTML=
+    "✓ Ultimo stop registrato.";
+}
+
+
+/* =====================================================
+   EVENTI - UN CLICK = +1
+===================================================== */
+
+const eventDefinitions={
+  eventG348:["g348","Assente / Chiuso 1"],
+  eventL1KX:["l1kx","Assente / Chiuso 2"],
+  eventAY49:["ay49","Assente / Chiuso 3"],
+  eventSI:["si","No denaro 1"],
+  eventKZ:["kz","No denaro 2"],
+  eventS2:["s2","No denaro 3"],
+  eventTransfer:["transfer","Trasferito"],
+  eventAddress:["address","No numero / strada / cit."],
+  eventRecipient:["recipient","No destinatario"],
+  eventRefused:["refused","Rifiutato"],
+  futureL:["futureL","L futura"],
+  emergencyK:["emergencyK","K emergenze"]
+};
+
+function eventClick(inputId){
+
+  const def=eventDefinitions[inputId];
+
+  if(!def) return;
+
+  const current=numberValue(inputId)+1;
+
+  setValue(inputId,current);
+
+  saveDay();
+
+  updateEventButtons();
+}
+
+function updateEventButtons(){
+
+  Object.keys(eventDefinitions).forEach(inputId=>{
+
+    const input=$(inputId);
+
+    if(!input) return;
+
+    input.style.display="none";
+
+    const label=input.closest("label");
+
+    if(!label) return;
+
+    let wrap=label.querySelector(".eventCounter");
+
+    if(!wrap){
+
+      wrap=document.createElement("div");
+      wrap.className="eventCounter";
+
+      label.appendChild(wrap);
+    }
+
+    const def=eventDefinitions[inputId];
+    const count=numberValue(inputId);
+
+    wrap.innerHTML=
+      "<button type='button' "
+      +"onclick=\"eventClick('"+inputId+"')\">"
+      +"➕ Registra evento"
+      +"</button>"
+      +"<span class='eventNumber'>"
+      +count+
+      "</span>";
+  });
+}
+
+
+function activityClick(id){
+  const current=numberValue(id)+1;
+  setValue(id,current);
+  const map={pickupStops:"pickupStopsCount",pickupPackages:"pickupPackagesCount",deliveryStops:"deliveryStopsCount",deliveryPackages:"deliveryPackagesCount"};
+  if($(map[id])) $(map[id]).textContent=current;
+  saveDay();
+}
+
+function updateActivityCounters(){
+  const map={pickupStops:"pickupStopsCount",pickupPackages:"pickupPackagesCount",deliveryStops:"deliveryStopsCount",deliveryPackages:"deliveryPackagesCount"};
+  Object.keys(map).forEach(id=>{if($(map[id])) $(map[id]).textContent=numberValue(id);});
+}
+
+function saveNotes(){
+  day.notes=value("notes");
+  saveDay();
+  $("notesMsg").style.display="block"; $("notesMsg").className="status ok";
+  $("notesMsg").innerHTML="✓ Note di fine giornata registrate.";
+}
+
+/* =====================================================
+   PAUSE
+===================================================== */
+
+function pauseStart(){
+
+  if(day.currentPause){
+
+    alert("C'è già una pausa in corso.");
+    return;
+  }
+
+  day.currentPause={
+    start:nowTime()
+  };
+
+  $("pauseMsg").style.display="block"; $("pauseMsg").className="status warn";
+  $("pauseMsg").innerHTML="⏸️ Pausa iniziata alle "+day.currentPause.start;
+  saveDay();
+
+  $("pauseMsg").style.display="block"; $("pauseMsg").className="status warn";
+  $("pauseMsg").innerHTML=
+    "⏸️ Pausa iniziata alle "
+    +day.currentPause.start;
+}
+
+function pauseEnd(){
+
+  if(!day.currentPause){
+
+    alert("Non c'è una pausa in corso.");
+    return;
+  }
+
+  const end=nowTime();
+  const start=day.currentPause.start;
+  const minutes=diffMinutes(start,end);
+
+  pauses.push({
+    start:start,
+    end:end,
+    minutes:minutes
+  });
+
+  day.currentPause=null;
+
+  $("pauseMsg").style.display="block"; $("pauseMsg").className="status ok";
+  $("pauseMsg").innerHTML="✓ Pausa terminata alle "+end+" — "+minutes+" minuti.";
+  saveDay();
+
+  $("pauseMsg").style.display="block"; $("pauseMsg").className="status ok";
+  $("pauseMsg").innerHTML=
+    "✓ Pausa terminata alle "
+    +end+" — "+minutes+" minuti.";
+
+  renderPauseList();
+}
+
+function renderPauseList(){
+
+  if(!pauses.length){
+
+    $("pauseList").innerHTML="";
+    return;
+  }
+
+  let html="<div class='separator'></div>";
+
+  pauses.forEach((p,i)=>{
+
+    html+=
+      "<div class='list-item'>"
+      +"⏸️ Pausa "+(i+1)
+      +"<br>Inizio: <b>"+p.start+"</b>"
+      +"<br>Fine: <b>"+p.end+"</b>"
+      +"<br>Durata: <b>"+p.minutes+" min</b>"
+      +"</div>";
+  });
+
+  $("pauseList").innerHTML=html;
+}
+
+
+/* =====================================================
+   FOTO
+===================================================== */
+
+function ensurePhotos(){
+  if(!day.photos) day.photos={};
+}
+
+function openCamera(id){
+
+  const el=$(id);
+
+  if(el) el.click();
+}
+
+function photoSelected(input,previewId,key){
+  const file=input && input.files ? input.files[0] : null;
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    ensurePhotos();
+    const data=e.target.result;
+    const img=$(previewId);
+    if(img){img.src=data;img.style.display="block";}
+    if(key==="fuel"){
+      if(fuelRecords.length) fuelRecords[fuelRecords.length-1].photo=data;
+      else day.photos.fuelPending=data;
+    } else if(key==="damage"){
+      if(day.damages && day.damages.length) day.damages[day.damages.length-1].photo=data;
+      else day.photos.damagePending=data;
+    } else {
+      day.photos[key]=data;
+    }
+    saveDay();
+    if(key==="fuel" || key==="damage") renderExpenses();
+  };
+  reader.readAsDataURL(file);
+}
+
+function restorePhotos(){
+
+  ensurePhotos();
+
+  const list=[
+    ["arrival","arrivalPreview"],
+    ["fuel","fuelPreview"],
+    ["return","returnPreview"],
+    ["damage","damagePreview"]
+  ];
+
+  list.forEach(pair=>{
+
+    const data=day.photos[pair[0]] || day.photos[pair[0]+"Pending"];
+    const img=$(pair[1]);
+
+    if(data && img){
+
+      img.src=data;
+      img.style.display="block";
+    }
+  });
+}
+
+
+/* =====================================================
+   DRIVER
+===================================================== */
+
+function saveFixed(){
+
+  fixed={
+    driverName:value("driverName"),
+    driverCode:value("driverCode"),
+    plate:value("plate")
+  };
+
+  localStorage.setItem(
+    "ups_fixed",
+    JSON.stringify(fixed)
+  );
+
+  day.driverName=fixed.driverName;
+  day.driverCode=fixed.driverCode;
+  day.plate=fixed.plate;
+
+  saveDay();
+
+  alert("✓ Dati driver salvati.");
+}
+
+
+/* =====================================================
+   FIRMA
+===================================================== */
+
+let canvas=null;
+let ctx=null;
+let drawing=false;
+
+function initSignatureCanvas(){
+
+  canvas=$("signatureCanvas");
+
+  if(!canvas) return;
+
+  const rect=canvas.getBoundingClientRect();
+
+  if(rect.width<=0) return;
+
+  const ratio=window.devicePixelRatio || 1;
+
+  canvas.width=Math.round(rect.width*ratio);
+  canvas.height=Math.round(rect.height*ratio);
+
+  ctx=canvas.getContext("2d");
+
+  ctx.setTransform(
+    ratio,0,0,ratio,0,0
+  );
+
+  ctx.lineWidth=2.5;
+  ctx.lineCap="round";
+  ctx.strokeStyle="#111";
+
+  if(signatureData){
+
+    const img=new Image();
+
+    img.onload=function(){
+
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        rect.width,
+        rect.height
+      );
+    };
+
+    img.src=signatureData;
+  }
+
+  canvas.onpointerdown=function(e){
+
+    drawing=true;
+
+    const r=canvas.getBoundingClientRect();
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      e.clientX-r.left,
+      e.clientY-r.top
+    );
+  };
+
+  canvas.onpointermove=function(e){
+
+    if(!drawing) return;
+
+    const r=canvas.getBoundingClientRect();
+
+    ctx.lineTo(
+      e.clientX-r.left,
+      e.clientY-r.top
+    );
+
+    ctx.stroke();
+  };
+
+  canvas.onpointerup=function(){
+    drawing=false;
+  };
+
+  canvas.onpointercancel=function(){
+    drawing=false;
+  };
+}
+
+function clearSignature(){
+
+  if(!canvas || !ctx) initSignatureCanvas();
+
+  if(canvas && ctx){
+
+    ctx.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+  }
+
+  signatureData=null;
+
+  day.signature=null;
+
+  saveDay();
+
+  $("signatureMsg").className="status";
+  $("signatureMsg").innerHTML=
+    "Firma cancellata.";
+}
+
+function setSignatureStatus(ok,text){
+  const msg=$("signatureMsg");
+  if(!msg) return;
+  msg.style.display="block";
+  msg.className=ok?"status ok":"status warn";
+  msg.innerHTML=text;
+}
+
+function saveSignature(){
+
+  if(!canvas || !ctx)
+    initSignatureCanvas();
+
+  if(!canvas){
+    alert("Area firma non disponibile.");
+    return;
+  }
+
+  const data=canvas.toDataURL("image/png");
+  if(!data || data.length<100){
+    setSignatureStatus(false,"⚠️ Firma non acquisita: firma nello spazio e riprova.");
+    return;
+  }
+
+  signatureData=data;
+  day.signature=data;
+  saveDay();
+
+  setSignatureStatus(true,"✓ Firma acquisita e salvata.");
+  renderRouteSummary();
+}
+
+
+/* =====================================================
+   RUOLINO
+===================================================== */
+
+function openRouteSection(){
+
+  const item=
+    [...document.querySelectorAll(".item")]
+      .find(x=>x.textContent.includes("Ruolino"));
+
+  show("route",item);
+}
+
+function renderRouteSummary(){
+
+  const d=day;
+  const e=d.events || {};
+
+  $("routeSummary").innerHTML=
+
+    "<div class='list-item'>"
+    +"👤 Driver: <b>"+(d.driverName||"—")+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"🚐 Targa: <b>"+(d.plate||"—")+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"⏱️ Inizio: <b>"+(d.start||"—")+"</b>"
+    +" — Uscita: <b>"+(d.exit||"—")+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📍 Primo stop: <b>"+(d.first||"—")+"</b>"
+    +" — Ultimo: <b>"+(d.last||"—")+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"🏭 Rientro: <b>"+(d.return||"—")+"</b>"
+    +" — Fine: <b>"+(d.end||"—")+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📦 Pacchi consegna: <b>"+(d.parcels||0)+"</b>"
+    +" — Stop: <b>"+(d.stops||0)+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📦 Ritiri: <b>"+(d.pickups||0)+"</b>"
+    +" — Pacchi ritiro: <b>"+(d.picked||0)+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📦 Attività aggiuntive: stop pickup "+(d.pickupStops||0)+" — pacchi ritiro "+(d.pickupPackages||0)+" — stop consegna "+(d.deliveryStops||0)+" — pacchi consegna "+(d.deliveryPackages||0)
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📊 Eventi: "
+    +"Ass./Chiuso "+(e.g348||0)+"/"+(e.l1kx||0)+"/"+(e.ay49||0)
+    +" — No denaro "+(e.si||0)+"/"+(e.kz||0)+"/"+(e.s2||0)
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"✍️ Firma: <b>"
+    +(d.signature ? "✓ presente" : "mancante")
+    +"</b>"
+    +"</div>";
+}
+
+
+/* =====================================================
+   RUOLINO SALVATO
+===================================================== */
+
+function saveRouteToHistory(){
+
+  const route={
+    date:todayKey,
+    created:new Date().toISOString(),
+    data:JSON.parse(JSON.stringify(day))
+  };
+
+  const index=
+    routes.findIndex(r=>r.date===todayKey);
+
+  if(index>=0)
+    routes[index]=route;
+  else
+    routes.push(route);
+
+  localStorage.setItem(
+    "ups_routes",
+    JSON.stringify(routes)
+  );
+}
+
+function onRuolinoGenerated(success,message){
+  const msg=$("generateMsg");
+  if(!msg) return;
+  if(success){
+    msg.className="status ok";
+    msg.innerHTML="✓ Ruolino generato e salvato.";
+    saveRouteToHistory();
+    renderRouteHistory();
+  }else{
+    msg.className="status error";
+    msg.innerHTML="❌ "+escapeHtml(message||"Errore nella generazione del ruolino.");
+  }
+}
+
+function generateRoute(){
+  saveDay();
+  const sig=signatureData || day.signature || "";
+  if(!sig){
+    setSignatureStatus(false,"⚠️ Inserisci e conferma prima la firma.");
+    $("generateMsg").className="status warn";
+    $("generateMsg").innerHTML="⚠️ Inserisci e conferma prima la firma.";
+    return;
+  }
+  signatureData=sig;
+  day.signature=sig;
+  saveDay();
+  const routeData=JSON.stringify(day);
+  if(window.Android && typeof Android.generateRuolino==="function") {
+    $("generateMsg").className="status warn";
+    $("generateMsg").innerHTML="⏳ Generazione ruolino in corso…";
+    Android.generateRuolino(routeData);
+  } else {
+    $("generateMsg").className="status error";
+    $("generateMsg").innerHTML="❌ Generazione PDF non disponibile.";
+  }
+}
+
+function openSavedRoute(index){
+
+  const r=routes[index];
+
+  if(!r) return;
+
+  day=JSON.parse(JSON.stringify(r.data));
+
+  signatureData=day.signature || null;
+  pauses=day.pauses || [];
+  fuelRecords=day.fuelRecords || [];
+  tollRecords=day.tollRecords || [];
+
+  show("route",null);
+
+  $("routeSummary").innerHTML=
+    "<div class='status ok'>"
+    +"📄 Ruolino salvato del "
+    +formatDate(r.date)
+    +"</div>"
+    +routeDetailHtml(r.data);
+}
+
+function routeDetailHtml(d){
+
+  const e=d.events || {};
+
+  let html=
+
+    "<div class='card'>"
+
+    +"<div class='list-item'>"
+    +"👤 Driver: <b>"+(d.driverName||"—")+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"🚐 Targa: <b>"+(d.plate||"—")+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📦 Pacchi: <b>"+(d.parcels||0)+"</b>"
+    +" — Stop: <b>"+(d.stops||0)+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"⏱️ Orari: <b>"
+    +(d.start||"—")
+    +" → "
+    +(d.end||"—")
+    +"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"🚚 Uscita: "+(d.exit||"—")
+    +" — 🏭 Rientro: "+(d.return||"—")
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📊 Eventi: "
+    +(e.g348||0)+"/"
+    +(e.l1kx||0)+"/"
+    +(e.ay49||0)+" | "
+    +(e.si||0)+"/"
+    +(e.kz||0)+"/"
+    +(e.s2||0)
+    +"</div>";
+
+  if(d.signature){
+
+    html+=
+      "<div class='list-item'>"
+      +"✍️ Firma<br>"
+      +"<img src='"+d.signature+"' "
+      +"style='max-width:100%;height:120px;"
+      +"object-fit:contain'>"
+      +"</div>";
+  }
+
+  if(d.photos){
+
+    const photos=[
+      ["arrival","📷 Arrivo in magazzino"],
+      ["fuel","⛽ Scontrino rifornimento"],
+      ["return","📷 Rientro in magazzino"],
+      ["damage","🔧 Foto danno"]
+    ];
+
+    photos.forEach(item=>{
+
+      if(d.photos[item[0]]){
+
+        html+=
+          "<div class='list-item'>"
+          +"<b>"+item[1]+"</b><br>"
+          +"<img src='"+d.photos[item[0]]+"' "
+          +"style='width:100%;max-width:500px;"
+          +"border-radius:12px;margin-top:8px'>"
+          +"</div>";
+      }
+    });
+  }
+
+  html+="</div>";
+
+  return html;
+}
+
+function renderRouteHistory(){
+
+  if(!routes.length){
+
+    $("routeHistory").innerHTML=
+      "Nessun ruolino generato.";
+
+    return;
+  }
+
+  $("routeHistory").innerHTML=
+    [...routes]
+      .reverse()
+      .map((r,i)=>{
+
+        const index=routes.length-1-i;
+
+        return(
+          "<div class='list-item' "
+          +"style='cursor:pointer' "
+          +"onclick='openSavedRoute("+index+")'>"
+          +"📄 <b>Ruolino "+formatDate(r.date)+"</b>"
+          +"<br>"
+          +"<span class='muted'>"
+          +new Date(r.created).toLocaleString("it-IT")
+          +"</span>"
+          +"<br><button type='button'>Apri ruolino</button>"
+          +"</div>"
+        );
+      })
+      .join("");
+}
+
+
+/* =====================================================
+   CONDIVISIONE
+===================================================== */
+
+function shareRoute(){
+
+  if(
+    window.Android &&
+    typeof Android.shareRuolino==="function"
+  ){
+
+    Android.shareRuolino();
+    return;
+  }
+
+  if(navigator.share){
+
+    navigator.share({
+      title:"Ruolino UpsWorkPlace",
+      text:"Ruolino di lavoro"
+    });
+
+  }else{
+
+    alert("Condivisione non disponibile su questo dispositivo.");
+  }
+}
+
+function shareEmail(){
+
+  if(
+    window.Android &&
+    typeof Android.shareEmail==="function"
+  )
+    Android.shareEmail();
+  else
+    shareRoute();
+}
+
+function shareWhatsApp(){
+
+  if(
+    window.Android &&
+    typeof Android.shareWhatsApp==="function"
+  )
+    Android.shareWhatsApp();
+  else
+    shareRoute();
+}
+
+
+/* =====================================================
+   STORICO GIORNATE
+===================================================== */
+
+function archiveToday(){
+
+  day.date=todayKey;
+  const copy=JSON.parse(JSON.stringify(day));
+
+  const index=
+    history.findIndex(x=>x.date===todayKey);
+
+  if(index>=0)
+    history[index]=copy;
+  else
+    history.push(copy);
+
+  localStorage.setItem(
+    "ups_history",
+    JSON.stringify(history)
+  );
+}
+
+function renderHistory(){
+
+  archiveToday();
+
+  if(!history.length){
+
+    $("historyList").innerHTML=
+      "Nessuna giornata salvata.";
+
+    return;
+  }
+
+  $("historyList").innerHTML=
+    [...history]
+      .reverse()
+      .map((d,i)=>{
+
+        const index=history.length-1-i;
+
+        return(
+          "<div class='list-item' "
+          +"style='cursor:pointer' "
+          +"onclick='openHistoryDay("+index+")'>"
+          +"📅 <b>"+formatDate(d.date)+"</b>"
+          +"<br>"
+          +"🚚 Uscita: "+(d.exit||"—")
+          +" | 🏁 Rientro: "+(d.return||"—")
+          +"<br>"
+          +"📦 Pacchi: "+(d.parcels||0)
+          +" | 🛑 Stop: "+(d.stops||0)
+          +"<br>"
+          +"<span class='muted'>"
+          +"Tocca per aprire il resoconto completo"
+          +"</span>"
+          +"</div>"
+        );
+      })
+      .join("");
+}
+
+function openHistoryDay(index){
+
+  const d=history[index];
+
+  if(!d) return;
+
+  document.querySelectorAll(".screen")
+    .forEach(s=>s.classList.remove("active"));
+
+  let detail=$("historyDetail");
+
+  if(!detail){
+
+    detail=document.createElement("section");
+    detail.id="historyDetail";
+    detail.className="screen";
+
+    document.querySelector("main")
+      .appendChild(detail);
+  }
+
+  detail.classList.add("active");
+
+  detail.innerHTML=
+    "<h1>📋 Dettaglio giornata</h1>"
+    +"<button class='secondary' "
+    +"onclick=\"show('history',null)\">"
+    +"← Torna allo storico"
+    +"</button>"
+    +buildHistoryDetail(d);
+
+  closeMenu();
+}
+
+function buildHistoryDetail(d){
+
+  const e=d.events || {};
+  const photos=d.photos || {};
+
+  let html=
+
+    "<div class='card'>"
+
+    +"<h2>📅 "+formatDate(d.date)+"</h2>"
+
+    +"<div class='list-item'>"
+    +"👤 Driver: <b>"+(d.driverName||"—")+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"🚐 Targa: <b>"+(d.plate||"—")+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"⏱️ Inizio: "+(d.start||"—")
+    +" — Fine: "+(d.end||"—")
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"🚚 Uscita: "+(d.exit||"—")
+    +" — 🏭 Rientro: "+(d.return||"—")
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📦 Pacchi: <b>"+(d.parcels||0)+"</b>"
+    +" — 🛑 Stop: <b>"+(d.stops||0)+"</b>"
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📦 Ritiri: "+(d.pickups||0)
+    +" — Pacchi ritiro: "+(d.picked||0)
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📍 Primo stop: "+(d.first||"—")
+    +" — 🏁 Ultimo: "+(d.last||"—")
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"📊 Eventi: "
+    +"Ass./Chiuso "
+    +(e.g348||0)+"/"+(e.l1kx||0)+"/"+(e.ay49||0)
+    +" — No denaro "
+    +(e.si||0)+"/"+(e.kz||0)+"/"+(e.s2||0)
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"Trasferito: "+(e.transfer||0)
+    +" — No numero/strada/cit.: "+(e.address||0)
+    +"</div>"
+
+    +"<div class='list-item'>"
+    +"No destinatario: "+(e.recipient||0)
+    +" — Rifiutato: "+(e.refused||0)
+    +"</div>";
+
+  html+="<div class='list-item'>📦 Attività aggiuntive: stop pickup "+(d.pickupStops||0)+" — pacchi ritiro "+(d.pickupPackages||0)+" — stop consegna "+(d.deliveryStops||0)+" — pacchi consegna "+(d.deliveryPackages||0)+"</div>";
+
+  if(d.damages && d.damages.length){
+    d.damages.forEach(x=>{html+="<div class='list-item'>🔧 <b>"+x.date+" "+(x.time||"")+"</b><br>"+escapeHtml(x.text)+(x.photo?"<br><img src='"+x.photo+"' style='width:100%;max-width:500px;border-radius:12px;margin-top:8px'>":"")+"</div>";});
+  }
+
+  if(d.pauses && d.pauses.length){
+    html+="<div class='list-item'>⏸️ Pause: "+d.pauses.map(p=>p.start+"–"+p.end+" ("+p.minutes+" min)").join("; ")+"</div>";
+  }
+
+  if(d.damage){
+
+    html+=
+      "<div class='list-item'>"
+      +"🔧 Guasto/danno: "
+      +escapeHtml(d.damage)
+      +"</div>";
+  }
+
+  if(d.notes){
+
+    html+=
+      "<div class='list-item'>"
+      +"📝 Note: "
+      +escapeHtml(d.notes)
+      +"</div>";
+  }
+
+  if(d.signature){
+
+    html+=
+      "<div class='list-item'>"
+      +"✍️ Firma<br>"
+      +"<img src='"+d.signature+"' "
+      +"style='width:100%;max-width:500px;"
+      +"height:140px;object-fit:contain;"
+      +"border:1px solid #ddd;border-radius:10px'>"
+      +"</div>";
+  }
+
+  const photoList=[
+    ["arrival","📷 Arrivo in magazzino"],
+    ["fuel","⛽ Scontrino rifornimento"],
+    ["return","📷 Rientro in magazzino"],
+    ["damage","🔧 Foto danno"]
+  ];
+
+  photoList.forEach(item=>{
+
+    if(photos[item[0]]){
+
+      html+=
+        "<div class='list-item'>"
+        +"<b>"+item[1]+"</b><br>"
+        +"<img src='"+photos[item[0]]+"' "
+        +"style='width:100%;max-width:500px;"
+        +"border-radius:12px;margin-top:8px'>"
+        +"</div>";
+    }
+  });
+
+  if(d.fuelRecords && d.fuelRecords.length){
+    d.fuelRecords.forEach(f=>{
+      if(f.photo){ html+="<div class='list-item'><b>⛽ Scontrino rifornimento — "+f.date+" "+(f.time||"")+"</b><br><img src='"+f.photo+"' style='width:100%;max-width:500px;border-radius:12px;margin-top:8px'></div>"; }
+    });
+  }
+
+  html+="</div>";
+
+  return html;
+}
+
+function escapeHtml(text){
+
+  return String(text ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+/* =====================================================
+   ORE
+===================================================== */
+
+function workMinutes(){
+  return diffMinutes(
+    value("start"),
+    value("end")
+  );
+}
+
+function updateCalculations(){
+
+  const mins=workMinutes();
+
+  $("todayHours").textContent=
+    formatMinutes(mins);
+
+  let total=0;
+
+  history.forEach(d=>{
+    total+=diffMinutes(d.start,d.end);
+  });
+
+  total+=mins;
+
+  $("historyHours").textContent=
+    formatMinutes(total);
+}
+
+
+/* =====================================================
+   SPESE
+===================================================== */
+
+function saveFuel(){
+  const record={date:todayItalian(),time:nowTime(),liters:numberValue("fuelLiters"),price:numberValue("fuelPrice"),amount:numberValue("fuelAmount"),km:numberValue("fuelKm")};
+  if(day.photos && day.photos.fuelPending){record.photo=day.photos.fuelPending;delete day.photos.fuelPending;}
+  fuelRecords.push(record);
+  $("fuelMsg").style.display="block"; $("fuelMsg").className="status ok";
+  $("fuelMsg").innerHTML="✓ Rifornimento registrato alle "+record.time+".";
+  saveDay();
+  $("fuelMsg").style.display="block"; $("fuelMsg").className="status ok";
+  $("fuelMsg").innerHTML="✓ Rifornimento registrato alle "+record.time+".";
+  setValue("fuelLiters","");setValue("fuelPrice","");setValue("fuelAmount","");setValue("fuelKm","");
+  renderExpenses();
+}
+
+function saveToll(){
+
+  tollRecords.push({
+
+    date:todayItalian(),
+    time:nowTime(),
+    amount:numberValue("tollAmount"),
+    count:numberValue("tollCount")
+
+  });
+
+  saveDay();
+
+  setValue("tollAmount","");
+  setValue("tollCount","");
+
+  alert("✓ Pedaggio registrato.");
+
+  renderExpenses();
+}
+
+function renderExpenses(){
+  let fuel="";
+  fuelRecords.forEach(f=>{
+    fuel+="<div class='list-item photo-card'>"+"⛽ <b>"+f.date+" "+(f.time||"")+"</b><br>"+f.liters+" L — € "+f.price+"/L — € "+f.amount+" — Km "+f.km+(f.photo?"<br><img src='"+f.photo+"'>":"")+"</div>";
+  });
+  $("fuelHistory").innerHTML=fuel || "Nessun rifornimento.";
+  let toll="";
+  tollRecords.forEach(t=>{toll+="<div class='list-item'>🛣️ <b>"+t.date+" "+(t.time||"")+"</b><br>€ "+t.amount+" — "+t.count+" pedaggi</div>";});
+  $("tollHistory").innerHTML=toll || "Nessun pedaggio.";
+}
+
+
+/* =====================================================
+   GUASTI
+===================================================== */
+
+function saveDamage(){
+  const text=value("damageText");
+  if(!text){alert("Inserisci una descrizione.");return;}
+  if(!day.damages) day.damages=[];
+  const record={date:todayItalian(),time:nowTime(),text:text};
+  if(day.photos && day.photos.damagePending){record.photo=day.photos.damagePending;delete day.photos.damagePending;}
+  day.damages.push(record);
+  day.damage=text;
+  $("damageMsg").style.display="block"; $("damageMsg").className="status ok";
+  $("damageMsg").innerHTML="✓ Guasto/danno registrato alle "+record.time+".";
+  saveDay();
+  $("damageMsg").style.display="block"; $("damageMsg").className="status ok";
+  $("damageMsg").innerHTML="✓ Guasto/danno registrato alle "+record.time+".";
+}
+
+let payslips=JSON.parse(localStorage.getItem("ups_payslips")||"[]");
+function payslipSelected(input){
+  const file=input.files && input.files[0]; if(!file) return;
+  const month=value("payslipMonth") || todayKey.slice(0,7);
+  const reader=new FileReader(); reader.onload=function(e){
+    payslips.push({month:month,name:file.name,type:file.type,data:e.target.result,created:new Date().toISOString()});
+    localStorage.setItem("ups_payslips",JSON.stringify(payslips));
+    $("payslipMsg").className="status ok"; $("payslipMsg").innerHTML="✓ Busta paga salvata per "+month+".";
+    renderPayslips();
+  }; reader.readAsDataURL(file);
+}
+function renderPayslips(){
+  let box=$("payslipHistory"); if(!box) return;
+  box.innerHTML=payslips.length?payslips.slice().reverse().map((p,i)=>"<div class='list-item'>💰 <b>"+p.month+"</b><br>"+escapeHtml(p.name)+"<br><button type='button' onclick='openPayslip("+(payslips.length-1-i)+")'>Apri</button></div>").join(""):"Nessuna busta paga caricata.";
+}
+function openPayslip(i){const p=payslips[i];if(!p)return;const w=window.open();if(w){w.document.write(p.type==="application/pdf"?"<embed src='"+p.data+"' type='application/pdf' width='100%' height='100%'>":"<img src='"+p.data+"' style='max-width:100%'>");}}
+function comparePayslipHours(){
+  const month=value("compareMonth") || todayKey.slice(0,7); const paid=Number(value("payslipPaidHours")||0);
+  const rows=history.filter(d=>String(d.date||"").slice(0,7)===month); const appMinutes=rows.reduce((n,d)=>n+diffMinutes(d.start,d.end),0); const appHours=appMinutes/60; const diff=appHours-paid;
+  $("payslipCompare").className="status ok"; $("payslipCompare").innerHTML="Mese: <b>"+month+"</b><br>Ore registrate nell'app: <b>"+appHours.toFixed(2)+" h</b><br>Ore pagate in busta: <b>"+paid.toFixed(2)+" h</b><br>Differenza: <b>"+(diff>=0?"+":"")+diff.toFixed(2)+" h</b>";
+}
+
+/* =====================================================
+   STATISTICHE
+===================================================== */
+
+function chartBars(data){
+  if(!data.length) return "<div class='muted'>Nessun dato disponibile.</div>";
+  const max=Math.max(1,...data.map(x=>Number(x.value||0)));
+  return data.map(x=>"<div class='barRow'><span>"+x.label+"</span><div class='barTrack'><div class='barFill' style='width:"+(Number(x.value||0)/max*100)+"%'></div></div><b>"+x.value+"</b></div>").join("");
+}
+
+function renderStats(){
+  archiveToday();
+  const now=new Date();
+  const weekStart=new Date(now); weekStart.setDate(now.getDate()-((now.getDay()+6)%7));
+  const monthKey=todayKey.slice(0,7);
+  const week=history.filter(d=>d.date && new Date(d.date+"T00:00:00")>=weekStart);
+  const month=history.filter(d=>String(d.date||"").slice(0,7)===monthKey);
+  const dayM=workMinutes();
+  const totalStops=a=>a.reduce((n,d)=>n+Number(d.stops||0),0);
+  const totalPackages=a=>a.reduce((n,d)=>n+Number(d.parcels||0),0);
+  const totalHours=a=>a.reduce((n,d)=>n+diffMinutes(d.start,d.end),0);
+  $("dailyStats").innerHTML="📦 Pacchi: <b>"+(day.parcels||0)+"</b><br>🛑 Stop: <b>"+(day.stops||0)+"</b><br>⏱️ Ore: <b>"+formatMinutes(dayM)+"</b><br>📦 Espressi: <b>"+(day.express||0)+"</b>";
+  $("dailyChart").innerHTML=chartBars([{label:"Pacchi",value:day.parcels||0},{label:"Stop",value:day.stops||0},{label:"Espressi",value:day.express||0}]);
+  $("weeklyStats").innerHTML="📦 Pacchi: <b>"+totalPackages(week)+"</b><br>🛑 Stop: <b>"+totalStops(week)+"</b><br>⏱️ Ore: <b>"+formatMinutes(totalHours(week))+"</b>";
+  $("weeklyChart").innerHTML=chartBars(week.map(d=>({label:formatDate(d.date).slice(0,5),value:Number(d.parcels||0)})));
+  $("monthlyStats").innerHTML="📦 Pacchi: <b>"+totalPackages(month)+"</b><br>🛑 Stop: <b>"+totalStops(month)+"</b><br>⏱️ Ore: <b>"+formatMinutes(totalHours(month))+"</b><br>ℹ️ Espressi: <b>"+month.reduce((n,d)=>n+Number(d.express||0),0)+"</b>";
+  $("monthlyChart").innerHTML=chartBars(month.map(d=>({label:formatDate(d.date).slice(0,5),value:Number(d.stops||0)})));
+}
+
+/* =====================================================
+   FERIE
+===================================================== */
+
+function saveLeave(){
+  const record={type:value("leaveType"),date:value("leaveDate"),note:value("leaveNote")};
+  let list=JSON.parse(localStorage.getItem("ups_leave_history")||"[]");
+  list.push(record);
+  localStorage.setItem("ups_leave_history",JSON.stringify(list));
+  $("leaveMsg").className="status ok"; $("leaveMsg").innerHTML="✓ Registrato il "+formatDate(record.date)+".";
+  renderLeaveHistory();
+}
+function renderLeaveHistory(){
+  let list=JSON.parse(localStorage.getItem("ups_leave_history")||"[]");
+  let box=$("leaveHistory"); if(!box) return;
+  box.innerHTML=list.length?list.slice().reverse().map(r=>"<div class='list-item'>🏖️ <b>"+r.type+"</b> — "+formatDate(r.date)+(r.note?"<br>"+escapeHtml(r.note):"")+"</div>").join(""):"Nessuna registrazione.";
+}
+
+/* =====================================================
+   VEICOLO
+===================================================== */
+
+function saveVehicle(){
+
+  const record={
+    plate:value("vehiclePlate"),
+    km:value("vehicleKm"),
+    note:value("vehicleNote")
+  };
+
+  localStorage.setItem(
+    "ups_vehicle",
+    JSON.stringify(record)
+  );
+
+  alert("✓ Dati veicolo salvati.");
+}
+
+
+/* =====================================================
+   GUASTI STORICO
+===================================================== */
+
+function saveDamageHistory(){
+
+  const text=value("damageHistory");
+
+  if(!text) return;
+
+  localStorage.setItem(
+    "ups_damage_"+Date.now(),
+    text
+  );
+
+  $("damageHistory").value="";
+
+  alert("✓ Guasto registrato.");
+}
+
+
+/* =====================================================
+   ESPORTAZIONE / RESET
+===================================================== */
+
+function exportData(){
+
+  saveDay();
+  archiveToday();
+
+  const blob=new Blob(
+    [
+      JSON.stringify(
+        {
+          fixed:fixed,
+          today:day,
+          history:history,
+          routes:routes
+        },
+        null,
+        2
+      )
+    ],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download=
+    "UpsWorkPlace_backup_"+todayKey+".json";
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function resetToday(){
+
+  if(!confirm("Vuoi iniziare una nuova giornata?"))
+    return;
+
+  archiveToday();
+
+  localStorage.removeItem(
+    "ups_day_"+todayKey
+  );
+
+  location.reload();
+}
+
+
+/* =====================================================
+   CARICAMENTO DATI
+===================================================== */
+
+function loadFixed(){
+
+  setValue("driverName",fixed.driverName);
+  setValue("driverCode",fixed.driverCode);
+  setValue("plate",fixed.plate);
+}
+
+function restoreStatusMessages(){
+  if(day.start && $("startMsg")){ $("startMsg").style.display="block"; $("startMsg").className="status ok"; $("startMsg").innerHTML="✓ Inizio giornata registrato alle "+day.start+"."; }
+  if(day.exit && $("exitMsg")){ $("exitMsg").style.display="block"; $("exitMsg").className="status ok"; $("exitMsg").innerHTML="✓ Uscita dal magazzino registrata."; }
+  if(day.first && $("firstMsg")){ $("firstMsg").style.display="block"; $("firstMsg").className="status ok"; $("firstMsg").innerHTML="✓ Primo stop registrato"+(day.firstGps?" con GPS.":"."); }
+  if(day.last && $("lastMsg")){ $("lastMsg").style.display="block"; $("lastMsg").className="status ok"; $("lastMsg").innerHTML="✓ Ultimo stop registrato alle "+day.last+"."; }
+  if(day.end && $("endMsg")){ $("endMsg").style.display="block"; $("endMsg").className="status ok"; $("endMsg").innerHTML="✓ Fine giornata registrata alle "+day.end+"."; }
+  if(day.damage && $("damageMsg")){ $("damageMsg").style.display="block"; $("damageMsg").className="status ok"; $("damageMsg").innerHTML="✓ Guasto/danno registrato."; }
+  if(day.notes && $("notesMsg")){ $("notesMsg").style.display="block"; $("notesMsg").className="status ok"; $("notesMsg").innerHTML="✓ Note di fine giornata registrate."; }
+  if(fuelRecords.length && $("fuelMsg")){ $("fuelMsg").style.display="block"; $("fuelMsg").className="status ok"; $("fuelMsg").innerHTML="✓ "+fuelRecords.length+" rifornimento/i registrato/i."; }
+  if(tollRecords.length && $("tollHistory")) renderExpenses();
+  if(pauses.length && $("pauseMsg")){ $("pauseMsg").style.display="block"; $("pauseMsg").className="status ok"; $("pauseMsg").innerHTML="✓ "+pauses.length+" pausa/e registrata/e."; }
+  if(day.signature && $("signatureMsg")){ setSignatureStatus(true,"✓ Firma acquisita e salvata."); }
+}
+
+function loadDay(){
+
+  setValue("start",day.start);
+  setValue("kmOut",day.kmOut);
+
+  setValue("parcels",day.parcels);
+  setValue("stops",day.stops);
+
+  setValue("pickups",day.pickups);
+  setValue("picked",day.picked);
+
+  setValue("express",day.express);
+setValue("exit",day.exit);
+
+  setValue("first",day.first);
+  setValue("firstGps",day.firstGps);
+
+  setValue("last",day.last);
+
+  setValue("return",day.return);
+  setValue("kmReturn",day.kmReturn);
+
+  setValue("end",day.end);
+  setValue("cleaning",day.cleaning);
+  setValue("notes",day.notes);
+
+  setValue("pickupStops",day.pickupStops);
+  setValue("pickupPackages",day.pickupPackages);
+  setValue("deliveryStops",day.deliveryStops);
+  setValue("deliveryPackages",day.deliveryPackages);
+  setValue("futureL",day.futureL);
+  setValue("emergencyK",day.emergencyK);
+
+  setValue("damageText",day.damage);
+
+  if($("finalized"))
+    $("finalized").checked=!!day.finalized;
+
+  const e=day.events || {};
+
+  setValue("eventG348",e.g348);
+  setValue("eventL1KX",e.l1kx);
+  setValue("eventAY49",e.ay49);
+
+  setValue("eventSI",e.si);
+  setValue("eventKZ",e.kz);
+  setValue("eventS2",e.s2);
+
+  setValue("eventTransfer",e.transfer);
+  setValue("eventAddress",e.address);
+  setValue("eventRecipient",e.recipient);
+  setValue("eventRefused",e.refused);
+  setValue("eventNotes",e.notes);
+
+  signatureData=day.signature || null;
+  restoreStatusMessages();
+
+  pauses=day.pauses || [];
+  fuelRecords=day.fuelRecords || [];
+  tollRecords=day.tollRecords || [];
+  if(!day.damages) day.damages=[];
+  updateActivityCounters();
+}
+
+
+/* =====================================================
+   AUTOSAVE
+===================================================== */
+
+document.addEventListener(
+  "input",
+  function(e){
+
+    if(
+      e.target.tagName==="INPUT" ||
+      e.target.tagName==="TEXTAREA" ||
+      e.target.tagName==="SELECT"
+    )
+      saveDay();
+  }
+);
+
+document.addEventListener(
+  "change",
+  function(e){
+
+    if(
+      e.target.tagName==="INPUT" ||
+      e.target.tagName==="TEXTAREA" ||
+      e.target.tagName==="SELECT"
+    )
+      saveDay();
+  }
+);
+
+
+/* =====================================================
+   AVVIO
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    $("todayDate").textContent=todayItalian();
+
+    loadFixed();
+    loadDay();
+
+    renderPauseList();
+    renderExpenses();
+    updateCalculations();
+    renderStats();
+    renderRouteHistory();
+    renderLeaveHistory();
+    renderPayslips();
+
+    restorePhotos();
+    updateEventButtons();
+
+    setTimeout(initSignatureCanvas,100);
+  }
+);
+
+</script>
+
+
+</body>
+</html>
