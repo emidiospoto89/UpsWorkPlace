@@ -221,7 +221,7 @@ public class MainActivity extends Activity {
         p.setTypeface(Typeface.DEFAULT_BOLD);
         p.setTextAlign(Paint.Align.LEFT);
 
-        drawText(c,p,d.optString("driverName",""),X(190),Y(146));
+        drawText(c,p,d.optString("driverName",""),X(190),Y(138));
         drawBoxes(c,p,d.optString("plate",""),754,88,1003,151,7,false);
 
         // Prima riga: il valore va nella casella a destra della relativa dicitura.
@@ -240,7 +240,7 @@ public class MainActivity extends Activity {
         String cleaning=d.optString("cleaning","");
         if(cleaning.matches("[1-5]")){
             p.setTypeface(Typeface.DEFAULT_BOLD);p.setTextSize(14f);
-            drawCentered(c,p,"✓",641,364,1003,433);
+            drawCentered(c,p,"✓",946,364,1003,433);
             p.setTypeface(Typeface.DEFAULT_BOLD);p.setTextSize(10.5f);
         }
 
@@ -254,7 +254,7 @@ public class MainActivity extends Activity {
         JSONObject e=d.optJSONObject("events");if(e==null)e=new JSONObject();
         float[] rowTops={774,827,879,931,983,1034,1085,1135,1187,1237};
         float[] rowBottoms={827,879,931,983,1034,1085,1135,1187,1237,1287};
-        String[] leftKeys={"deliveryStops","deliveryPackages","pickupStops","pickupPackages","futureL","emergencyK","strike","vacation","deceased",""};
+        String[] leftKeys={"","deliveryPackages","pickupStops","pickupPackages","futureL","emergencyK","strike","vacation","deceased",""};
         for(int i=0;i<leftKeys.length;i++){
             String value=i<4?num(d,leftKeys[i]):i<6?num(d,leftKeys[i]):num(e,leftKeys[i]);
             drawBoxesRightAligned(c,p,value,638,rowTops[i],723,rowBottoms[i],4);
@@ -265,15 +265,15 @@ public class MainActivity extends Activity {
         }
 
         drawWrapped(c,p,e.optString("notes",""),110,735,215,768,10.5f,3);
-        drawWrapped(c,p,damageText(d),35,945,480,1025,10.5f,6);
-        drawWrapped(c,p,d.optString("notes",""),35,1100,480,1245,10.5f,10);
+        drawWrapped(c,p,damageText(d),35,960,480,1040,10.5f,6);
+        drawWrapped(c,p,d.optString("notes",""),35,1115,480,1260,10.5f,10);
 
-        drawCentered(c,p,formatWorkMinutes(d),16,1287,370,1389);
+        drawCentered(c,p,formatWorkMinutes(d),16,1305,370,1389);
         drawBoxesRightAligned(c,p,totalStops(d),646,1337,723,1389,3);
         drawBoxesRightAligned(c,p,totalExceptionPackages(e),936,1337,1003,1389,3);
 
         // Data e firma sulle rispettive righe tratteggiate.
-        drawText(c,p,formatDate(d.optString("date","")),X(100),Y(1472));
+        drawText(c,p,formatDate(d.optString("date","")),X(100),Y(1458));
         drawSignature(c,d.optString("signature",""));
     }
 
