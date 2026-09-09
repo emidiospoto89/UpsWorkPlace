@@ -256,7 +256,12 @@ public class MainActivity extends Activity {
         float[] rowBottoms={827,879,931,983,1034,1085,1135,1187,1237,1287};
         String[] leftKeys={"","deliveryPackages","pickupStops","pickupPackages","futureL","emergencyK","strike","vacation","deceased",""};
         for(int i=0;i<leftKeys.length;i++){
-            String value=i<4?num(d,leftKeys[i]):i<6?num(d,leftKeys[i]):num(e,leftKeys[i]);
+            String value;
+            if(i==0 || i==9) value="";
+            else if(i==1) value=sumFields(d,"parcels","deliveryPackages");
+            else if(i==2) value=sumFields(d,"pickups","pickupStops");
+            else if(i==3) value=sumFields(d,"picked","pickupPackages");
+            else value=num(e,leftKeys[i]);
             drawBoxesRightAligned(c,p,value,638,rowTops[i],723,rowBottoms[i],4);
         }
         String[] rightKeys={"g348","l1kx","ay49","si","kz","s2","transfer","address","recipient","refused"};
@@ -273,7 +278,7 @@ public class MainActivity extends Activity {
         drawBoxesRightAligned(c,p,totalExceptionPackages(e),936,1337,1003,1389,3);
 
         // Data e firma sulle rispettive righe tratteggiate.
-        drawText(c,p,formatDate(d.optString("date","")),X(100),Y(1458));
+        drawText(c,p,formatDate(d.optString("date","")),X(100),Y(1438));
         drawSignature(c,d.optString("signature",""));
     }
 
@@ -310,7 +315,8 @@ public class MainActivity extends Activity {
     private String formatMinutes(int m){return (m/60)+":"+String.format(Locale.ITALY,"%02d",m%60);}
     private String deliveryStops(JSONObject d){String s=num(d,"deliveryStops");return s.isEmpty()?"":s;}
     private String deliveryPackages(JSONObject d){String s=num(d,"deliveryPackages");return s.isEmpty()?"":s;}
-    private String totalStops(JSONObject d){int total=d.optInt("deliveryStops",0)+d.optInt("pickupStops",0);return total==0?"":String.valueOf(total);}
+    private String totalStops(JSONObject d){int total=d.optInt("stops",0)+d.optInt("deliveryStops",0)+d.optInt("pickups",0)+d.optInt("pickupStops",0);return total==0?"":String.valueOf(total);}
+    private String sumFields(JSONObject d,String... keys){int total=0;boolean found=false;for(String key:keys){Object v=d==null?null:d.opt(key);if(v==null||v==JSONObject.NULL)continue;try{int n=v instanceof Number?((Number)v).intValue():Integer.parseInt(String.valueOf(v));total+=n;found=true;}catch(Exception ignored){}}return found&&total>0?String.valueOf(total):"";}
     private String totalExceptionPackages(JSONObject e){String[] keys={"g348","l1kx","ay49","si","kz","s2","transfer","address","recipient","refused","futureL","emergencyK","strike","vacation","deceased"};int total=0;for(String key:keys)total+=e.optInt(key,0);return total==0?"":String.valueOf(total);}
     private String damageText(JSONObject d){String s=d.optString("damage","");try{JSONArray a=d.optJSONArray("damages");if(a!=null&&a.length()>0){StringBuilder b=new StringBuilder();for(int i=0;i<a.length();i++){JSONObject o=a.optJSONObject(i);if(o!=null&&o.optString("text","").length()>0){if(b.length()>0)b.append(" • ");b.append(o.optString("text",""));}}if(b.length()>0)s=b.toString();}}catch(Exception ignored){}return s;}
     private String num(JSONObject o,String key){if(o==null)return "";Object v=o.opt(key);if(v==null||v==JSONObject.NULL)return "";if(v instanceof Number){int n=((Number)v).intValue();return n==0?"":String.valueOf(n);}String s=String.valueOf(v);return "0".equals(s)?"":s;}
