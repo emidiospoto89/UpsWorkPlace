@@ -239,12 +239,12 @@ public class MainActivity extends Activity {
         drawCentered(c,p,deliveryStops(d),695,rowTops[0],766,rowTops[0]+56);
         drawCentered(c,p,deliveryPackages(d),695,rowTops[1],766,rowTops[1]+56);
         drawCentered(c,p,num(d,"pickupStops"),695,rowTops[2],766,rowTops[2]+56);
-        drawCentered(c,p,num(d,"pickupPackages"),695,rowTops[3],rowTops[3]+56);
-        drawCentered(c,p,num(d,"futureL"),695,rowTops[4],rowTops[4]+56);
-        drawCentered(c,p,num(d,"emergencyK"),695,rowTops[5],rowTops[5]+56);
-        drawCentered(c,p,num(e,"strike"),695,rowTops[6],rowTops[6]+56);
-        drawCentered(c,p,num(e,"vacation"),695,rowTops[7],rowTops[7]+56);
-        drawCentered(c,p,num(e,"deceased"),695,rowTops[8],rowTops[8]+56);
+        drawCentered(c,p,num(d,"pickupPackages"),695,rowTops[3],766,rowTops[3]+56);
+        drawCentered(c,p,num(d,"futureL"),695,rowTops[4],766,rowTops[4]+56);
+        drawCentered(c,p,num(d,"emergencyK"),695,rowTops[5],766,rowTops[5]+56);
+        drawCentered(c,p,num(e,"strike"),695,rowTops[6],766,rowTops[6]+56);
+        drawCentered(c,p,num(e,"vacation"),695,rowTops[7],766,rowTops[7]+56);
+        drawCentered(c,p,num(e,"deceased"),695,rowTops[8],766,rowTops[8]+56);
         drawRightCentered(c,p,num(e,"g348"),1010,rowTops[0],rowTops[0]+56);drawRightCentered(c,p,num(e,"l1kx"),1010,rowTops[1],rowTops[1]+56);drawRightCentered(c,p,num(e,"ay49"),1010,rowTops[2],rowTops[2]+56);drawRightCentered(c,p,num(e,"si"),1010,rowTops[3],rowTops[3]+56);drawRightCentered(c,p,num(e,"kz"),1010,rowTops[4],rowTops[4]+56);drawRightCentered(c,p,num(e,"s2"),1010,rowTops[5],rowTops[5]+56);drawRightCentered(c,p,num(e,"transfer"),1010,rowTops[6],rowTops[6]+56);drawRightCentered(c,p,num(e,"address"),1010,rowTops[7],rowTops[7]+56);drawRightCentered(c,p,num(e,"recipient"),1010,rowTops[8],rowTops[8]+56);drawRightCentered(c,p,num(e,"refused"),1010,rowTops[9],rowTops[9]+56);
         drawWrapped(c,p,e.optString("notes",""),110,735,215,768,8.5f,3);
         drawWrapped(c,p,damageText(d),35,885,480,985,8.5f,8);
