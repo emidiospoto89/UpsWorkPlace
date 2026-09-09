@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
                     getPreferences(MODE_PRIVATE).edit().putString("last_pdf",generated.getAbsolutePath()).apply();
                     runOnUiThread(()->{
                         Toast.makeText(MainActivity.this,"Ruolino generato e salvato",Toast.LENGTH_SHORT).show();
-                        notifyRuolinoResult(true,"Ruolino generato e salvato.");
+                        notifyRuolinoResult(true,"Ruolino generato e salvato.",generated.getName());
                     });
                 }catch(Exception e){
                     e.printStackTrace();
@@ -110,7 +110,7 @@ public class MainActivity extends Activity {
                     final String errorMessage=message;
                     runOnUiThread(()->{
                         Toast.makeText(MainActivity.this,"Errore nella generazione del ruolino: "+errorMessage,Toast.LENGTH_LONG).show();
-                        notifyRuolinoResult(false,errorMessage);
+                        notifyRuolinoResult(false,errorMessage,"");
                     });
                 }
             }).start();
@@ -119,14 +119,39 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void shareEmail(){Intent i=makeShareIntent();i.putExtra(Intent.EXTRA_SUBJECT,"Ruolino UpsWorkPlace");i.putExtra(Intent.EXTRA_TEXT,"Ruolino di lavoro");share(i,"Invia ruolino via email");}
         @JavascriptInterface public void shareWhatsApp(){Intent i=makeShareIntent();i.setPackage("com.whatsapp");try{startActivity(i);}catch(Exception e){share(makeShareIntent(),"Condividi ruolino");}}
     }
-    private void notifyRuolinoResult(boolean success,String message){
+    private void notifyRuolinoResult(boolean success,String message,String fileName){
         if(web==null) return;
-        String js="if(typeof onRuolinoGenerated==='function'){onRuolinoGenerated("+(success?"true":"false")+","+JSONObject.quote(message==null?"":message)+");}";
+        String js="if(typeof onRuolinoGenerated==='function'){onRuolinoGenerated("+(success?"true":"false")+","+JSONObject.quote(message==null?"":message)+","+JSONObject.quote(fileName==null?"":fileName)+");}";
         web.evaluateJavascript(js,null);
     }
 
+    @JavascriptInterface public void openRuolino(String fileName){
+        File f=getRuolinoFile(fileName);
+        if(f==null || !f.exists()){Toast.makeText(this,"PDF del ruolino non trovato",Toast.LENGTH_SHORT).show();return;}
+        try{
+            Uri u=FileProvider.getUriForFile(this,getPackageName()+".fileprovider",f);
+            Intent i=new Intent(Intent.ACTION_VIEW); i.setDataAndType(u,"application/pdf");
+            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(i);
+        }catch(Exception e){Toast.makeText(this,"Nessuna app disponibile per aprire il PDF",Toast.LENGTH_SHORT).show();}
+    }
+    @JavascriptInterface public void shareSavedRuolino(String fileName){
+        File f=getRuolinoFile(fileName);
+        if(f==null || !f.exists()){Toast.makeText(this,"PDF del ruolino non trovato",Toast.LENGTH_SHORT).show();return;}
+        share(makeShareIntent(f),"Condividi ruolino");
+    }
+    private File getRuolinoFile(String fileName){
+        if(fileName==null || fileName.trim().isEmpty()) return null;
+        File dir=new File(getFilesDir(),"ruolini");
+        File f=new File(dir,fileName);
+        try{ if(!f.getCanonicalFile().getParentFile().equals(dir.getCanonicalFile())) return null; }catch(Exception e){return null;}
+        if(!fileName.toLowerCase(Locale.ITALY).endsWith(".pdf")) return null;
+        return f;
+    }
+
     private void share(Intent intent,String title){if(lastPdfFile==null||!lastPdfFile.exists()){Toast.makeText(this,"Genera prima il ruolino",Toast.LENGTH_SHORT).show();return;}try{startActivity(Intent.createChooser(intent,title));}catch(Exception e){Toast.makeText(this,"Impossibile condividere il ruolino",Toast.LENGTH_SHORT).show();}}
-    private Intent makeShareIntent(){Intent i=new Intent(Intent.ACTION_SEND);i.setType("application/pdf");if(lastPdfFile!=null&&lastPdfFile.exists()){Uri u=FileProvider.getUriForFile(this,getPackageName()+".fileprovider",lastPdfFile);i.putExtra(Intent.EXTRA_STREAM,u);i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);}return i;}
+    private Intent makeShareIntent(){return makeShareIntent(lastPdfFile);}
+    private Intent makeShareIntent(File pdf){Intent i=new Intent(Intent.ACTION_SEND);i.setType("application/pdf");if(pdf!=null&&pdf.exists()){Uri u=FileProvider.getUriForFile(this,getPackageName()+".fileprovider",pdf);i.putExtra(Intent.EXTRA_STREAM,u);i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);}return i;}
 
     private File buildRuolino(JSONObject d)throws Exception{
         File dir=new File(getFilesDir(),"ruolini"); if(!dir.exists()&&!dir.mkdirs())throw new Exception("Impossibile creare cartella ruolini");
