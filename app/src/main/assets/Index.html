@@ -629,7 +629,7 @@ Ora uscita
 🚚 Registra uscita
 </button>
 
-<div id="exitMsg" class="status warn">
+<div id="exitMsg" class="status warn" style="display:none">
 Prima dell'uscita devi finalizzare l'itinerario.
 </div>
 
@@ -885,7 +885,7 @@ placeholder="Note sugli eventi di consegna"></textarea>
 ⏹️ Fine pausa
 </button>
 
-<div id="pauseMsg" class="status">
+<div id="pauseMsg" class="status" style="display:none">
 Nessuna pausa registrata.
 </div>
 
@@ -913,7 +913,7 @@ Ora ultimo stop
 
 </div>
 
-<div id="lastMsg" class="status">
+<div id="lastMsg" class="status" style="display:none">
 Ultimo stop non registrato.
 </div>
 
@@ -989,7 +989,7 @@ Pulizia abitacolo
 ⏱️ Registra fine lavoro
 </button>
 
-<div id="endMsg" class="status">
+<div id="endMsg" class="status" style="display:none">
 Fine giornata non registrata.
 </div>
 
@@ -1023,7 +1023,7 @@ placeholder="Descrizione guasto o danno"></textarea>
 <img id="damagePreview"
      class="photo-preview">
 
-<div id="damageMsg" class="status">
+<div id="damageMsg" class="status" style="display:none">
 Nessun guasto registrato.
 </div>
 
@@ -1041,7 +1041,7 @@ placeholder="Eventuali note..."></textarea>
 
 <button onclick="saveNotes()">💾 Registra note</button>
 
-<div id="notesMsg" class="status">Nessuna nota registrata.</div>
+<div id="notesMsg" class="status" style="display:none">Nessuna nota registrata.</div>
 
 </div>
 
@@ -1719,116 +1719,68 @@ function show(id,element){
 ===================================================== */
 
 function setNow(id){
-
   setValue(id,nowTime());
-
-  saveDay();
 
   if(id==="start"){
     $("startMsg").style.display="block"; $("startMsg").className="status ok";
-    $("startMsg").innerHTML=
-      "✓ Inizio giornata registrato alle "+value("start")+".";
+    $("startMsg").innerHTML="✓ Inizio giornata registrato alle "+value("start")+".";
   }
-
   if(id==="return"){
     const m=$("returnMsg");
-    if(m){
-      m.className="status ok";
-      m.innerHTML=
-        "✓ Rientro registrato alle "+value("return")+".";
-    }
+    if(m){ m.style.display="block"; m.className="status ok"; m.innerHTML="✓ Rientro registrato alle "+value("return")+"."; }
   }
-
   if(id==="end"){
     $("endMsg").style.display="block"; $("endMsg").className="status ok";
-    $("endMsg").innerHTML=
-      "✓ Fine giornata registrata alle "+value("end")+".";
+    $("endMsg").innerHTML="✓ Fine giornata registrata alle "+value("end")+".";
   }
+  saveDay();
 }
-
 function warehouseExit(){
-
-  if(!$("finalized").checked){
-
-    $("exitMsg").style.display="block"; $("exitMsg").className="status warn";
-    $("exitMsg").innerHTML=
-      "⚠️ Prima dell'uscita devi finalizzare l'itinerario.";
-
+  if(!$('finalized').checked){
+    $('exitMsg').style.display='block'; $('exitMsg').className='status warn';
+    $("exitMsg").innerHTML="⚠️ Prima dell'uscita devi finalizzare l'itinerario.";
     return;
   }
-
-  setValue("exit",nowTime());
-
-  $("exitMsg").style.display="block"; $("exitMsg").className="status ok";
-  $("exitMsg").innerHTML="✓ Uscita dal magazzino registrata.";
+  setValue('exit',nowTime());
+  $('exitMsg').style.display='block'; $('exitMsg').className='status ok';
+  $('exitMsg').innerHTML='✓ Uscita dal magazzino registrata.';
   saveDay();
-
-  $("exitMsg").style.display="block"; $("exitMsg").className="status ok";
-  $("exitMsg").innerHTML=
-    "✓ Uscita dal magazzino registrata.";
 }
-
 
 /* =====================================================
    PRIMO / ULTIMO STOP
 ===================================================== */
 
 function registerFirstStop(){
-
-  setValue("first",nowTime());
-
+  setValue('first',nowTime());
   if(navigator.geolocation){
-
     navigator.geolocation.getCurrentPosition(
       function(pos){
-
-        setValue(
-          "firstGps",
-          pos.coords.latitude.toFixed(6)
-          +","+pos.coords.longitude.toFixed(6)
-        );
-
-        $("firstMsg").style.display="block"; $("firstMsg").className="status ok";
-        $("firstMsg").innerHTML="✓ Primo stop registrato con GPS.";
+        setValue('firstGps',pos.coords.latitude.toFixed(6)+','+pos.coords.longitude.toFixed(6));
+        $('firstMsg').style.display='block'; $('firstMsg').className='status ok';
+        $('firstMsg').innerHTML='✓ Primo stop registrato con GPS.';
         saveDay();
-
-        $("firstMsg").style.display="block"; $("firstMsg").className="status ok";
-        $("firstMsg").innerHTML=
-          "✓ Primo stop registrato con GPS.";
       },
       function(){
-
-        $("firstMsg").style.display="block"; $("firstMsg").className="status warn";
-        $("firstMsg").innerHTML="Ora registrata, ma GPS non disponibile.";
+        $('firstMsg').style.display='block'; $('firstMsg').className='status warn';
+        $('firstMsg').innerHTML='Ora registrata, ma GPS non disponibile.';
         saveDay();
-
-        $("firstMsg").style.display="block"; $("firstMsg").className="status warn";
-        $("firstMsg").innerHTML=
-          "Ora registrata, ma GPS non disponibile.";
       },
-      {
-        enableHighAccuracy:true,
-        timeout:10000
-      }
+      {enableHighAccuracy:true,timeout:10000}
     );
-
   }else{
+    $('firstMsg').style.display='block'; $('firstMsg').className='status warn';
+    $('firstMsg').innerHTML='Ora registrata, ma GPS non disponibile.';
     saveDay();
   }
 }
 
 function registerLastStop(){
-
-  setValue("last",nowTime());
-  $("lastMsg").style.display="block"; $("lastMsg").className="status ok";
-  $("lastMsg").innerHTML="✓ Ultimo stop registrato.";
+  setValue('last',nowTime());
+  $('lastMsg').style.display='block'; $('lastMsg').className='status ok';
+  $('lastMsg').innerHTML='✓ Ultimo stop registrato.';
   saveDay();
-
-  $("lastMsg").style.display="block"; $("lastMsg").className="status ok";
-  $("lastMsg").innerHTML=
-    "✓ Ultimo stop registrato.";
 }
-
 
 /* =====================================================
    EVENTI - UN CLICK = +1
@@ -1858,10 +1810,8 @@ function eventClick(inputId){
   const current=numberValue(inputId)+1;
 
   setValue(inputId,current);
-
-  saveDay();
-
   updateEventButtons();
+  saveDay();
 }
 
 function updateEventButtons(){
@@ -1918,9 +1868,9 @@ function updateActivityCounters(){
 
 function saveNotes(){
   day.notes=value("notes");
-  saveDay();
   $("notesMsg").style.display="block"; $("notesMsg").className="status ok";
   $("notesMsg").innerHTML="✓ Note di fine giornata registrate.";
+  saveDay();
 }
 
 /* =====================================================
@@ -1942,11 +1892,6 @@ function pauseStart(){
   $("pauseMsg").style.display="block"; $("pauseMsg").className="status warn";
   $("pauseMsg").innerHTML="⏸️ Pausa iniziata alle "+day.currentPause.start;
   saveDay();
-
-  $("pauseMsg").style.display="block"; $("pauseMsg").className="status warn";
-  $("pauseMsg").innerHTML=
-    "⏸️ Pausa iniziata alle "
-    +day.currentPause.start;
 }
 
 function pauseEnd(){
@@ -1972,12 +1917,6 @@ function pauseEnd(){
   $("pauseMsg").style.display="block"; $("pauseMsg").className="status ok";
   $("pauseMsg").innerHTML="✓ Pausa terminata alle "+end+" — "+minutes+" minuti.";
   saveDay();
-
-  $("pauseMsg").style.display="block"; $("pauseMsg").className="status ok";
-  $("pauseMsg").innerHTML=
-    "✓ Pausa terminata alle "
-    +end+" — "+minutes+" minuti.";
-
   renderPauseList();
 }
 
@@ -2318,11 +2257,12 @@ function renderRouteSummary(){
    RUOLINO SALVATO
 ===================================================== */
 
-function saveRouteToHistory(){
+function saveRouteToHistory(pdfName){
 
   const route={
     date:todayKey,
     created:new Date().toISOString(),
+    pdfName:pdfName || "",
     data:JSON.parse(JSON.stringify(day))
   };
 
@@ -2340,13 +2280,13 @@ function saveRouteToHistory(){
   );
 }
 
-function onRuolinoGenerated(success,message){
+function onRuolinoGenerated(success,message,pdfName){
   const msg=$("generateMsg");
   if(!msg) return;
   if(success){
     msg.className="status ok";
     msg.innerHTML="✓ Ruolino generato e salvato.";
-    saveRouteToHistory();
+    saveRouteToHistory(pdfName || "");
     renderRouteHistory();
   }else{
     msg.className="status error";
@@ -2487,10 +2427,7 @@ function routeDetailHtml(d){
 function renderRouteHistory(){
 
   if(!routes.length){
-
-    $("routeHistory").innerHTML=
-      "Nessun ruolino generato.";
-
+    $("routeHistory").innerHTML="Nessun ruolino generato.";
     return;
   }
 
@@ -2498,19 +2435,19 @@ function renderRouteHistory(){
     [...routes]
       .reverse()
       .map((r,i)=>{
-
         const index=routes.length-1-i;
-
+        const pdf=r.pdfName || "";
+        const safePdf=escapeHtml(pdf);
+        const buttons=pdf
+          ? "<button type='button' onclick=\"event.stopPropagation();openSavedPdf('"+safePdf+"')\">📄 Apri PDF</button> "
+            +"<button type='button' onclick=\"event.stopPropagation();shareSavedPdf('"+safePdf+"')\">📤 Condividi PDF</button>"
+          : "<span class='muted'>PDF non disponibile per questo vecchio record</span>";
         return(
-          "<div class='list-item' "
-          +"style='cursor:pointer' "
-          +"onclick='openSavedRoute("+index+")'>"
+          "<div class='list-item'>"
           +"📄 <b>Ruolino "+formatDate(r.date)+"</b>"
-          +"<br>"
-          +"<span class='muted'>"
-          +new Date(r.created).toLocaleString("it-IT")
-          +"</span>"
-          +"<br><button type='button'>Apri ruolino</button>"
+          +"<br><span class='muted'>"+new Date(r.created).toLocaleString("it-IT")+"</span>"
+          +"<br>"+buttons
+          +"<br><button type='button' onclick='openSavedRoute("+index+")'>Dettagli giornata</button>"
           +"</div>"
         );
       })
@@ -2518,9 +2455,26 @@ function renderRouteHistory(){
 }
 
 
+
 /* =====================================================
    CONDIVISIONE
 ===================================================== */
+
+function openSavedPdf(pdfName){
+  if(window.Android && typeof Android.openRuolino==="function"){
+    Android.openRuolino(pdfName || "");
+  }else{
+    alert("Apertura PDF non disponibile nella versione Android.");
+  }
+}
+
+function shareSavedPdf(pdfName){
+  if(window.Android && typeof Android.shareSavedRuolino==="function"){
+    Android.shareSavedRuolino(pdfName || "");
+  }else{
+    alert("Condivisione PDF non disponibile nella versione Android.");
+  }
+}
 
 function shareRoute(){
 
@@ -2853,8 +2807,6 @@ function saveFuel(){
   $("fuelMsg").style.display="block"; $("fuelMsg").className="status ok";
   $("fuelMsg").innerHTML="✓ Rifornimento registrato alle "+record.time+".";
   saveDay();
-  $("fuelMsg").style.display="block"; $("fuelMsg").className="status ok";
-  $("fuelMsg").innerHTML="✓ Rifornimento registrato alle "+record.time+".";
   setValue("fuelLiters","");setValue("fuelPrice","");setValue("fuelAmount","");setValue("fuelKm","");
   renderExpenses();
 }
@@ -2907,8 +2859,6 @@ function saveDamage(){
   $("damageMsg").style.display="block"; $("damageMsg").className="status ok";
   $("damageMsg").innerHTML="✓ Guasto/danno registrato alle "+record.time+".";
   saveDay();
-  $("damageMsg").style.display="block"; $("damageMsg").className="status ok";
-  $("damageMsg").innerHTML="✓ Guasto/danno registrato alle "+record.time+".";
 }
 
 let payslips=JSON.parse(localStorage.getItem("ups_payslips")||"[]");
@@ -3086,19 +3036,21 @@ function loadFixed(){
 }
 
 function restoreStatusMessages(){
-  if(day.start && $("startMsg")){ $("startMsg").style.display="block"; $("startMsg").className="status ok"; $("startMsg").innerHTML="✓ Inizio giornata registrato alle "+day.start+"."; }
-  if(day.exit && $("exitMsg")){ $("exitMsg").style.display="block"; $("exitMsg").className="status ok"; $("exitMsg").innerHTML="✓ Uscita dal magazzino registrata."; }
-  if(day.first && $("firstMsg")){ $("firstMsg").style.display="block"; $("firstMsg").className="status ok"; $("firstMsg").innerHTML="✓ Primo stop registrato"+(day.firstGps?" con GPS.":"."); }
-  if(day.last && $("lastMsg")){ $("lastMsg").style.display="block"; $("lastMsg").className="status ok"; $("lastMsg").innerHTML="✓ Ultimo stop registrato alle "+day.last+"."; }
-  if(day.end && $("endMsg")){ $("endMsg").style.display="block"; $("endMsg").className="status ok"; $("endMsg").innerHTML="✓ Fine giornata registrata alle "+day.end+"."; }
-  if(day.damage && $("damageMsg")){ $("damageMsg").style.display="block"; $("damageMsg").className="status ok"; $("damageMsg").innerHTML="✓ Guasto/danno registrato."; }
-  if(day.notes && $("notesMsg")){ $("notesMsg").style.display="block"; $("notesMsg").className="status ok"; $("notesMsg").innerHTML="✓ Note di fine giornata registrate."; }
-  if(fuelRecords.length && $("fuelMsg")){ $("fuelMsg").style.display="block"; $("fuelMsg").className="status ok"; $("fuelMsg").innerHTML="✓ "+fuelRecords.length+" rifornimento/i registrato/i."; }
-  if(tollRecords.length && $("tollHistory")) renderExpenses();
-  if(pauses.length && $("pauseMsg")){ $("pauseMsg").style.display="block"; $("pauseMsg").className="status ok"; $("pauseMsg").innerHTML="✓ "+pauses.length+" pausa/e registrata/e."; }
-  if(day.signature && $("signatureMsg")){ setSignatureStatus(true,"✓ Firma acquisita e salvata."); }
-}
+  const ids=['startMsg','exitMsg','firstMsg','lastMsg','returnMsg','endMsg','damageMsg','notesMsg','fuelMsg','pauseMsg'];
+  ids.forEach(id=>{ const m=$(id); if(m) m.style.display='none'; });
 
+  if(day.start && $('startMsg')){ $('startMsg').style.display='block'; $('startMsg').className='status ok'; $('startMsg').innerHTML='✓ Inizio giornata registrato alle '+day.start+'.'; }
+  if(day.exit && $('exitMsg')){ $('exitMsg').style.display='block'; $('exitMsg').className='status ok'; $('exitMsg').innerHTML='✓ Uscita dal magazzino registrata.'; }
+  if(day.first && $('firstMsg')){ $('firstMsg').style.display='block'; $('firstMsg').className='status ok'; $('firstMsg').innerHTML='✓ Primo stop registrato'+(day.firstGps?' con GPS.':'.'); }
+  if(day.last && $('lastMsg')){ $('lastMsg').style.display='block'; $('lastMsg').className='status ok'; $('lastMsg').innerHTML='✓ Ultimo stop registrato alle '+day.last+'.'; }
+  if(day.return && $('returnMsg')){ $('returnMsg').style.display='block'; $('returnMsg').className='status ok'; $('returnMsg').innerHTML='✓ Rientro registrato alle '+day.return+'.'; }
+  if(day.end && $('endMsg')){ $('endMsg').style.display='block'; $('endMsg').className='status ok'; $('endMsg').innerHTML='✓ Fine giornata registrata alle '+day.end+'.'; }
+  if(day.damage && $('damageMsg')){ $('damageMsg').style.display='block'; $('damageMsg').className='status ok'; $('damageMsg').innerHTML='✓ Guasto/danno registrato.'; }
+  if(day.notes && $('notesMsg')){ $('notesMsg').style.display='block'; $('notesMsg').className='status ok'; $('notesMsg').innerHTML='✓ Note di fine giornata registrate.'; }
+  if(fuelRecords.length && $('fuelMsg')){ $('fuelMsg').style.display='block'; $('fuelMsg').className='status ok'; $('fuelMsg').innerHTML='✓ '+fuelRecords.length+' rifornimento/i registrato/i.'; }
+  if(pauses.length && $('pauseMsg')){ $('pauseMsg').style.display='block'; $('pauseMsg').className='status ok'; $('pauseMsg').innerHTML='✓ '+pauses.length+' pausa/e registrata/e.'; }
+  if(day.signature && $('signatureMsg')) setSignatureStatus(true,'✓ Firma acquisita e salvata.');
+}
 function loadDay(){
 
   setValue("start",day.start);
