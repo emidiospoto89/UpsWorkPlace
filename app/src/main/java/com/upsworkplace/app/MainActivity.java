@@ -38,8 +38,8 @@ import java.util.Locale;
 public class MainActivity extends Activity {
     private static final int PDF_W = 612;
     private static final int PDF_H = 894;
-    private static final int TEMPLATE_W = 1052;
-    private static final int TEMPLATE_H = 1536;
+    private static final int TEMPLATE_W = 1037;
+    private static final int TEMPLATE_H = 1516;
     private static final int REQ_CAMERA = 2001;
     private static final int REQ_LOCATION = 2002;
     private static final int REQ_FILE_CHOOSER = 2003;
@@ -222,25 +222,25 @@ public class MainActivity extends Activity {
         p.setTextAlign(Paint.Align.LEFT);
 
         drawText(c,p,d.optString("driverName",""),X(190),Y(146));
-        drawBoxes(c,p,d.optString("plate",""),736,88,994,151,7,false);
+        drawBoxes(c,p,d.optString("plate",""),754,88,1003,151,7,false);
 
         // Prima riga: il valore va nella casella a destra della relativa dicitura.
-        drawCentered(c,p,d.optString("start",""),272,193,574,252);
-        drawCentered(c,p,d.optString("end",""),813,193,1018,252);
+        drawCentered(c,p,d.optString("start",""),268,191,566,248);
+        drawCentered(c,p,d.optString("end",""),801,191,1003,248);
 
         // Seconda/terza riga: campi con caselle dedicate.
-        drawBoxes(c,p,d.optString("driverCode",""),173,252,272,309,3,false);
-        drawBoxes(c,p,d.optString("exit",""),488,252,651,309,5,false);
-        drawBoxes(c,p,d.optString("kmOut",""),842,252,1018,309,5,false);
-        drawBoxes(c,p,d.optString("return",""),488,309,651,369,5,false);
-        drawBoxes(c,p,d.optString("kmReturn",""),842,309,1018,369,5,false);
-        drawCentered(c,p,d.optString("loop",""),16,252,272,440);
-        drawBoxes(c,p,pauseText(d),488,309,651,369,5,false);
+        drawBoxes(c,p,d.optString("driverCode",""),169,248,268,305,3,false);
+        drawBoxes(c,p,d.optString("exit",""),473,248,641,305,5,false);
+        drawBoxesRightAligned(c,p,num(d,"kmOut"),829,248,1003,305,6);
+        drawBoxes(c,p,d.optString("return",""),473,305,641,364,5,false);
+        drawBoxesRightAligned(c,p,num(d,"kmReturn"),829,305,1003,364,6);
+        drawCentered(c,p,d.optString("loop",""),16,248,268,433);
+        drawBoxes(c,p,pauseText(d),473,364,641,433,5,false);
 
         String cleaning=d.optString("cleaning","");
         if(cleaning.matches("[1-5]")){
             p.setTypeface(Typeface.DEFAULT_BOLD);p.setTextSize(14f);
-            drawCentered(c,p,"✓",963,309,1018,369);
+            drawCentered(c,p,"✓",641,364,1003,433);
             p.setTypeface(Typeface.DEFAULT_BOLD);p.setTextSize(10.5f);
         }
 
@@ -248,29 +248,29 @@ public class MainActivity extends Activity {
         drawFuel(c,p,d.optJSONArray("fuelRecords"));
 
         // U.P.S.: orari nelle rispettive caselle, eventi nelle caselle numeriche.
-        drawCentered(c,p,d.optString("first",""),657,735,734,784);
-        drawCentered(c,p,d.optString("last",""),951,735,1018,784);
+        drawCentered(c,p,d.optString("first",""),638,725,723,774);
+        drawCentered(c,p,d.optString("last",""),922,725,1003,774);
 
         JSONObject e=d.optJSONObject("events");if(e==null)e=new JSONObject();
-        float[] rowTops={735,784,838,891,944,996,1048,1100,1152,1204};
-        float[] rowBottoms={784,838,891,944,996,1048,1100,1152,1204,1254};
+        float[] rowTops={774,827,879,931,983,1034,1085,1135,1187,1237};
+        float[] rowBottoms={827,879,931,983,1034,1085,1135,1187,1237,1287};
         String[] leftKeys={"deliveryStops","deliveryPackages","pickupStops","pickupPackages","futureL","emergencyK","strike","vacation","deceased",""};
         for(int i=0;i<leftKeys.length;i++){
             String value=i<4?num(d,leftKeys[i]):i<6?num(d,leftKeys[i]):num(e,leftKeys[i]);
-            drawBoxesRightAligned(c,p,value,657,rowTops[i],734,rowBottoms[i],3);
+            drawBoxesRightAligned(c,p,value,638,rowTops[i],723,rowBottoms[i],4);
         }
         String[] rightKeys={"g348","l1kx","ay49","si","kz","s2","transfer","address","recipient","refused"};
         for(int i=0;i<rightKeys.length;i++){
-            drawBoxesRightAligned(c,p,num(e,rightKeys[i]),951,rowTops[i],1018,rowBottoms[i],3);
+            drawBoxesRightAligned(c,p,num(e,rightKeys[i]),922,rowTops[i],1003,rowBottoms[i],3);
         }
 
         drawWrapped(c,p,e.optString("notes",""),110,735,215,768,10.5f,3);
-        drawWrapped(c,p,damageText(d),35,885,480,985,10.5f,8);
-        drawWrapped(c,p,d.optString("notes",""),35,1060,480,1210,10.5f,10);
+        drawWrapped(c,p,damageText(d),35,945,480,1025,10.5f,6);
+        drawWrapped(c,p,d.optString("notes",""),35,1100,480,1245,10.5f,10);
 
-        drawCentered(c,p,formatWorkMinutes(d),16,1353,447,1410);
-        drawBoxesRightAligned(c,p,totalStops(d),657,1307,734,1353,4);
-        drawBoxesRightAligned(c,p,totalExceptionPackages(e),951,1307,1018,1353,3);
+        drawCentered(c,p,formatWorkMinutes(d),16,1287,370,1389);
+        drawBoxesRightAligned(c,p,totalStops(d),646,1337,723,1389,3);
+        drawBoxesRightAligned(c,p,totalExceptionPackages(e),936,1337,1003,1389,3);
 
         // Data e firma sulle rispettive righe tratteggiate.
         drawText(c,p,formatDate(d.optString("date","")),X(100),Y(1472));
@@ -282,10 +282,11 @@ public class MainActivity extends Activity {
         int n=Math.min(5,a.length());
         for(int i=0;i<n;i++){
             JSONObject o=a.optJSONObject(i);if(o==null)continue;
-            float top=495+i*51.5f;
+            float[] tops={488,535,582,630,678};
+            float top=tops[i];
             // Importo tra il simbolo € e la sigla T.; numero pedaggi nella casella superiore.
-            drawCentered(c,p,money(o,"amount"),45,top,235,top+51);
-            drawCentered(c,p,num(o,"count"),272,440,369,495);
+            drawCentered(c,p,money(o,"amount"),50,top,190,top+47);
+            drawCentered(c,p,num(o,"count"),267,433,363,488);
         }
     }
     private void drawFuel(Canvas c,Paint p,JSONArray a){
@@ -293,10 +294,11 @@ public class MainActivity extends Activity {
         int n=Math.min(3,a.length());
         for(int i=0;i<n;i++){
             JSONObject o=a.optJSONObject(i);if(o==null)continue;
-            float top=495+i*51.5f;
-            drawCentered(c,p,money(o,"amount"),369,top,553,top+47);
-            drawBoxesRightAligned(c,p,num(o,"liters"),619,top,793,top+47,5);
-            drawBoxesRightAligned(c,p,num(o,"km"),861,top,1018,top+47,5);
+            float[] tops={488,535,582,630};
+            float top=tops[i];
+            drawCentered(c,p,money(o,"amount"),369,top,551,top+47);
+            drawBoxesRightAligned(c,p,num(o,"liters"),609,top,779,top+47,5);
+            drawBoxesRightAligned(c,p,num(o,"km"),848,top,1003,top+47,5);
         }
     }
 
@@ -332,6 +334,6 @@ public class MainActivity extends Activity {
     private void drawRightCentered(Canvas c,Paint p,String value,float x,float t,float b){if(value==null||value.trim().isEmpty())return;p.setTextAlign(Paint.Align.RIGHT);float y=Y((t+b)/2f)-(p.ascent()+p.descent())/2f;c.drawText(value,X(x),y,p);p.setTextAlign(Paint.Align.LEFT);}
     private void drawText(Canvas c,Paint p,String value,float x,float y){if(value!=null&&!value.trim().isEmpty())c.drawText(value,x,y,p);}
     private void drawWrapped(Canvas c,Paint p,String value,float l,float t,float r,float b,float size,int maxLines){if(value==null||value.trim().isEmpty())return;p.setTextSize(size);p.setTextAlign(Paint.Align.LEFT);float max=X(r-l);String[] words=value.replace("\n"," ").split("\\s+");String line="";int lines=0;float yy=Y(t)+p.getTextSize();for(String w:words){String test=line.isEmpty()?w:line+" "+w;if(p.measureText(test)>max&&!line.isEmpty()){if(lines++>=maxLines)break;c.drawText(line,X(l),yy,p);yy+=Y(12);line=w;}else line=test;}if(lines<maxLines&&!line.isEmpty())c.drawText(line,X(l),yy,p);}
-    private void drawSignature(Canvas c,String sig){if(sig==null||sig.isEmpty()||!sig.contains(","))return;try{byte[] bytes=android.util.Base64.decode(sig.substring(sig.indexOf(',')+1),android.util.Base64.DEFAULT);Bitmap sign=BitmapFactory.decodeByteArray(bytes,0,bytes.length);if(sign!=null){Paint p=new Paint(Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);c.drawBitmap(sign,null,new RectF(X(430),Y(1518),X(750),Y(1568)),p);sign.recycle();}}catch(Exception ignored){}}
+    private void drawSignature(Canvas c,String sig){if(sig==null||sig.isEmpty()||!sig.contains(","))return;try{byte[] bytes=android.util.Base64.decode(sig.substring(sig.indexOf(',')+1),android.util.Base64.DEFAULT);Bitmap sign=BitmapFactory.decodeByteArray(bytes,0,bytes.length);if(sign!=null){Paint p=new Paint(Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);c.drawBitmap(sign,null,new RectF(X(400),Y(1405),X(750),Y(1475)),p);sign.recycle();}}catch(Exception ignored){}}
     private String formatDate(String date){try{Date d=new SimpleDateFormat("yyyy-MM-dd",Locale.ITALY).parse(date);return new SimpleDateFormat("dd/MM/yyyy",Locale.ITALY).format(d);}catch(Exception e){return date==null?"":date;}}
 }
